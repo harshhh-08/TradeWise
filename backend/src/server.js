@@ -4,7 +4,7 @@ import cors from 'cors';
 import prisma from './config/prisma.js';
 
 const app = express();
-const PORT = process.env.PORT || 3000;
+const PORT = process.env.PORT || 5001;
 
 // Middleware
 app.use(cors({ origin: 'http://localhost:5173' }));

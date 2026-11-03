@@ -8,3 +8,114 @@ generator client {
 datasource db {
   provider = "postgresql"
 }
+
+model User {
+  id             Int             @id @default(autoincrement())
+  email          String          @unique
+  name           String
+  passwordHash   String
+  createdAt      DateTime        @default(now())
+  wallet         Wallet?
+  orders         Order[]
+  trades         Trade[]
+  positions      Position[]
+  quizResults    QuizResult[]
+  replaySessions ReplaySession[]
+}
+
+model Wallet {
+  id     Int     @id @default(autoincrement())
+  userId Int     @unique
+  cash   Decimal @db.Decimal(18, 2)
+  user   User    @relation(fields: [userId], references: [id])
+}
+
+model Candle {
+  id     Int      @id @default(autoincrement())
+  symbol String
+  date   DateTime
+  open   Decimal  @db.Decimal(18, 4)
+  high   Decimal  @db.Decimal(18, 4)
+  low    Decimal  @db.Decimal(18, 4)
+  close  Decimal  @db.Decimal(18, 4)
+  volume BigInt
+
+  @@unique([symbol, date])
+  @@index([symbol, date])
+}
+
+model ReplaySession {
+  id          Int          @id @default(autoincrement())
+  userId      Int
+  symbol      String
+  startDate   DateTime
+  currentDate DateTime
+  cash        Decimal      @db.Decimal(18, 2)
+  createdAt   DateTime     @default(now())
+  user        User         @relation(fields: [userId], references: [id])
+  orders      Order[]
+  trades      Trade[]
+  positions   Position[]
+}
+
+model Position {
+  id              Int            @id @default(autoincrement())
+  userId          Int
+  replaySessionId Int?
+  symbol          String
+  quantity        Int
+  avgCost         Decimal        @db.Decimal(18, 4)
+  user            User           @relation(fields: [userId], references: [id])
+  replaySession   ReplaySession? @relation(fields: [replaySessionId], references: [id])
+
+  @@index([userId, symbol])
+}
+
+model Order {
+  id              Int            @id @default(autoincrement())
+  userId          Int
+  replaySessionId Int?
+  symbol          String
+  side            String
+  type            String         @default("MARKET")
+  quantity        Int
+  status          String         @default("FILLED")
+  createdAt       DateTime       @default(now())
+  user            User           @relation(fields: [userId], references: [id])
+  replaySession   ReplaySession? @relation(fields: [replaySessionId], references: [id])
+  trade           Trade?
+}
+
+model Trade {
+  id              Int            @id @default(autoincrement())
+  userId          Int
+  orderId         Int            @unique
+  replaySessionId Int?
+  symbol          String
+  side            String
+  quantity        Int
+  price           Decimal        @db.Decimal(18, 4)
+  realizedPnl     Decimal?       @db.Decimal(18, 2)
+  executedAt      DateTime       @default(now())
+  user            User           @relation(fields: [userId], references: [id])
+  order           Order          @relation(fields: [orderId], references: [id])
+  replaySession   ReplaySession? @relation(fields: [replaySessionId], references: [id])
+}
+
+model Lesson {
+  id      Int    @id @default(autoincrement())
+  slug    String @unique
+  title   String
+  order   Int
+  content String
+}
+
+model QuizResult {
+  id        Int      @id @default(autoincrement())
+  userId    Int
+  lessonId  Int
+  score     Int
+  total     Int
+  createdAt DateTime @default(now())
+  user      User     @relation(fields: [userId], references: [id])
+}
