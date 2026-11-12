@@ -8,6 +8,7 @@ import {
   RotateCcw,
   CheckCircle2,
 } from 'lucide-react';
+import toast from 'react-hot-toast';
 import api from '@/services/api';
 import { useAuth } from '@/context/AuthContext';
 import { formatCurrency, formatPercent } from '@/lib/utils';
@@ -119,7 +120,7 @@ export default function StockDetail() {
 
     if (tradeSide === 'BUY') {
       if (estimatedTotal > walletBalance) {
-        alert('Insufficient virtual buying power.');
+        toast.error('Insufficient virtual buying power.');
         return;
       }
       updateWalletCash(walletBalance - estimatedTotal);
@@ -161,6 +162,7 @@ export default function StockDetail() {
     } catch (_) {}
 
     setIsTradeSuccess(true);
+    toast.success(`${tradeSide} order executed for ${shares} ${upperSymbol}!`);
     setTimeout(() => setIsTradeSuccess(false), 3000);
   };
 

@@ -1,4 +1,5 @@
 import { BrowserRouter, Routes, Route, Navigate } from 'react-router-dom';
+import { Toaster } from 'react-hot-toast';
 import { AuthProvider } from '@/context/AuthContext';
 import { AppShell } from '@/components/layout/AppShell';
 import { AuthLayout } from '@/components/layout/AuthLayout';
@@ -20,6 +21,33 @@ export default function App() {
   return (
     <BrowserRouter>
       <AuthProvider>
+        <Toaster
+          position="top-right"
+          toastOptions={{
+            duration: 3500,
+            style: {
+              background: '#131620',
+              color: '#f1f3f9',
+              border: '1px solid rgba(255, 255, 255, 0.08)',
+              borderRadius: '12px',
+              fontSize: '12px',
+              fontFamily: 'Inter, system-ui, sans-serif',
+            },
+            success: {
+              iconTheme: {
+                primary: '#34d399',
+                secondary: '#0c0e14',
+              },
+            },
+            error: {
+              iconTheme: {
+                primary: '#f87171',
+                secondary: '#0c0e14',
+              },
+            },
+          }}
+        />
+
         <Routes>
           {/* Public Landing */}
           <Route path="/" element={<Landing />} />

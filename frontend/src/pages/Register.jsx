@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { User, Mail, Lock, AlertCircle, ArrowRight, Sparkles } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { useAuth } from '@/context/AuthContext';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -45,9 +46,11 @@ export default function Register() {
     setIsLoading(false);
 
     if (result.success) {
+      toast.success('Account created! $100,000 virtual cash credited.');
       navigate('/dashboard', { replace: true });
     } else {
       setError(result.message || 'Registration failed.');
+      toast.error(result.message || 'Registration failed.');
     }
   };
 

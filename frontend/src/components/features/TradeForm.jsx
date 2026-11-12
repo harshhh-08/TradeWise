@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
 import { ArrowLeftRight, CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { useAuth } from '@/context/AuthContext';
 import { formatCurrency } from '@/lib/utils';
 import { SearchCombobox } from './SearchCombobox';
@@ -67,10 +68,9 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
 
     if (side === 'BUY') {
       if (totalCost > walletBalance) {
-        setMessage({
-          type: 'error',
-          text: `Insufficient funds. Needed ${formatCurrency(totalCost)}, available ${formatCurrency(walletBalance)}.`,
-        });
+        const errText = `Insufficient funds. Needed ${formatCurrency(totalCost)}, available ${formatCurrency(walletBalance)}.`;
+        setMessage({ type: 'error', text: errText });
+        toast.error('Insufficient buying power.');
         return;
       }
       updateWalletCash(walletBalance - totalCost);
@@ -79,10 +79,9 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
       const positions = JSON.parse(localStorage.getItem('tradewise_positions') || '[]');
       const pos = positions.find((p) => p.symbol === symbol);
       if (!pos || pos.quantity < qty) {
-        setMessage({
-          type: 'error',
-          text: `Cannot sell ${qty} shares of ${symbol}. You only hold ${pos?.quantity || 0} shares.`,
-        });
+        const errText = `Cannot sell ${qty} shares of ${symbol}. You only hold ${pos?.quantity || 0} shares.`;
+        setMessage({ type: 'error', text: errText });
+        toast.error('Cannot sell more shares than you hold.');
         return;
       }
       updateWalletCash(walletBalance + totalCost);
@@ -124,10 +123,12 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
     }
     localStorage.setItem('tradewise_positions', JSON.stringify(positions));
 
+    const successMsg = `Order filled: ${side} ${qty} shares of ${symbol} @ ${formatCurrency(executionPrice)}.`;
     setMessage({
       type: 'success',
-      text: `Order filled: ${side} ${qty} shares of ${symbol} @ ${formatCurrency(executionPrice)}.`,
+      text: successMsg,
     });
+    toast.success(`${side} order executed for ${qty} ${symbol}!`);
 
     if (onTradeExecuted) onTradeExecuted(tradeRecord);
   };

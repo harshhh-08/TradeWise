@@ -1,6 +1,7 @@
 import { useState } from 'react';
 import { Link, useNavigate, useLocation } from 'react-router-dom';
 import { Mail, Lock, AlertCircle, ArrowRight } from 'lucide-react';
+import toast from 'react-hot-toast';
 import { useAuth } from '@/context/AuthContext';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
@@ -31,9 +32,11 @@ export default function Login() {
     setIsLoading(false);
 
     if (result.success) {
+      toast.success('Welcome back to TradeWise!');
       navigate(from, { replace: true });
     } else {
       setError(result.message || 'Invalid email or password.');
+      toast.error(result.message || 'Login failed.');
     }
   };
 
