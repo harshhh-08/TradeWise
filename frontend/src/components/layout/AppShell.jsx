@@ -1,11 +1,13 @@
 import { useState } from 'react';
 import { Outlet } from 'react-router-dom';
+import { useAuth } from '@/context/AuthContext';
 import { Sidebar } from './Sidebar';
 import { TopBar } from './TopBar';
 import { BottomNav } from './BottomNav';
 
-export function AppShell({ user, walletBalance, onLogout }) {
+export function AppShell() {
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, walletBalance, logout } = useAuth();
 
   return (
     <div className="flex h-svh w-full bg-[var(--color-bg-base)] text-[var(--color-text-primary)] overflow-hidden">
@@ -34,7 +36,7 @@ export function AppShell({ user, walletBalance, onLogout }) {
           isMobileMenuOpen={isMobileMenuOpen}
           user={user}
           walletBalance={walletBalance}
-          onLogout={onLogout}
+          onLogout={logout}
         />
 
         <main className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8 pb-20 md:pb-8">
