@@ -1,0 +1,50 @@
+import { useState } from 'react';
+import { Outlet } from 'react-router-dom';
+import { Sidebar } from './Sidebar';
+import { TopBar } from './TopBar';
+import { BottomNav } from './BottomNav';
+
+export function AppShell({ user, walletBalance, onLogout }) {
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+
+  return (
+    <div className="flex h-svh w-full bg-[var(--color-bg-base)] text-[var(--color-text-primary)] overflow-hidden">
+      <Sidebar />
+
+      {/* Mobile drawer backdrop */}
+      {isMobileMenuOpen && (
+        <div
+          className="fixed inset-0 z-40 bg-black/60 backdrop-blur-xs md:hidden"
+          onClick={() => setIsMobileMenuOpen(false)}
+        />
+      )}
+
+      {/* Mobile drawer sidebar */}
+      <div
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-[var(--color-bg-base)] transition-transform duration-200 md:hidden ${
+          isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
+        }`}
+      >
+        <Sidebar className="flex! w-full h-full" />
+      </div>
+
+      <div className="flex-1 flex flex-col min-w-0 overflow-hidden">
+        <TopBar
+          onToggleMobileMenu={() => setIsMobileMenuOpen((prev) => !prev)}
+          isMobileMenuOpen={isMobileMenuOpen}
+          user={user}
+          walletBalance={walletBalance}
+          onLogout={onLogout}
+        />
+
+        <main className="flex-1 overflow-y-auto px-4 py-6 sm:px-6 lg:px-8 pb-20 md:pb-8">
+          <div className="max-w-7xl mx-auto w-full">
+            <Outlet />
+          </div>
+        </main>
+      </div>
+
+      <BottomNav />
+    </div>
+  );
+}
