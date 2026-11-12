@@ -8,7 +8,25 @@ import stockRoutes from './routes/stock_routes.js';
 const app = express();
 const PORT = process.env.PORT || 3000;
 
-app.use(cors({ origin: 'http://localhost:5173' }));
+const allowedOrigins = [
+  'http://localhost:5173',
+  'http://localhost:5174',
+  'http://localhost:5175',
+  'http://127.0.0.1:5173',
+  'http://127.0.0.1:5174',
+];
+
+app.use(
+  cors({
+    origin: (origin, callback) => {
+      if (!origin || allowedOrigins.includes(origin) || /^http:\/\/localhost:\d+$/.test(origin)) {
+        return callback(null, true);
+      }
+      return callback(new Error('Blocked by CORS'));
+    },
+    credentials: true,
+  })
+);
 app.use(express.json());
 
 app.use('/api/auth', authRoutes);
