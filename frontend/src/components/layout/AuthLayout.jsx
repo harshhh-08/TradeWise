@@ -1,69 +1,74 @@
 import { Link, Outlet } from 'react-router-dom';
-import { TrendingUp, ShieldCheck, Zap, BookOpen } from 'lucide-react';
+import { Activity, Shield, Terminal, ArrowUpRight } from 'lucide-react';
 
 export function AuthLayout() {
   return (
-    <div className="min-h-svh flex bg-[var(--color-bg-base)] text-[var(--color-text-primary)]">
+    <div className="min-h-svh flex bg-[var(--color-bg-base)] text-[var(--color-text-primary)] selection:bg-[var(--color-brand)] selection:text-white">
       {/* Brand panel (hidden on mobile) */}
-      <div className="hidden lg:flex flex-col justify-between w-1/2 p-12 bg-linear-to-br from-[var(--color-bg-subtle)] via-[var(--color-bg-base)] to-[var(--color-bg-subtle)] border-r border-[var(--color-border)] relative overflow-hidden">
-        <div className="flex items-center gap-3">
-          <div className="w-9 h-9 rounded-xl bg-[var(--color-brand)] flex items-center justify-center text-white font-bold text-lg shadow-sm">
-            TW
-          </div>
-          <div>
-            <h1 className="text-lg font-bold tracking-tight">TradeWise</h1>
-            <p className="text-xs text-[var(--color-text-muted)]">Risk-Free Paper Trading & Learning</p>
+      <div className="hidden lg:flex flex-col justify-between w-1/2 p-12 bg-[var(--color-bg-subtle)] border-r border-[var(--color-border)] relative overflow-hidden">
+        <div className="flex items-center justify-between">
+          <Link to="/" className="flex items-center gap-2.5">
+            <div className="w-6 h-6 rounded bg-[var(--color-brand)] flex items-center justify-center text-white font-mono font-bold text-xs shadow-xs">
+              TW
+            </div>
+            <span className="font-bold font-mono tracking-wider text-xs">TRADEWISE</span>
+          </Link>
+          <div className="flex items-center gap-1.5 text-[10px] font-mono text-[var(--color-success)] px-2 py-0.5 rounded bg-[var(--color-bg-raised)] border border-[var(--color-border)]">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)] animate-pulse" />
+            <span>LIVE DATA FEED</span>
           </div>
         </div>
 
         <div className="space-y-6 max-w-md">
-          <h2 className="text-3xl font-extrabold tracking-tight leading-tight">
-            Master the market before risking real money.
-          </h2>
-          <p className="text-sm text-[var(--color-text-muted)] leading-relaxed">
-            Get $100,000 in virtual trading capital. Test your strategies with live market data, interactive lessons, and historical replay.
-          </p>
+          <div className="space-y-2">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-[var(--color-brand)]">
+              Paper Trading Environment
+            </span>
+            <h2 className="text-3xl font-extrabold tracking-tight leading-tight">
+              Institutional-grade market practice. Zero financial exposure.
+            </h2>
+          </div>
 
-          <div className="grid grid-cols-2 gap-3 pt-4">
-            <div className="p-3.5 rounded-xl bg-[var(--color-bg-subtle)] border border-[var(--color-border)]">
-              <TrendingUp className="w-4 h-4 text-[var(--color-success)] mb-2" />
-              <div className="text-xs font-semibold">Live Quotes</div>
-              <div className="text-[11px] text-[var(--color-text-muted)]">Real market feeds</div>
+          <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-base)] p-4 space-y-3 font-mono text-xs">
+            <div className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider border-b border-[var(--color-border)] pb-2">
+              Default Account Provisioning
             </div>
-            <div className="p-3.5 rounded-xl bg-[var(--color-bg-subtle)] border border-[var(--color-border)]">
-              <Zap className="w-4 h-4 text-[var(--color-brand)] mb-2" />
-              <div className="text-xs font-semibold">$100k Virtual Cash</div>
-              <div className="text-[11px] text-[var(--color-text-muted)]">Zero financial risk</div>
+            <div className="flex justify-between py-1">
+              <span className="text-[var(--color-text-muted)]">Initial Buying Power</span>
+              <span className="font-bold text-[var(--color-text-primary)]">$100,000.00 USD</span>
             </div>
-            <div className="p-3.5 rounded-xl bg-[var(--color-bg-subtle)] border border-[var(--color-border)]">
-              <BookOpen className="w-4 h-4 text-[var(--color-info)] mb-2" />
-              <div className="text-xs font-semibold">Bite-sized Lessons</div>
-              <div className="text-[11px] text-[var(--color-text-muted)]">Quizzes with feedback</div>
+            <div className="flex justify-between py-1">
+              <span className="text-[var(--color-text-muted)]">Execution Model</span>
+              <span className="font-semibold text-[var(--color-text-primary)]">Market &amp; Limit Sim</span>
             </div>
-            <div className="p-3.5 rounded-xl bg-[var(--color-bg-subtle)] border border-[var(--color-border)]">
-              <ShieldCheck className="w-4 h-4 text-[var(--color-warning)] mb-2" />
-              <div className="text-xs font-semibold">Replay Mode</div>
-              <div className="text-[11px] text-[var(--color-text-muted)]">Practice any era</div>
+            <div className="flex justify-between py-1">
+              <span className="text-[var(--color-text-muted)]">Exchange Feeds</span>
+              <span className="font-semibold text-[var(--color-text-primary)]">NASDAQ / NYSE Equities</span>
+            </div>
+            <div className="flex justify-between py-1">
+              <span className="text-[var(--color-text-muted)]">Commission Schedule</span>
+              <span className="text-[var(--color-success)]">$0.00 (Zero Fee)</span>
             </div>
           </div>
         </div>
 
-        <div className="text-xs text-[var(--color-text-muted)] flex items-center justify-between">
-          <span>&copy; {new Date().getFullYear()} TradeWise. Built for learners.</span>
-          <Link to="/" className="text-[var(--color-brand)] hover:underline">
-            Back to Home
+        <div className="text-xs font-mono text-[var(--color-text-muted)] flex items-center justify-between pt-6 border-t border-[var(--color-border)]">
+          <span>&copy; {new Date().getFullYear()} TradeWise.</span>
+          <Link to="/" className="text-[var(--color-brand)] hover:underline inline-flex items-center gap-1">
+            <span>Terminal Home</span>
+            <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
         </div>
       </div>
 
       {/* Form panel */}
       <div className="flex-1 flex flex-col justify-center items-center p-6 sm:p-12 relative">
-        <div className="w-full max-w-md">
-          <div className="lg:hidden flex items-center gap-2.5 mb-8">
-            <div className="w-8 h-8 rounded-lg bg-[var(--color-brand)] flex items-center justify-center text-white font-bold text-sm">
+        <div className="w-full max-w-sm">
+          <div className="lg:hidden flex items-center gap-2 mb-8">
+            <div className="w-6 h-6 rounded bg-[var(--color-brand)] flex items-center justify-center text-white font-mono font-bold text-xs">
               TW
             </div>
-            <span className="font-bold tracking-tight text-base">TradeWise</span>
+            <span className="font-bold font-mono tracking-wider text-xs">TRADEWISE</span>
           </div>
 
           <Outlet />
@@ -72,4 +77,3 @@ export function AuthLayout() {
     </div>
   );
 }
-

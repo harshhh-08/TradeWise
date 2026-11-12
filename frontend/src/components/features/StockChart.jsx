@@ -3,35 +3,38 @@ import {
   ResponsiveContainer,
   AreaChart,
   Area,
+  BarChart,
+  Bar,
   XAxis,
   YAxis,
   Tooltip,
 } from 'recharts';
-import { formatCurrency } from '@/lib/utils';
+import { formatCurrency, formatCompact } from '@/lib/utils';
 
 export function StockChart({ data = [], isPositive = true, onTimeframeChange, timeframe = '1D' }) {
-  const TIMEFRAMES = ['1D', '1W', '1M', '1Y'];
+  const [chartMode, setChartMode] = useState('area'); // 'area' | 'bar'
+  const TIMEFRAMES = ['1D', '5D', '1M', '6M', '1Y', 'ALL'];
 
-  const strokeColor = isPositive ? '#10b981' : '#ef4444';
-  const fillColor = isPositive ? 'rgba(16, 185, 129, 0.15)' : 'rgba(239, 68, 68, 0.15)';
+  const strokeColor = isPositive ? '#10b981' : '#f43f5e';
+  const fillColor = isPositive ? 'rgba(16, 185, 129, 0.12)' : 'rgba(244, 63, 94, 0.12)';
 
   const prices = data.map((d) => d.close || d.price || 0);
-  const minPrice = prices.length ? Math.min(...prices) * 0.995 : 0;
-  const maxPrice = prices.length ? Math.max(...prices) * 1.005 : 100;
+  const minPrice = prices.length ? Math.min(...prices) * 0.996 : 0;
+  const maxPrice = prices.length ? Math.max(...prices) * 1.004 : 100;
 
   return (
-    <div className="space-y-4">
-      {/* Timeframe controls */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-1 bg-[var(--color-bg-subtle)] p-1 rounded-lg border border-[var(--color-border)]">
+    <div className="space-y-3">
+      {/* Chart Top Controls */}
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-[var(--color-border)]">
+        <div className="flex items-center gap-1 bg-[var(--color-bg-base)] p-0.5 rounded border border-[var(--color-border)]">
           {TIMEFRAMES.map((tf) => (
             <button
               key={tf}
               type="button"
               onClick={() => onTimeframeChange && onTimeframeChange(tf)}
-              className={`px-3 py-1 rounded-md text-xs font-semibold transition-colors cursor-pointer ${
+              className={`px-2.5 py-1 rounded text-xs font-mono font-semibold transition-colors cursor-pointer ${
                 timeframe === tf
-                  ? 'bg-[var(--color-brand)] text-white'
+                  ? 'bg-[var(--color-brand)] text-white shadow-xs'
                   : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
               }`}
             >
@@ -40,72 +43,120 @@ export function StockChart({ data = [], isPositive = true, onTimeframeChange, ti
           ))}
         </div>
 
-        <div className="text-[11px] font-mono text-[var(--color-text-muted)]">
-          Volume / Price Weighted
+        <div className="flex items-center gap-3 text-[11px] font-mono text-[var(--color-text-muted)]">
+          <div className="flex items-center gap-1">
+            <button
+              type="button"
+              onClick={() => setChartMode('area')}
+              className={`px-2 py-0.5 rounded text-[10px] font-mono cursor-pointer ${
+                chartMode === 'area'
+                  ? 'bg-[var(--color-bg-raised)] text-[var(--color-text-primary)] font-bold'
+                  : 'hover:text-[var(--color-text-primary)]'
+              }`}
+            >
+              Area
+            </button>
+            <button
+              type="button"
+              onClick={() => setChartMode('bar')}
+              className={`px-2 py-0.5 rounded text-[10px] font-mono cursor-pointer ${
+                chartMode === 'bar'
+                  ? 'bg-[var(--color-bg-raised)] text-[var(--color-text-primary)] font-bold'
+                  : 'hover:text-[var(--color-text-primary)]'
+              }`}
+            >
+              Volume / Delta
+            </button>
+          </div>
+          <span className="hidden sm:inline border-l border-[var(--color-border)] pl-3">
+            LOGARITHMIC SCALE: OFF
+          </span>
         </div>
       </div>
 
-      {/* Recharts Area */}
-      <div className="h-72 w-full pt-2">
+      {/* Chart Display */}
+      <div className="h-72 w-full pt-1">
         <ResponsiveContainer width="100%" height="100%">
-          <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
-            <defs>
-              <linearGradient id="priceGradient" x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor={strokeColor} stopOpacity={0.4} />
-                <stop offset="100%" stopColor={strokeColor} stopOpacity={0.0} />
-              </linearGradient>
-            </defs>
+          {chartMode === 'area' ? (
+            <AreaChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <defs>
+                <linearGradient id="priceGradient" x1="0" y1="0" x2="0" y2="1">
+                  <stop offset="0%" stopColor={strokeColor} stopOpacity={0.35} />
+                  <stop offset="100%" stopColor={strokeColor} stopOpacity={0.0} />
+                </linearGradient>
+              </defs>
 
-            <XAxis
-              dataKey="date"
-              axisLine={false}
-              tickLine={false}
-              tick={{ fontSize: 10, fill: '#8b95a8' }}
-              minTickGap={40}
-            />
-            <YAxis
-              domain={[minPrice, maxPrice]}
-              axisLine={false}
-              tickLine={false}
-              tick={{ fontSize: 10, fill: '#8b95a8' }}
-              tickFormatter={(v) => `$${v.toFixed(0)}`}
-              orientation="right"
-            />
-            <Tooltip
-              content={({ active, payload }) => {
-                if (active && payload && payload.length) {
-                  const d = payload[0].payload;
-                  return (
-                    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-base)]/95 backdrop-blur-md p-3 shadow-xl space-y-1 text-xs">
-                      <div className="text-[11px] text-[var(--color-text-muted)] font-mono">
-                        {d.date}
-                      </div>
-                      <div className="text-base font-bold font-mono text-[var(--color-text-primary)]">
-                        {formatCurrency(d.close || d.price)}
-                      </div>
-                      {d.open && (
-                        <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-[10px] text-[var(--color-text-muted)] pt-1 border-t border-[var(--color-border)] font-mono">
-                          <span>Open: ${Number(d.open).toFixed(2)}</span>
-                          <span>High: ${Number(d.high).toFixed(2)}</span>
-                          <span>Low: ${Number(d.low).toFixed(2)}</span>
-                          <span>Vol: {Number(d.volume || 0).toLocaleString()}</span>
+              <XAxis
+                dataKey="date"
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 10, fill: '#757d91' }}
+                minTickGap={45}
+              />
+              <YAxis
+                domain={[minPrice, maxPrice]}
+                axisLine={false}
+                tickLine={false}
+                tick={{ fontSize: 10, fill: '#757d91' }}
+                tickFormatter={(v) => `$${v.toFixed(0)}`}
+                orientation="right"
+              />
+              <Tooltip
+                content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    const d = payload[0].payload;
+                    return (
+                      <div className="rounded border border-[var(--color-border)] bg-[var(--color-bg-subtle)]/95 backdrop-blur-md p-2.5 shadow-xl space-y-1 font-mono text-xs">
+                        <div className="text-[10px] text-[var(--color-text-muted)]">
+                          {d.date}
                         </div>
-                      )}
-                    </div>
-                  );
-                }
-                return null;
-              }}
-            />
-            <Area
-              type="monotone"
-              dataKey="close"
-              stroke={strokeColor}
-              strokeWidth={2}
-              fillOpacity={1}
-              fill="url(#priceGradient)"
-            />
-          </AreaChart>
+                        <div className="text-sm font-bold text-[var(--color-text-primary)]">
+                          {formatCurrency(d.close || d.price)}
+                        </div>
+                        {d.open && (
+                          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-[10px] text-[var(--color-text-muted)] pt-1 border-t border-[var(--color-border)]">
+                            <span>Open: ${Number(d.open).toFixed(2)}</span>
+                            <span>High: ${Number(d.high).toFixed(2)}</span>
+                            <span>Low: ${Number(d.low).toFixed(2)}</span>
+                            <span>Vol: {formatCompact(d.volume || 0)}</span>
+                          </div>
+                        )}
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
+              <Area
+                type="monotone"
+                dataKey="close"
+                stroke={strokeColor}
+                strokeWidth={1.5}
+                fillOpacity={1}
+                fill="url(#priceGradient)"
+              />
+            </AreaChart>
+          ) : (
+            <BarChart data={data} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
+              <XAxis dataKey="date" axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#757d91' }} minTickGap={45} />
+              <YAxis axisLine={false} tickLine={false} tick={{ fontSize: 10, fill: '#757d91' }} orientation="right" tickFormatter={(v) => formatCompact(v)} />
+              <Tooltip
+                content={({ active, payload }) => {
+                  if (active && payload && payload.length) {
+                    const d = payload[0].payload;
+                    return (
+                      <div className="rounded border border-[var(--color-border)] bg-[var(--color-bg-subtle)] p-2 text-xs font-mono">
+                        <div>{d.date}</div>
+                        <div className="font-bold">Vol: {Number(d.volume || 0).toLocaleString()}</div>
+                      </div>
+                    );
+                  }
+                  return null;
+                }}
+              />
+              <Bar dataKey="volume" fill="var(--color-brand)" opacity={0.6} />
+            </BarChart>
+          )}
         </ResponsiveContainer>
       </div>
     </div>

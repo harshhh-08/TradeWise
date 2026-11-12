@@ -1,88 +1,92 @@
 import { Link } from 'react-router-dom';
-import { Wallet, TrendingUp, ArrowUpRight, ArrowLeftRight, Sparkles } from 'lucide-react';
+import { TrendingUp, TrendingDown, ArrowUpRight, ArrowLeftRight } from 'lucide-react';
 import { formatCurrency, formatChange, formatPercent } from '@/lib/utils';
 import { Button } from '@/components/ui/Button';
 
-export function WalletBanner({ cash = 100000, invested = 0, dayPnl = 1245.50 }) {
+export function WalletBanner({ cash = 100000, invested = 0, dayPnl = 0 }) {
   const totalValue = cash + invested;
-  const dayPnlPercent = (dayPnl / (totalValue || 1)) * 100;
+  const dayPnlPercent = totalValue ? (dayPnl / totalValue) * 100 : 0;
   const pnlMeta = formatChange(dayPnl);
 
+  const cashRatio = totalValue ? Math.round((cash / totalValue) * 100) : 100;
+  const equityRatio = 100 - cashRatio;
+
   return (
-    <div className="rounded-2xl bg-linear-to-r from-[var(--color-bg-subtle)] via-[var(--color-bg-base)] to-[var(--color-bg-subtle)] border border-[var(--color-border)] p-6 shadow-sm">
-      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-6">
-        {/* Left: Values */}
-        <div className="space-y-4">
-          <div className="flex items-center gap-2 text-xs font-semibold uppercase tracking-wider text-[var(--color-text-muted)]">
-            <Wallet className="w-4 h-4 text-[var(--color-brand)]" />
-            <span>Virtual Portfolio Summary</span>
+    <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] p-5 shadow-xs space-y-4">
+      <div className="flex flex-col lg:flex-row lg:items-center justify-between gap-5">
+        {/* Left: Net Value & Day's Return */}
+        <div className="space-y-3">
+          <div className="flex items-center gap-2">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-[var(--color-text-muted)]">
+              Simulated Account Net Value
+            </span>
+            <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[var(--color-bg-raised)] text-[var(--color-brand)] border border-[var(--color-border)]">
+              USD CASH
+            </span>
           </div>
 
-          <div className="flex flex-wrap items-baseline gap-x-6 gap-y-2">
-            <div>
-              <span className="text-xs text-[var(--color-text-muted)] block">Net Portfolio Value</span>
-              <span className="text-3xl sm:text-4xl font-extrabold font-mono tracking-tight text-[var(--color-text-primary)]">
-                {formatCurrency(totalValue)}
-              </span>
-            </div>
+          <div className="flex flex-wrap items-baseline gap-x-5 gap-y-2">
+            <span className="text-3xl sm:text-4xl font-extrabold font-mono tracking-tight text-[var(--color-text-primary)]">
+              {formatCurrency(totalValue)}
+            </span>
 
-            <div className="flex items-center gap-2 pb-1">
+            <div className="flex items-center gap-1.5">
               <span
-                className={`inline-flex items-center gap-1 px-2.5 py-1 rounded-full text-xs font-mono font-semibold ${
+                className={`inline-flex items-center gap-1 px-2 py-0.5 rounded text-xs font-mono font-semibold ${
                   pnlMeta.isPositive
                     ? 'bg-[var(--color-success-subtle)] text-[var(--color-success)]'
                     : 'bg-[var(--color-error-subtle)] text-[var(--color-error)]'
                 }`}
               >
-                <TrendingUp className="w-3.5 h-3.5" />
+                {pnlMeta.isPositive ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
                 <span>{pnlMeta.text}</span>
                 <span>({formatPercent(dayPnlPercent).text})</span>
               </span>
-              <span className="text-[11px] text-[var(--color-text-muted)]">Today</span>
-            </div>
-          </div>
-
-          <div className="grid grid-cols-2 sm:grid-cols-3 gap-4 pt-2 border-t border-[var(--color-border)] text-xs">
-            <div>
-              <span className="text-[var(--color-text-muted)]">Available Cash</span>
-              <p className="font-mono font-semibold text-[var(--color-text-primary)] mt-0.5">
-                {formatCurrency(cash)}
-              </p>
-            </div>
-            <div>
-              <span className="text-[var(--color-text-muted)]">Invested Capital</span>
-              <p className="font-mono font-semibold text-[var(--color-text-primary)] mt-0.5">
-                {formatCurrency(invested)}
-              </p>
-            </div>
-            <div className="hidden sm:block">
-              <span className="text-[var(--color-text-muted)]">Simulated Margin</span>
-              <p className="font-mono font-semibold text-[var(--color-brand)] mt-0.5">
-                1.0x (Cash Account)
-              </p>
+              <span className="text-[11px] font-mono text-[var(--color-text-muted)]">Session</span>
             </div>
           </div>
         </div>
 
-        {/* Right: Actions */}
-        <div className="flex flex-col sm:flex-row lg:flex-col gap-2.5 shrink-0 justify-center">
+        {/* Right: Quick Order Actions */}
+        <div className="flex items-center gap-2 shrink-0">
           <Link to="/trade">
-            <Button
-              className="w-full justify-center"
-              leftIcon={<ArrowLeftRight className="w-4 h-4" />}
-            >
-              Paper Trade
+            <Button size="md" leftIcon={<ArrowLeftRight className="w-3.5 h-3.5" />}>
+              Order Ticket
             </Button>
           </Link>
           <Link to="/markets">
-            <Button
-              variant="outline"
-              className="w-full justify-center"
-              rightIcon={<ArrowUpRight className="w-4 h-4" />}
-            >
-              Explore Markets
+            <Button variant="outline" size="md" rightIcon={<ArrowUpRight className="w-3.5 h-3.5" />}>
+              Market Screener
             </Button>
           </Link>
+        </div>
+      </div>
+
+      {/* Metric row */}
+      <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 pt-3 border-t border-[var(--color-border)] text-xs font-mono">
+        <div>
+          <span className="text-[11px] text-[var(--color-text-muted)] block">Available Cash</span>
+          <span className="font-bold text-[var(--color-text-primary)] block mt-0.5">
+            {formatCurrency(cash)}
+          </span>
+        </div>
+        <div>
+          <span className="text-[11px] text-[var(--color-text-muted)] block">Invested Equity</span>
+          <span className="font-bold text-[var(--color-text-primary)] block mt-0.5">
+            {formatCurrency(invested)}
+          </span>
+        </div>
+        <div>
+          <span className="text-[11px] text-[var(--color-text-muted)] block">Portfolio Leverage</span>
+          <span className="font-bold text-[var(--color-brand)] block mt-0.5">
+            1.00x (Cash)
+          </span>
+        </div>
+        <div>
+          <span className="text-[11px] text-[var(--color-text-muted)] block">Cash / Equity Split</span>
+          <span className="font-bold text-[var(--color-text-secondary)] block mt-0.5">
+            {cashRatio}% / {equityRatio}%
+          </span>
         </div>
       </div>
     </div>

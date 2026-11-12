@@ -1,301 +1,355 @@
+import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
   TrendingUp,
-  Shield,
-  BookOpen,
-  History,
+  TrendingDown,
   ArrowRight,
-  Sparkles,
+  Shield,
+  BarChart2,
+  Cpu,
+  History,
   CheckCircle2,
-  BarChart3,
-  DollarSign,
+  Lock,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { formatCurrency } from '@/lib/utils';
 
-const MARKET_TICKERS = [
-  { symbol: 'AAPL', name: 'Apple Inc.', price: '$224.23', change: '+1.84%', positive: true },
-  { symbol: 'NVDA', name: 'Nvidia Corp.', price: '$141.54', change: '+3.12%', positive: true },
-  { symbol: 'TSLA', name: 'Tesla Inc.', price: '$218.89', change: '-0.95%', positive: false },
-  { symbol: 'MSFT', name: 'Microsoft', price: '$428.15', change: '+0.62%', positive: true },
-  { symbol: 'AMZN', name: 'Amazon.com', price: '$186.40', change: '+1.15%', positive: true },
+const BENCHMARKS = [
+  { name: 'S&P 500', value: '5,864.67', change: '+0.42%', isPos: true },
+  { name: 'NASDAQ', value: '18,290.10', change: '+0.81%', isPos: true },
+  { name: 'DOW JONES', value: '43,910.25', change: '+0.18%', isPos: true },
+  { name: 'RUSSELL 2000', value: '2,214.30', change: '-0.24%', isPos: false },
+  { name: 'CBOE VIX', value: '14.85', change: '-1.45%', isPos: false },
 ];
 
+const PREVIEW_TICKERS = {
+  NVDA: { name: 'NVIDIA Corporation', price: 141.54, change: '+3.12%', isPos: true, points: [136, 137, 136.5, 138, 137.8, 139.5, 140, 141.54] },
+  AAPL: { name: 'Apple Inc.', price: 224.23, change: '+1.84%', isPos: true, points: [220, 221, 220.5, 222, 221.8, 223, 223.5, 224.23] },
+  TSLA: { name: 'Tesla Inc.', price: 218.89, change: '-0.95%', isPos: false, points: [222, 221, 221.5, 220, 219.5, 220, 219, 218.89] },
+  MSFT: { name: 'Microsoft Corporation', price: 428.15, change: '+0.62%', isPos: true, points: [425, 426, 425.8, 426.5, 427, 427.5, 428, 428.15] },
+};
+
 export default function Landing() {
+  const [activeTicker, setActiveTicker] = useState('NVDA');
+  const [previewSide, setPreviewSide] = useState('BUY');
+  const [previewShares, setPreviewShares] = useState(25);
+
+  const stock = PREVIEW_TICKERS[activeTicker];
+  const orderTotal = previewShares * stock.price;
+
   return (
-    <div className="min-h-svh bg-[var(--color-bg-base)] text-[var(--color-text-primary)] flex flex-col">
-      {/* Navigation */}
-      <header className="h-16 border-b border-[var(--color-border)] sticky top-0 z-30 bg-[var(--color-bg-base)]/80 backdrop-blur-md">
+    <div className="min-h-svh bg-[var(--color-bg-base)] text-[var(--color-text-primary)] flex flex-col selection:bg-[var(--color-brand)] selection:text-white">
+      {/* Benchmark Ticker Strip */}
+      <div className="border-b border-[var(--color-border)] bg-[var(--color-bg-subtle)]/70 py-1.5 px-4 overflow-x-auto no-scrollbar">
+        <div className="max-w-7xl mx-auto flex items-center justify-between min-w-[700px] text-[11px] font-mono">
+          <div className="flex items-center gap-6">
+            {BENCHMARKS.map((b) => (
+              <div key={b.name} className="flex items-center gap-2">
+                <span className="text-[var(--color-text-muted)]">{b.name}</span>
+                <span className="font-semibold text-[var(--color-text-primary)]">{b.value}</span>
+                <span className={b.isPos ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}>
+                  {b.change}
+                </span>
+              </div>
+            ))}
+          </div>
+          <div className="flex items-center gap-2 text-[10px] text-[var(--color-text-muted)] border-l border-[var(--color-border)] pl-4">
+            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)] animate-pulse" />
+            <span>US MARKETS OPEN</span>
+          </div>
+        </div>
+      </div>
+
+      {/* Primary Header */}
+      <header className="h-14 border-b border-[var(--color-border)] sticky top-0 z-30 bg-[var(--color-bg-base)]/90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-8 h-8 rounded-lg bg-[var(--color-brand)] flex items-center justify-center text-white font-bold text-sm shadow-sm">
+            <div className="w-6 h-6 rounded bg-[var(--color-brand)] flex items-center justify-center text-white font-mono font-bold text-xs shadow-xs">
               TW
             </div>
-            <span className="font-bold tracking-tight text-base">TradeWise</span>
+            <span className="font-bold font-mono tracking-wider text-xs">TRADEWISE</span>
           </Link>
 
-          <div className="hidden md:flex items-center gap-6 text-xs font-medium text-[var(--color-text-muted)]">
-            <a href="#features" className="hover:text-[var(--color-text-primary)] transition-colors">
-              Features
-            </a>
+          <nav className="hidden md:flex items-center gap-6 text-xs text-[var(--color-text-secondary)]">
             <Link to="/markets" className="hover:text-[var(--color-text-primary)] transition-colors">
-              Live Markets
+              Market Quotes
+            </Link>
+            <Link to="/trade" className="hover:text-[var(--color-text-primary)] transition-colors">
+              Execution Engine
+            </Link>
+            <Link to="/replay" className="hover:text-[var(--color-text-primary)] transition-colors">
+              Candle Replay
             </Link>
             <Link to="/learn" className="hover:text-[var(--color-text-primary)] transition-colors">
-              Lessons
+              Curriculum
             </Link>
-          </div>
+          </nav>
 
-          <div className="flex items-center gap-3">
+          <div className="flex items-center gap-2.5">
             <Link to="/login">
               <Button variant="ghost" size="sm">
-                Log In
+                Sign In
               </Button>
             </Link>
             <Link to="/register">
-              <Button size="sm" rightIcon={<ArrowRight className="w-3.5 h-3.5" />}>
-                Get Started
+              <Button size="sm">
+                Launch Terminal
               </Button>
             </Link>
           </div>
         </div>
       </header>
 
-      {/* Hero section */}
-      <section className="relative pt-16 pb-20 sm:pt-24 sm:pb-28 overflow-hidden">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8 text-center space-y-6">
-          <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-[var(--color-brand-subtle)] border border-[var(--color-brand)]/20 text-[var(--color-brand)] text-xs font-semibold">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Risk-Free Paper Trading & Market Education</span>
-          </div>
-
-          <h1 className="text-4xl sm:text-6xl font-extrabold tracking-tight leading-[1.1] text-[var(--color-text-primary)]">
-            Learn to trade. <br className="hidden sm:inline" />
-            <span className="text-[var(--color-brand)]">Risk nothing.</span> Master the markets.
-          </h1>
-
-          <p className="max-w-2xl mx-auto text-base sm:text-lg text-[var(--color-text-muted)] leading-relaxed">
-            TradeWise gives you $100,000 in virtual capital backed by live market feeds,
-            interactive financial quizzes, and historical candle replay. Build confidence before your first real trade.
-          </p>
-
-          <div className="flex flex-col sm:flex-row items-center justify-center gap-3 pt-2">
-            <Link to="/register" className="w-full sm:w-auto">
-              <Button size="lg" className="w-full sm:w-auto" rightIcon={<ArrowRight className="w-4 h-4" />}>
-                Start Trading with $100k
-              </Button>
-            </Link>
-            <Link to="/markets" className="w-full sm:w-auto">
-              <Button variant="secondary" size="lg" className="w-full sm:w-auto">
-                Explore Live Quotes
-              </Button>
-            </Link>
-          </div>
-
-          <div className="pt-6 flex items-center justify-center gap-6 text-xs text-[var(--color-text-muted)]">
-            <div className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-[var(--color-success)]" />
-              <span>No credit card needed</span>
-            </div>
-            <div className="flex items-center gap-1.5">
-              <CheckCircle2 className="w-4 h-4 text-[var(--color-success)]" />
-              <span>Real Yahoo / Twelve Data feeds</span>
-            </div>
-            <div className="flex items-center gap-1.5 hidden sm:flex">
-              <CheckCircle2 className="w-4 h-4 text-[var(--color-success)]" />
-              <span>Interactive curriculum</span>
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Live ticker bar */}
-      <section className="border-y border-[var(--color-border)] bg-[var(--color-bg-subtle)] py-3">
-        <div className="max-w-7xl mx-auto px-4 overflow-x-auto no-scrollbar">
-          <div className="flex items-center justify-between min-w-[640px] gap-6">
-            {MARKET_TICKERS.map((ticker) => (
-              <Link
-                key={ticker.symbol}
-                to={`/stocks/${ticker.symbol}`}
-                className="flex items-center gap-2 hover:opacity-80 transition-opacity"
-              >
-                <span className="font-bold text-xs font-mono">{ticker.symbol}</span>
-                <span className="text-xs text-[var(--color-text-muted)] font-mono">{ticker.price}</span>
-                <span
-                  className={`text-xs font-mono font-medium ${
-                    ticker.positive ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'
-                  }`}
-                >
-                  {ticker.change}
-                </span>
-              </Link>
-            ))}
-          </div>
-        </div>
-      </section>
-
-      {/* Preview Terminal Showcase */}
-      <section className="py-16 bg-[var(--color-bg-base)]">
-        <div className="max-w-5xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="rounded-2xl border border-[var(--color-border)] bg-[var(--color-bg-subtle)] p-4 sm:p-6 shadow-xl">
-            <div className="flex items-center justify-between pb-4 border-b border-[var(--color-border)]">
-              <div className="flex items-center gap-2">
-                <div className="w-3 h-3 rounded-full bg-red-500/80" />
-                <div className="w-3 h-3 rounded-full bg-yellow-500/80" />
-                <div className="w-3 h-3 rounded-full bg-green-500/80" />
-                <span className="ml-2 text-xs font-mono text-[var(--color-text-muted)]">
-                  tradewise-terminal // AAPL — 1D
-                </span>
-              </div>
-              <div className="text-xs font-mono text-[var(--color-success)]">
-                ● Market Data Connected
-              </div>
-            </div>
-
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 pt-6">
-              <div className="md:col-span-2 space-y-4">
-                <div className="flex items-baseline justify-between">
-                  <div>
-                    <h3 className="text-xl font-bold font-mono">AAPL &bull; Apple Inc.</h3>
-                    <p className="text-xs text-[var(--color-text-muted)]">NASDAQ &bull; USD</p>
-                  </div>
-                  <div className="text-right">
-                    <div className="text-2xl font-extrabold font-mono text-[var(--color-text-primary)]">
-                      $224.23
-                    </div>
-                    <div className="text-xs font-mono font-semibold text-[var(--color-success)]">
-                      +$4.05 (+1.84%) Today
-                    </div>
-                  </div>
-                </div>
-
-                {/* Simulated Chart Line */}
-                <div className="h-44 rounded-xl bg-[var(--color-bg-base)] border border-[var(--color-border)] p-4 flex flex-col justify-end">
-                  <div className="flex items-end gap-1.5 h-28 w-full">
-                    {[35, 42, 38, 55, 60, 52, 68, 74, 70, 85, 82, 95, 90, 100].map(
-                      (h, i) => (
-                        <div
-                          key={i}
-                          className="flex-1 bg-[var(--color-brand)]/30 hover:bg-[var(--color-brand)] rounded-t transition-all"
-                          style={{ height: `${h}%` }}
-                        />
-                      )
-                    )}
-                  </div>
-                  <div className="flex justify-between text-[10px] text-[var(--color-text-muted)] pt-2 border-t border-[var(--color-border)] font-mono">
-                    <span>09:30 AM</span>
-                    <span>11:30 AM</span>
-                    <span>01:30 PM</span>
-                    <span>04:00 PM</span>
-                  </div>
-                </div>
+      {/* Hero Section */}
+      <section className="pt-14 pb-16 sm:pt-20 sm:pb-24 border-b border-[var(--color-border)]">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+          <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
+            {/* Left copy (7 cols) */}
+            <div className="lg:col-span-7 space-y-5">
+              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[var(--color-bg-raised)] border border-[var(--color-border)] text-[11px] font-mono text-[var(--color-brand)]">
+                <span>SIMULATED BROKERAGE ENVIRONMENT</span>
               </div>
 
-              {/* Order Slip Preview */}
-              <div className="p-4 rounded-xl bg-[var(--color-bg-base)] border border-[var(--color-border)] space-y-3">
-                <div className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
-                  Quick Trade Ticket
-                </div>
-                <div className="grid grid-cols-2 gap-2">
-                  <div className="py-1.5 text-center text-xs font-bold rounded-lg bg-[var(--color-success)] text-white">
-                    BUY
-                  </div>
-                  <div className="py-1.5 text-center text-xs font-semibold rounded-lg bg-[var(--color-bg-raised)] text-[var(--color-text-muted)]">
-                    SELL
-                  </div>
-                </div>
-                <div className="space-y-2 text-xs">
-                  <div className="flex justify-between py-1 border-b border-[var(--color-border)]">
-                    <span className="text-[var(--color-text-muted)]">Shares</span>
-                    <span className="font-mono font-semibold">50</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-[var(--color-border)]">
-                    <span className="text-[var(--color-text-muted)]">Order Type</span>
-                    <span className="font-semibold">Market</span>
-                  </div>
-                  <div className="flex justify-between py-1 border-b border-[var(--color-border)]">
-                    <span className="text-[var(--color-text-muted)]">Est. Cost</span>
-                    <span className="font-mono font-semibold">$11,211.50</span>
-                  </div>
-                  <div className="flex justify-between py-1">
-                    <span className="text-[var(--color-text-muted)]">Cash Balance</span>
-                    <span className="font-mono font-semibold text-[var(--color-brand)]">$100,000.00</span>
-                  </div>
-                </div>
-                <Link to="/register" className="block pt-2">
-                  <Button size="sm" className="w-full">
-                    Open Free Account
+              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-[1.12] text-[var(--color-text-primary)]">
+                The institutional paper trading terminal.
+              </h1>
+
+              <p className="text-sm sm:text-base text-[var(--color-text-muted)] leading-relaxed max-w-xl">
+                Test equity strategies against real-time NASDAQ and NYSE market feeds. Practice order execution, risk sizing, and historical market regimes with $100,000 in virtual capital.
+              </p>
+
+              <div className="flex flex-wrap items-center gap-3 pt-2">
+                <Link to="/register">
+                  <Button size="lg" className="px-5 font-semibold" rightIcon={<ArrowRight className="w-4 h-4" />}>
+                    Open $100k Paper Account
+                  </Button>
+                </Link>
+                <Link to="/markets">
+                  <Button variant="secondary" size="lg" className="px-5 font-mono">
+                    Explore Screener
                   </Button>
                 </Link>
               </div>
+
+              <div className="pt-4 flex items-center gap-6 text-xs text-[var(--color-text-muted)] font-mono">
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[var(--color-success)]" />
+                  <span>Real Yahoo &amp; Twelve Data Feeds</span>
+                </div>
+                <div className="flex items-center gap-1.5">
+                  <CheckCircle2 className="w-3.5 h-3.5 text-[var(--color-success)]" />
+                  <span>Zero Financial Risk</span>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Interactive Preview (5 cols) */}
+            <div className="lg:col-span-5">
+              <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] shadow-xl overflow-hidden">
+                {/* Terminal top chrome */}
+                <div className="h-9 px-3 bg-[var(--color-bg-raised)] border-b border-[var(--color-border)] flex items-center justify-between text-[11px] font-mono">
+                  <div className="flex items-center gap-2">
+                    <span className="w-2 h-2 rounded-full bg-[var(--color-success)]" />
+                    <span className="font-semibold text-[var(--color-text-primary)]">TICKER SIMULATOR</span>
+                  </div>
+                  <span className="text-[var(--color-text-muted)]">CASH: $100,000.00</span>
+                </div>
+
+                {/* Ticker switch pills */}
+                <div className="p-3 border-b border-[var(--color-border)] flex items-center gap-1.5 bg-[var(--color-bg-base)]">
+                  {Object.keys(PREVIEW_TICKERS).map((sym) => (
+                    <button
+                      key={sym}
+                      type="button"
+                      onClick={() => setActiveTicker(sym)}
+                      className={`px-2.5 py-1 rounded text-xs font-mono font-semibold transition-colors cursor-pointer ${
+                        activeTicker === sym
+                          ? 'bg-[var(--color-brand)] text-white'
+                          : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-raised)]'
+                      }`}
+                    >
+                      {sym}
+                    </button>
+                  ))}
+                </div>
+
+                {/* Price display & mini sparkline */}
+                <div className="p-4 space-y-3">
+                  <div className="flex items-baseline justify-between">
+                    <div>
+                      <div className="text-lg font-bold font-mono">{activeTicker}</div>
+                      <div className="text-[11px] text-[var(--color-text-muted)] truncate max-w-[160px]">
+                        {stock.name}
+                      </div>
+                    </div>
+                    <div className="text-right">
+                      <div className="text-xl font-extrabold font-mono text-[var(--color-text-primary)]">
+                        {formatCurrency(stock.price)}
+                      </div>
+                      <div
+                        className={`text-xs font-mono font-semibold ${
+                          stock.isPos ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'
+                        }`}
+                      >
+                        {stock.change}
+                      </div>
+                    </div>
+                  </div>
+
+                  {/* SVG Line Preview */}
+                  <div className="h-24 w-full bg-[var(--color-bg-base)] rounded border border-[var(--color-border)] p-2 flex items-center">
+                    <svg className="w-full h-full overflow-visible" viewBox="0 0 100 40" preserveAspectRatio="none">
+                      <polyline
+                        fill="none"
+                        stroke={stock.isPos ? '#10b981' : '#f43f5e'}
+                        strokeWidth="2"
+                        points={stock.points
+                          .map((val, i) => {
+                            const min = Math.min(...stock.points);
+                            const max = Math.max(...stock.points);
+                            const y = 35 - ((val - min) / ((max - min) || 1)) * 30;
+                            const x = (i / (stock.points.length - 1)) * 100;
+                            return `${x},${y}`;
+                          })
+                          .join(' ')}
+                      />
+                    </svg>
+                  </div>
+
+                  {/* Simulated Order Ticket */}
+                  <div className="pt-2 border-t border-[var(--color-border)] space-y-2.5">
+                    <div className="grid grid-cols-2 gap-1.5 p-0.5 rounded bg-[var(--color-bg-raised)] border border-[var(--color-border)]">
+                      <button
+                        type="button"
+                        onClick={() => setPreviewSide('BUY')}
+                        className={`py-1 text-xs font-bold font-mono rounded cursor-pointer ${
+                          previewSide === 'BUY'
+                            ? 'bg-[var(--color-success)] text-white shadow-xs'
+                            : 'text-[var(--color-text-muted)]'
+                        }`}
+                      >
+                        BUY (LONG)
+                      </button>
+                      <button
+                        type="button"
+                        onClick={() => setPreviewSide('SELL')}
+                        className={`py-1 text-xs font-bold font-mono rounded cursor-pointer ${
+                          previewSide === 'SELL'
+                            ? 'bg-[var(--color-error)] text-white shadow-xs'
+                            : 'text-[var(--color-text-muted)]'
+                        }`}
+                      >
+                        SELL (CLOSE)
+                      </button>
+                    </div>
+
+                    <div className="flex items-center justify-between text-xs font-mono">
+                      <span className="text-[var(--color-text-muted)]">Quantity</span>
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => setPreviewShares((s) => Math.max(5, s - 5))}
+                          className="px-2 py-0.5 rounded bg-[var(--color-bg-raised)] border border-[var(--color-border)] text-xs font-bold"
+                        >
+                          -
+                        </button>
+                        <span className="w-8 text-center font-bold">{previewShares}</span>
+                        <button
+                          type="button"
+                          onClick={() => setPreviewShares((s) => s + 5)}
+                          className="px-2 py-0.5 rounded bg-[var(--color-bg-raised)] border border-[var(--color-border)] text-xs font-bold"
+                        >
+                          +
+                        </button>
+                      </div>
+                    </div>
+
+                    <div className="flex justify-between items-center text-xs font-mono pt-1">
+                      <span className="text-[var(--color-text-muted)]">Order Consideration</span>
+                      <span className="font-bold text-[var(--color-text-primary)]">
+                        {formatCurrency(orderTotal)}
+                      </span>
+                    </div>
+
+                    <Link to="/register" className="block pt-1">
+                      <Button size="md" className="w-full font-mono text-xs">
+                        Execute {previewSide} {previewShares} {activeTicker}
+                      </Button>
+                    </Link>
+                  </div>
+                </div>
+              </div>
             </div>
           </div>
         </div>
       </section>
 
-      {/* Feature cards */}
-      <section id="features" className="py-20 border-t border-[var(--color-border)] bg-[var(--color-bg-subtle)]">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          <div className="text-center max-w-2xl mx-auto space-y-3">
-            <h2 className="text-3xl font-bold tracking-tight">Everything you need to master equities</h2>
-            <p className="text-sm text-[var(--color-text-muted)]">
-              Designed from the ground up for aspiring traders and long-term investors.
+      {/* Platform Pillars */}
+      <section className="py-16 bg-[var(--color-bg-subtle)]/50">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
+          <div className="max-w-xl space-y-2">
+            <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
+              Engineered for market mechanics, not guesswork.
+            </h2>
+            <p className="text-xs sm:text-sm text-[var(--color-text-muted)]">
+              TradeWise bridges the gap between static textbook finance and live exchange execution.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="p-6 rounded-2xl bg-[var(--color-bg-base)] border border-[var(--color-border)] space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-[var(--color-brand-subtle)] text-[var(--color-brand)] flex items-center justify-center">
-                <DollarSign className="w-5 h-5" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
+            <div className="p-5 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-base)] space-y-3">
+              <div className="w-8 h-8 rounded bg-[var(--color-bg-raised)] text-[var(--color-brand)] border border-[var(--color-border)] flex items-center justify-center font-mono">
+                <Cpu className="w-4 h-4" />
               </div>
-              <h3 className="text-base font-bold">Risk-Free Paper Portfolio</h3>
+              <h3 className="text-sm font-bold font-mono">Order Routing Simulation</h3>
               <p className="text-xs text-[var(--color-text-muted)] leading-relaxed">
-                Execute market and limit orders with $100,000 in simulated purchasing power. Track your unrealized P&L, holdings, and order history without risking capital.
+                Execute Market and Limit orders with instant fill validation against real bid/ask prices and available buying power.
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-[var(--color-bg-base)] border border-[var(--color-border)] space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-[var(--color-success-subtle)] text-[var(--color-success)] flex items-center justify-center">
-                <BookOpen className="w-5 h-5" />
+            <div className="p-5 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-base)] space-y-3">
+              <div className="w-8 h-8 rounded bg-[var(--color-bg-raised)] text-[var(--color-success)] border border-[var(--color-border)] flex items-center justify-center font-mono">
+                <History className="w-4 h-4" />
               </div>
-              <h3 className="text-base font-bold">Interactive Lessons & Quizzes</h3>
+              <h3 className="text-sm font-bold font-mono">Candle Replay Backtester</h3>
               <p className="text-xs text-[var(--color-text-muted)] leading-relaxed">
-                Learn fundamental analysis, candlestick charting patterns, order mechanics, and risk management with bite-sized lessons and instant quiz feedback.
+                Step through historical price action candle-by-candle with blind future data to test pattern recognition and risk-reward discipline.
               </p>
             </div>
 
-            <div className="p-6 rounded-2xl bg-[var(--color-bg-base)] border border-[var(--color-border)] space-y-4">
-              <div className="w-10 h-10 rounded-xl bg-[var(--color-info-subtle)] text-[var(--color-info)] flex items-center justify-center">
-                <History className="w-5 h-5" />
+            <div className="p-5 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-base)] space-y-3">
+              <div className="w-8 h-8 rounded bg-[var(--color-bg-raised)] text-[var(--color-info)] border border-[var(--color-border)] flex items-center justify-center font-mono">
+                <BarChart2 className="w-4 h-4" />
               </div>
-              <h3 className="text-base font-bold">Candle Replay Simulator</h3>
+              <h3 className="text-sm font-bold font-mono">Portfolio Performance Analytics</h3>
               <p className="text-xs text-[var(--color-text-muted)] leading-relaxed">
-                Travel back in time to past market crashes and bull runs. Step forward candle-by-candle to practice entries, stop-losses, and profit targets.
+                Track cost basis, unrealized P&amp;L, asset allocation, and fill history in real time as market quotes fluctuate.
               </p>
             </div>
           </div>
         </div>
       </section>
 
-      {/* CTA Footer */}
-      <footer className="mt-auto border-t border-[var(--color-border)] bg-[var(--color-bg-base)] py-12">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-[var(--color-text-muted)]">
+      {/* Footer */}
+      <footer className="mt-auto border-t border-[var(--color-border)] bg-[var(--color-bg-base)] py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-[var(--color-text-muted)]">
           <div className="flex items-center gap-2">
-            <div className="w-6 h-6 rounded-md bg-[var(--color-brand)] flex items-center justify-center text-white font-bold text-xs">
-              TW
-            </div>
-            <span className="font-semibold text-[var(--color-text-primary)]">TradeWise</span>
-            <span>&bull; Educational stock simulator</span>
+            <span className="font-bold text-[var(--color-text-primary)]">TRADEWISE</span>
+            <span>&bull; Simulated Brokerage Platform</span>
           </div>
 
-          <div className="flex items-center gap-6">
+          <div className="flex items-center gap-5">
             <Link to="/markets" className="hover:text-[var(--color-text-primary)]">
               Markets
+            </Link>
+            <Link to="/trade" className="hover:text-[var(--color-text-primary)]">
+              Terminal
             </Link>
             <Link to="/learn" className="hover:text-[var(--color-text-primary)]">
               Curriculum
             </Link>
-            <Link to="/register" className="text-[var(--color-brand)] hover:underline font-semibold">
-              Get Started Free
+            <Link to="/register" className="text-[var(--color-brand)] font-semibold hover:underline">
+              Launch Account
             </Link>
           </div>
         </div>

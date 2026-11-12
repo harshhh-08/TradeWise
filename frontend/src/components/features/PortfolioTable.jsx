@@ -14,21 +14,21 @@ import { Button } from '@/components/ui/Button';
 export function PortfolioTable({ positions = [], marketPrices = {} }) {
   if (!positions || positions.length === 0) {
     return (
-      <div className="p-12 text-center rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-base)] space-y-3">
-        <div className="w-12 h-12 rounded-full bg-[var(--color-bg-raised)] text-[var(--color-text-muted)] flex items-center justify-center mx-auto">
-          <PieChart className="w-6 h-6" />
+      <div className="p-8 text-center rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] space-y-2.5 font-mono">
+        <div className="w-9 h-9 rounded bg-[var(--color-bg-raised)] text-[var(--color-text-muted)] flex items-center justify-center mx-auto">
+          <PieChart className="w-5 h-5" />
         </div>
-        <div className="space-y-1">
-          <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">
-            No active positions
+        <div className="space-y-0.5">
+          <h3 className="text-xs font-bold text-[var(--color-text-primary)]">
+            NO OPEN POSITIONS
           </h3>
-          <p className="text-xs text-[var(--color-text-muted)] max-w-sm mx-auto">
-            You are currently holding 100% cash. Search equities on the Markets page or place a paper trade to start building your simulated portfolio.
+          <p className="text-[11px] text-[var(--color-text-muted)] max-w-sm mx-auto">
+            100% Cash Allocation. Transmit an equity order to establish an open holding.
           </p>
         </div>
-        <Link to="/markets" className="inline-block pt-2">
+        <Link to="/markets" className="inline-block pt-1">
           <Button size="sm" leftIcon={<ArrowLeftRight className="w-3.5 h-3.5" />}>
-            Find Stocks to Trade
+            Open Screener
           </Button>
         </Link>
       </div>
@@ -36,17 +36,17 @@ export function PortfolioTable({ positions = [], marketPrices = {} }) {
   }
 
   return (
-    <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-base)] overflow-hidden shadow-xs">
+    <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] overflow-hidden shadow-xs">
       <Table>
         <TableHeader>
           <TableRow>
-            <TableHead>Symbol</TableHead>
+            <TableHead>Asset</TableHead>
             <TableHead className="text-right">Shares</TableHead>
-            <TableHead className="text-right">Avg Cost</TableHead>
-            <TableHead className="text-right">Market Price</TableHead>
+            <TableHead className="text-right">Avg Price</TableHead>
+            <TableHead className="text-right">Current Price</TableHead>
             <TableHead className="text-right">Position Value</TableHead>
-            <TableHead className="text-right">Unrealized P&L</TableHead>
-            <TableHead className="text-right">Actions</TableHead>
+            <TableHead className="text-right">Unrealized P&amp;L</TableHead>
+            <TableHead className="text-right">Action</TableHead>
           </TableRow>
         </TableHeader>
         <TableBody>
@@ -91,11 +91,7 @@ export function PortfolioTable({ positions = [], marketPrices = {} }) {
                       isPos ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'
                     }`}
                   >
-                    {isPos ? (
-                      <TrendingUp className="w-3.5 h-3.5" />
-                    ) : (
-                      <TrendingDown className="w-3.5 h-3.5" />
-                    )}
+                    {isPos ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
                     <span>{formatChange(pnl).text}</span>
                     <span className="text-[10px]">({formatPercent(pnlPercent).text})</span>
                   </div>
@@ -103,7 +99,7 @@ export function PortfolioTable({ positions = [], marketPrices = {} }) {
 
                 <TableCell className="text-right">
                   <Link to={`/trade?symbol=${pos.symbol}`}>
-                    <Button size="sm" variant="outline">
+                    <Button size="sm" variant="outline" className="font-mono text-[11px]">
                       Trade
                     </Button>
                   </Link>

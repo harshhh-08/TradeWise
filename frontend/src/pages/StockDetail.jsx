@@ -1,5 +1,5 @@
 import { useState, useEffect } from 'react';
-import { useParams, Link, useNavigate } from 'react-router-dom';
+import { useParams, Link } from 'react-router-dom';
 import {
   TrendingUp,
   TrendingDown,
@@ -14,14 +14,14 @@ import { useAuth } from '@/context/AuthContext';
 import { formatCurrency, formatPercent } from '@/lib/utils';
 import { StockChart } from '@/components/features/StockChart';
 import { StatGrid } from '@/components/features/StatGrid';
-import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
+import { Card, CardTitle } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Skeleton } from '@/components/ui/Skeleton';
 
 function generateFallbackCandles(basePrice = 150) {
   const points = [];
-  let p = basePrice * 0.95;
+  let p = basePrice * 0.96;
   const now = new Date();
 
   for (let i = 24; i >= 0; i--) {
@@ -30,11 +30,11 @@ function generateFallbackCandles(basePrice = 150) {
     p = Math.max(1, p + variation);
     points.push({
       date: d.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }),
-      open: +(p - Math.random() * 0.5).toFixed(2),
-      high: +(p + Math.random() * 0.8).toFixed(2),
-      low: +(p - Math.random() * 0.8).toFixed(2),
+      open: +(p - Math.random() * 0.4).toFixed(2),
+      high: +(p + Math.random() * 0.6).toFixed(2),
+      low: +(p - Math.random() * 0.6).toFixed(2),
       close: +p.toFixed(2),
-      volume: Math.floor(Math.random() * 500000) + 100000,
+      volume: Math.floor(Math.random() * 600000) + 120000,
     });
   }
   return points;
@@ -54,7 +54,6 @@ export default function StockDetail() {
   const [tradeSide, setTradeSide] = useState('BUY');
   const [shares, setShares] = useState(10);
   const [isTradeSuccess, setIsTradeSuccess] = useState(false);
-  const navigate = useNavigate();
 
   useEffect(() => {
     let isMounted = true;
@@ -167,30 +166,30 @@ export default function StockDetail() {
   };
 
   return (
-    <div className="space-y-6">
-      {/* Back button */}
+    <div className="space-y-4">
+      {/* Navigation Breadcrumb */}
       <div>
         <Link
           to="/markets"
-          className="inline-flex items-center gap-1.5 text-xs text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-mono text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
-          <span>Back to Markets</span>
+          <span>Screener / {upperSymbol}</span>
         </Link>
       </div>
 
-      {/* Stock Header */}
+      {/* Ticker Header */}
       {isLoading && !quote ? (
-        <Skeleton className="h-20 w-full" />
+        <Skeleton className="h-16 w-full" />
       ) : (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-4 border-b border-[var(--color-border)]">
-          <div className="space-y-1">
-            <div className="flex items-center gap-3">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[var(--color-border)]">
+          <div className="space-y-0.5">
+            <div className="flex items-center gap-2.5">
               <span className="text-2xl font-extrabold font-mono tracking-tight text-[var(--color-text-primary)]">
                 {upperSymbol}
               </span>
-              <span className="px-2 py-0.5 rounded-full text-xs font-semibold bg-[var(--color-bg-raised)] text-[var(--color-text-muted)] border border-[var(--color-border)]">
-                NASDAQ
+              <span className="px-1.5 py-0.2 rounded text-[10px] font-mono bg-[var(--color-bg-raised)] text-[var(--color-text-muted)] border border-[var(--color-border)]">
+                US EQUITY &bull; NASDAQ
               </span>
             </div>
             <p className="text-xs text-[var(--color-text-muted)]">{quote?.name || upperSymbol}</p>
@@ -208,24 +207,25 @@ export default function StockDetail() {
               >
                 {isPositive ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
                 <span>
-                  {formatCurrency(quote?.change || 0)} ({formatPercent(quote?.changePercent || 0).text}) Today
+                  {formatCurrency(quote?.change || 0)} ({formatPercent(quote?.changePercent || 0).text})
                 </span>
               </div>
             </div>
 
             <Link to={`/replay?symbol=${upperSymbol}`} className="hidden md:inline-block">
               <Button size="sm" variant="outline" leftIcon={<RotateCcw className="w-3.5 h-3.5" />}>
-                Replay Mode
+                Replay Simulator
               </Button>
             </Link>
           </div>
         </div>
       )}
 
-      {/* 2-Column Layout: Chart & Stats on left (8), Trade Ticket on right (4) */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
-        <div className="lg:col-span-2 space-y-6">
-          <Card className="p-5">
+      {/* 2-Column Layout */}
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
+        {/* Left: Chart & Stats */}
+        <div className="lg:col-span-2 space-y-4">
+          <Card className="p-4">
             <StockChart
               data={candles}
               isPositive={isPositive}
@@ -234,85 +234,103 @@ export default function StockDetail() {
             />
           </Card>
 
-          <div className="space-y-3">
-            <h2 className="text-sm font-semibold tracking-tight text-[var(--color-text-primary)]">
-              Key Metrics
+          <div className="space-y-2">
+            <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
+              Exchange Fundamentals
             </h2>
             <StatGrid stats={quote || {}} />
           </div>
         </div>
 
-        {/* Right side: Trade Slip */}
+        {/* Right: Quick Trade Panel */}
         <div>
-          <Card className="p-5 sticky top-20 space-y-4">
-            <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border)]">
-              <CardTitle className="text-sm">Order Ticket</CardTitle>
-              <span className="text-[11px] text-[var(--color-brand)] font-semibold">
-                Simulated Execution
+          <Card className="p-4 sticky top-16 space-y-3.5">
+            <div className="flex items-center justify-between pb-2 border-b border-[var(--color-border)]">
+              <CardTitle className="text-xs font-mono uppercase tracking-wider">
+                Instant Order
+              </CardTitle>
+              <span className="text-[10px] font-mono text-[var(--color-success)]">
+                SIMULATED FILL
               </span>
             </div>
 
             {isTradeSuccess && (
-              <div className="p-3 rounded-lg bg-[var(--color-success-subtle)] border border-[var(--color-success)]/30 text-[var(--color-success)] text-xs flex items-center gap-2">
+              <div className="p-2.5 rounded bg-[var(--color-success-subtle)] border border-[var(--color-success)]/30 text-[var(--color-success)] text-xs font-mono flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 shrink-0" />
-                <span>Order filled! Portfolio updated.</span>
+                <span>Fill executed. Position updated.</span>
               </div>
             )}
 
-            <form onSubmit={handleExecuteTrade} className="space-y-4">
-              {/* Buy / Sell toggle */}
-              <div className="grid grid-cols-2 p-1 rounded-lg bg-[var(--color-bg-subtle)] border border-[var(--color-border)]">
+            <form onSubmit={handleExecuteTrade} className="space-y-3.5">
+              <div className="grid grid-cols-2 p-0.5 rounded bg-[var(--color-bg-base)] border border-[var(--color-border)]">
                 <button
                   type="button"
                   onClick={() => setTradeSide('BUY')}
-                  className={`py-1.5 text-xs font-bold rounded-md transition-colors cursor-pointer ${
+                  className={`py-1.5 text-xs font-bold font-mono rounded transition-colors cursor-pointer ${
                     tradeSide === 'BUY'
-                      ? 'bg-[var(--color-success)] text-white'
+                      ? 'bg-[var(--color-success)] text-white shadow-xs'
                       : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
                   }`}
                 >
-                  BUY
+                  BUY (LONG)
                 </button>
                 <button
                   type="button"
                   onClick={() => setTradeSide('SELL')}
-                  className={`py-1.5 text-xs font-bold rounded-md transition-colors cursor-pointer ${
+                  className={`py-1.5 text-xs font-bold font-mono rounded transition-colors cursor-pointer ${
                     tradeSide === 'SELL'
-                      ? 'bg-[var(--color-error)] text-white'
+                      ? 'bg-[var(--color-error)] text-white shadow-xs'
                       : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
                   }`}
                 >
-                  SELL
+                  SELL (CLOSE)
                 </button>
               </div>
 
-              <Input
-                label="Number of shares"
-                type="number"
-                min="1"
-                step="1"
-                value={shares}
-                onChange={(e) => setShares(Math.max(1, parseInt(e.target.value, 10) || 1))}
-              />
+              <div className="space-y-1">
+                <div className="flex justify-between text-[11px] font-mono text-[var(--color-text-muted)]">
+                  <span>Shares</span>
+                  <div className="flex items-center gap-1">
+                    {[10, 25, 50].map((n) => (
+                      <button
+                        key={n}
+                        type="button"
+                        onClick={() => setShares(n)}
+                        className="px-1.5 rounded bg-[var(--color-bg-raised)] text-[10px] hover:text-[var(--color-text-primary)] cursor-pointer"
+                      >
+                        {n}
+                      </button>
+                    ))}
+                  </div>
+                </div>
+                <Input
+                  type="number"
+                  min="1"
+                  step="1"
+                  value={shares}
+                  onChange={(e) => setShares(Math.max(1, parseInt(e.target.value, 10) || 1))}
+                  className="font-mono"
+                />
+              </div>
 
-              <div className="rounded-lg bg-[var(--color-bg-subtle)] p-3 space-y-2 text-xs border border-[var(--color-border)] font-mono">
+              <div className="rounded bg-[var(--color-bg-base)] p-3 space-y-1.5 text-xs font-mono border border-[var(--color-border)]">
                 <div className="flex justify-between text-[var(--color-text-muted)]">
-                  <span>Price</span>
+                  <span>Quote</span>
                   <span className="text-[var(--color-text-primary)]">{formatCurrency(currentPrice)}</span>
                 </div>
                 <div className="flex justify-between text-[var(--color-text-muted)]">
-                  <span>Order Type</span>
+                  <span>Type</span>
                   <span className="text-[var(--color-text-primary)]">Market Order</span>
                 </div>
-                <div className="flex justify-between pt-2 border-t border-[var(--color-border)] font-bold text-[var(--color-text-primary)]">
-                  <span>Estimated Total</span>
+                <div className="flex justify-between pt-1.5 border-t border-[var(--color-border)] font-bold text-[var(--color-text-primary)]">
+                  <span>Consideration</span>
                   <span>{formatCurrency(estimatedTotal)}</span>
                 </div>
               </div>
 
-              <div className="text-[11px] text-[var(--color-text-muted)] flex justify-between">
-                <span>Available Cash</span>
-                <span className="font-mono font-semibold text-[var(--color-brand)]">
+              <div className="text-[11px] font-mono text-[var(--color-text-muted)] flex justify-between">
+                <span>Buying Power</span>
+                <span className="font-bold text-[var(--color-brand)]">
                   {formatCurrency(walletBalance)}
                 </span>
               </div>
@@ -320,10 +338,10 @@ export default function StockDetail() {
               <Button
                 type="submit"
                 variant={tradeSide === 'BUY' ? 'success' : 'danger'}
-                className="w-full"
-                leftIcon={<ArrowLeftRight className="w-4 h-4" />}
+                className="w-full font-mono text-xs font-bold"
+                leftIcon={<ArrowLeftRight className="w-3.5 h-3.5" />}
               >
-                Place {tradeSide} Order
+                Transmit {tradeSide} Order
               </Button>
             </form>
           </Card>

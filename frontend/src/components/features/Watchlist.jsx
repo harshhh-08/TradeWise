@@ -6,8 +6,8 @@ import { StockCard } from './StockCard';
 import { Skeleton } from '@/components/ui/Skeleton';
 
 const FALLBACK_STOCKS = [
-  { symbol: 'AAPL', name: 'Apple Inc.', price: 224.23, change: 4.05, changePercent: 1.84 },
   { symbol: 'NVDA', name: 'NVIDIA Corporation', price: 141.54, change: 4.28, changePercent: 3.12 },
+  { symbol: 'AAPL', name: 'Apple Inc.', price: 224.23, change: 4.05, changePercent: 1.84 },
   { symbol: 'MSFT', name: 'Microsoft Corporation', price: 428.15, change: 2.64, changePercent: 0.62 },
   { symbol: 'AMZN', name: 'Amazon.com Inc.', price: 186.40, change: 2.12, changePercent: 1.15 },
   { symbol: 'TSLA', name: 'Tesla Inc.', price: 218.89, change: -2.10, changePercent: -0.95 },
@@ -31,10 +31,8 @@ export function Watchlist() {
             setStocks(FALLBACK_STOCKS);
           }
         }
-      } catch (err) {
-        if (isMounted) {
-          setStocks(FALLBACK_STOCKS);
-        }
+      } catch (_) {
+        if (isMounted) setStocks(FALLBACK_STOCKS);
       } finally {
         if (isMounted) setIsLoading(false);
       }
@@ -47,28 +45,33 @@ export function Watchlist() {
   }, []);
 
   return (
-    <div className="space-y-3">
+    <div className="space-y-2.5">
       <div className="flex items-center justify-between">
-        <h2 className="text-sm font-semibold tracking-tight text-[var(--color-text-primary)]">
-          Trending Stocks
-        </h2>
+        <div className="flex items-center gap-2">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+            Market Watch
+          </span>
+          <span className="text-[10px] font-mono text-[var(--color-text-muted)]">
+            Mega-Cap Equities
+          </span>
+        </div>
         <Link
           to="/markets"
-          className="text-xs text-[var(--color-brand)] hover:underline inline-flex items-center gap-1 font-medium"
+          className="text-xs font-mono text-[var(--color-brand)] hover:underline inline-flex items-center gap-1 font-medium"
         >
-          <span>View all</span>
+          <span>Full Scanner</span>
           <ArrowUpRight className="w-3.5 h-3.5" />
         </Link>
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
           {[...Array(6)].map((_, i) => (
-            <Skeleton key={i} className="h-20 w-full" />
+            <Skeleton key={i} className="h-16 w-full rounded-md" />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-3">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
           {stocks.map((stock) => (
             <StockCard key={stock.symbol} stock={stock} />
           ))}

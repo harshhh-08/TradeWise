@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react';
 import { useSearchParams } from 'react-router-dom';
-import { ArrowLeftRight, CheckCircle2, AlertCircle, Sparkles } from 'lucide-react';
+import { ArrowLeftRight, CheckCircle2, AlertCircle } from 'lucide-react';
 import toast from 'react-hot-toast';
 import { useAuth } from '@/context/AuthContext';
 import { formatCurrency } from '@/lib/utils';
@@ -25,9 +25,9 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
   const symbolParam = initialSymbol || searchParams.get('symbol') || 'AAPL';
 
   const [symbol, setSymbol] = useState(symbolParam.toUpperCase());
-  const [stockName, setStockName] = useState('Apple Inc.');
   const [side, setSide] = useState('BUY');
   const [orderType, setOrderType] = useState('MARKET');
+  const [timeInForce, setTimeInForce] = useState('DAY');
   const [limitPrice, setLimitPrice] = useState('');
   const [quantity, setQuantity] = useState(10);
   const [currentPrice, setCurrentPrice] = useState(SAMPLE_PRICES[symbolParam.toUpperCase()] || 150);
@@ -46,7 +46,6 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
 
   const handleStockSelect = (stock) => {
     setSymbol(stock.symbol);
-    setStockName(stock.name || stock.symbol);
     const p = stock.price || SAMPLE_PRICES[stock.symbol] || 150;
     setCurrentPrice(p);
     setLimitPrice(p.toFixed(2));
@@ -55,6 +54,7 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
 
   const executionPrice = orderType === 'LIMIT' && limitPrice ? parseFloat(limitPrice) : currentPrice;
   const totalCost = (parseInt(quantity, 10) || 0) * executionPrice;
+  const remainingCash = side === 'BUY' ? walletBalance - totalCost : walletBalance + totalCost;
 
   const handleSubmit = (e) => {
     e.preventDefault();
@@ -133,25 +133,39 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
     if (onTradeExecuted) onTradeExecuted(tradeRecord);
   };
 
+  const handleQuickQty = (q) => {
+    setQuantity(q);
+  };
+
+  const handleMaxQty = () => {
+    if (side === 'BUY') {
+      const maxShares = Math.floor(walletBalance / (executionPrice || 1));
+      setQuantity(Math.max(1, maxShares));
+    } else {
+      const positions = JSON.parse(localStorage.getItem('tradewise_positions') || '[]');
+      const pos = positions.find((p) => p.symbol === symbol);
+      setQuantity(pos ? pos.quantity : 0);
+    }
+  };
+
   return (
-    <Card className="p-6">
-      <CardHeader className="p-0 pb-4 border-b border-[var(--color-border)] mb-5">
+    <Card className="p-5">
+      <CardHeader className="p-0 pb-3 border-b border-[var(--color-border)] mb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-base flex items-center gap-2">
-            <ArrowLeftRight className="w-4 h-4 text-[var(--color-brand)]" />
-            <span>Virtual Trade Ticket</span>
+          <CardTitle className="text-xs font-mono uppercase tracking-wider flex items-center gap-2">
+            <ArrowLeftRight className="w-3.5 h-3.5 text-[var(--color-brand)]" />
+            <span>Order Ticket</span>
           </CardTitle>
-          <div className="flex items-center gap-1.5 text-xs text-[var(--color-brand)] font-medium">
-            <Sparkles className="w-3.5 h-3.5" />
-            <span>Zero Real Risk</span>
-          </div>
+          <span className="text-[10px] font-mono text-[var(--color-text-muted)]">
+            ACCOUNT // CASH SIM
+          </span>
         </div>
       </CardHeader>
 
-      <CardContent className="p-0 space-y-5">
+      <CardContent className="p-0 space-y-4">
         {message && (
           <div
-            className={`p-3 rounded-lg text-xs flex items-center gap-2 ${
+            className={`p-3 rounded text-xs font-mono flex items-center gap-2 ${
               message.type === 'success'
                 ? 'bg-[var(--color-success-subtle)] border border-[var(--color-success)]/30 text-[var(--color-success)]'
                 : 'bg-[var(--color-error-subtle)] border border-[var(--color-error)]/30 text-[var(--color-error)]'
@@ -167,38 +181,38 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
         )}
 
         <form onSubmit={handleSubmit} className="space-y-4">
-          {/* Asset Selection */}
-          <div className="space-y-1.5">
-            <label className="block text-xs font-semibold text-[var(--color-text-secondary)]">
-              Select Equity
+          {/* Equity lookup */}
+          <div className="space-y-1">
+            <label className="block text-[11px] font-mono text-[var(--color-text-muted)] uppercase tracking-wider">
+              Asset Symbol
             </label>
             <SearchCombobox
               placeholder="Search ticker (e.g. NVDA, AAPL, TSLA)..."
               onSelectStock={handleStockSelect}
             />
-            <div className="flex items-center justify-between text-xs pt-1 px-1">
-              <span className="font-bold font-mono text-[var(--color-text-primary)]">{symbol}</span>
-              <span className="text-[var(--color-text-muted)] font-mono">
-                Market: {formatCurrency(currentPrice)}
+            <div className="flex items-center justify-between text-xs font-mono pt-1">
+              <span className="font-bold text-[var(--color-text-primary)]">{symbol}</span>
+              <span className="text-[var(--color-text-muted)]">
+                Last: <strong className="text-[var(--color-text-primary)]">{formatCurrency(currentPrice)}</strong>
               </span>
             </div>
           </div>
 
-          {/* Buy / Sell Toggle */}
-          <div className="grid grid-cols-2 p-1 rounded-lg bg-[var(--color-bg-subtle)] border border-[var(--color-border)]">
+          {/* Buy / Sell Tab Segment */}
+          <div className="grid grid-cols-2 p-0.5 rounded bg-[var(--color-bg-base)] border border-[var(--color-border)]">
             <button
               type="button"
               onClick={() => {
                 setSide('BUY');
                 setMessage(null);
               }}
-              className={`py-2 text-xs font-bold rounded-md transition-colors cursor-pointer ${
+              className={`py-1.5 text-xs font-bold font-mono rounded cursor-pointer transition-colors ${
                 side === 'BUY'
                   ? 'bg-[var(--color-success)] text-white shadow-xs'
                   : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
               }`}
             >
-              BUY (Go Long)
+              BUY (LONG)
             </button>
             <button
               type="button"
@@ -206,86 +220,128 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
                 setSide('SELL');
                 setMessage(null);
               }}
-              className={`py-2 text-xs font-bold rounded-md transition-colors cursor-pointer ${
+              className={`py-1.5 text-xs font-bold font-mono rounded cursor-pointer transition-colors ${
                 side === 'SELL'
                   ? 'bg-[var(--color-error)] text-white shadow-xs'
                   : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
               }`}
             >
-              SELL (Liquidate)
+              SELL (CLOSE)
             </button>
           </div>
 
-          {/* Order Type */}
+          {/* Order Type & Time In Force */}
           <div className="grid grid-cols-2 gap-3">
-            <div className="space-y-1.5">
-              <label className="block text-xs font-semibold text-[var(--color-text-secondary)]">
+            <div className="space-y-1">
+              <label className="block text-[11px] font-mono text-[var(--color-text-muted)] uppercase tracking-wider">
                 Order Type
               </label>
               <select
                 value={orderType}
                 onChange={(e) => setOrderType(e.target.value)}
-                className="w-full h-9 rounded-[var(--radius-md)] bg-[var(--color-bg-subtle)] border border-[var(--color-border)] px-3 text-xs text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-brand)]"
+                className="w-full h-8 rounded bg-[var(--color-bg-base)] border border-[var(--color-border)] px-2.5 text-xs font-mono text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-brand)]"
               >
-                <option value="MARKET">Market Order</option>
-                <option value="LIMIT">Limit Order</option>
+                <option value="MARKET">Market</option>
+                <option value="LIMIT">Limit</option>
               </select>
             </div>
 
+            <div className="space-y-1">
+              <label className="block text-[11px] font-mono text-[var(--color-text-muted)] uppercase tracking-wider">
+                Duration (TIF)
+              </label>
+              <select
+                value={timeInForce}
+                onChange={(e) => setTimeInForce(e.target.value)}
+                className="w-full h-8 rounded bg-[var(--color-bg-base)] border border-[var(--color-border)] px-2.5 text-xs font-mono text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-brand)]"
+              >
+                <option value="DAY">Day Only</option>
+                <option value="GTC">Good &apos;Til Cancelled (GTC)</option>
+              </select>
+            </div>
+          </div>
+
+          {/* Shares Input with Quick presets */}
+          <div className="space-y-1.5">
+            <div className="flex items-center justify-between text-[11px] font-mono text-[var(--color-text-muted)]">
+              <span className="uppercase tracking-wider">Quantity</span>
+              <div className="flex items-center gap-1">
+                {[10, 25, 50, 100].map((num) => (
+                  <button
+                    key={num}
+                    type="button"
+                    onClick={() => handleQuickQty(num)}
+                    className="px-1.5 py-0.2 rounded bg-[var(--color-bg-raised)] border border-[var(--color-border)] text-[10px] hover:text-[var(--color-text-primary)] cursor-pointer"
+                  >
+                    {num}
+                  </button>
+                ))}
+                <button
+                  type="button"
+                  onClick={handleMaxQty}
+                  className="px-1.5 py-0.2 rounded bg-[var(--color-bg-raised)] border border-[var(--color-border)] text-[10px] text-[var(--color-brand)] font-bold cursor-pointer"
+                >
+                  MAX
+                </button>
+              </div>
+            </div>
+
             <Input
-              label="Shares Quantity"
               type="number"
               min="1"
               step="1"
               value={quantity}
               onChange={(e) => setQuantity(e.target.value)}
+              className="font-mono"
               required
             />
           </div>
 
           {orderType === 'LIMIT' && (
-            <Input
-              label="Limit Price ($)"
-              type="number"
-              step="0.01"
-              value={limitPrice}
-              onChange={(e) => setLimitPrice(e.target.value)}
-              placeholder="e.g. 220.00"
-              required
-            />
+            <div className="space-y-1">
+              <label className="block text-[11px] font-mono text-[var(--color-text-muted)] uppercase tracking-wider">
+                Limit Price ($)
+              </label>
+              <Input
+                type="number"
+                step="0.01"
+                value={limitPrice}
+                onChange={(e) => setLimitPrice(e.target.value)}
+                placeholder="220.00"
+                className="font-mono"
+                required
+              />
+            </div>
           )}
 
-          {/* Summary Box */}
-          <div className="rounded-xl bg-[var(--color-bg-subtle)] border border-[var(--color-border)] p-4 space-y-2 text-xs font-mono">
+          {/* Institutional Cost Breakdown */}
+          <div className="rounded bg-[var(--color-bg-base)] border border-[var(--color-border)] p-3 space-y-1.5 text-xs font-mono">
             <div className="flex justify-between text-[var(--color-text-muted)]">
-              <span>Executed Unit Price</span>
+              <span>Unit Fill Quote</span>
               <span className="text-[var(--color-text-primary)]">{formatCurrency(executionPrice)}</span>
             </div>
             <div className="flex justify-between text-[var(--color-text-muted)]">
-              <span>Commission</span>
-              <span className="text-[var(--color-success)]">$0.00 (Commission-Free)</span>
+              <span>Exchange Fee / Routing</span>
+              <span className="text-[var(--color-success)]">$0.00</span>
             </div>
-            <div className="flex justify-between pt-2 border-t border-[var(--color-border)] font-bold text-sm text-[var(--color-text-primary)]">
-              <span>Total Estimated Value</span>
+            <div className="flex justify-between pt-1.5 border-t border-[var(--color-border)] font-bold text-[var(--color-text-primary)]">
+              <span>Order Value</span>
               <span>{formatCurrency(totalCost)}</span>
             </div>
-          </div>
-
-          <div className="flex items-center justify-between text-xs px-1">
-            <span className="text-[var(--color-text-muted)]">Available Buying Power:</span>
-            <span className="font-mono font-bold text-[var(--color-brand)]">
-              {formatCurrency(walletBalance)}
-            </span>
+            <div className="flex justify-between text-[11px] text-[var(--color-text-muted)] pt-0.5">
+              <span>Est. Cash Remaining</span>
+              <span className={remainingCash < 0 ? 'text-[var(--color-error)]' : 'text-[var(--color-brand)]'}>
+                {formatCurrency(remainingCash)}
+              </span>
+            </div>
           </div>
 
           <Button
             type="submit"
             variant={side === 'BUY' ? 'success' : 'danger'}
-            className="w-full py-2.5"
-            size="lg"
-            leftIcon={<ArrowLeftRight className="w-4 h-4" />}
+            className="w-full font-mono text-xs h-9 font-bold"
           >
-            Confirm {side} {quantity || 0} {symbol}
+            TRANSMIT {side} ORDER &bull; {quantity || 0} {symbol}
           </Button>
         </form>
       </CardContent>

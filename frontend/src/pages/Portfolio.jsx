@@ -1,12 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  PieChart,
   ArrowLeftRight,
   TrendingUp,
   TrendingDown,
-  RotateCcw,
-  Sparkles,
 } from 'lucide-react';
 import { useAuth } from '@/context/AuthContext';
 import { formatCurrency, formatPercent, formatChange } from '@/lib/utils';
@@ -14,7 +11,6 @@ import { PortfolioTable } from '@/components/features/PortfolioTable';
 import { Tabs } from '@/components/ui/Tabs';
 import { Button } from '@/components/ui/Button';
 import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
 import {
   Table,
   TableHeader,
@@ -51,7 +47,6 @@ export default function Portfolio() {
     } catch (_) {}
   }, []);
 
-  // Compute portfolio metrics
   const totalStockValue = positions.reduce((sum, pos) => {
     const cur = SAMPLE_MARKET_PRICES[pos.symbol] || pos.avgCost * 1.02;
     return sum + pos.quantity * cur;
@@ -66,7 +61,7 @@ export default function Portfolio() {
   const stockPercent = 100 - cashPercent;
 
   const handleResetPortfolio = () => {
-    if (confirm('Reset your paper trading account back to $100,000 cash and clear all positions?')) {
+    if (confirm('Reset your simulated portfolio ledger back to $100,000 cash and clear open positions?')) {
       localStorage.removeItem('tradewise_positions');
       localStorage.removeItem('tradewise_trades');
       updateWalletCash(100000);
@@ -76,74 +71,82 @@ export default function Portfolio() {
   };
 
   const tabs = [
-    { id: 'positions', label: 'Holdings', badge: positions.length },
-    { id: 'history', label: 'Trade History', badge: trades.length },
+    { id: 'positions', label: 'Open Positions', badge: positions.length },
+    { id: 'history', label: 'Execution Ledger', badge: trades.length },
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[var(--color-border)]">
         <div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
-            Portfolio & Holdings
+          <h1 className="text-lg font-bold font-mono tracking-tight text-[var(--color-text-primary)]">
+            PORTFOLIO ACCOUNTING // POSITIONS &amp; P&amp;L
           </h1>
-          <p className="text-xs text-[var(--color-text-muted)]">
-            Track your open equity positions, cash balances, and trade execution logs.
+          <p className="text-[11px] font-mono text-[var(--color-text-muted)]">
+            Mark-to-market valuations and trade audit log
           </p>
         </div>
 
         <div className="flex items-center gap-2">
           <Link to="/trade">
             <Button size="sm" leftIcon={<ArrowLeftRight className="w-3.5 h-3.5" />}>
-              Place Trade
+              Order Ticket
             </Button>
           </Link>
           <Button
             size="sm"
             variant="ghost"
             onClick={handleResetPortfolio}
-            className="text-[var(--color-text-muted)] hover:text-[var(--color-error)]"
+            className="text-[var(--color-text-muted)] hover:text-[var(--color-error)] font-mono text-xs"
           >
-            Reset Account
+            Reset Ledger
           </Button>
         </div>
       </div>
 
-      {/* Metrics Grid */}
-      <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
-        <Card className="p-4 space-y-1">
-          <span className="text-[11px] text-[var(--color-text-muted)] font-medium">Net Portfolio Value</span>
-          <span className="text-xl sm:text-2xl font-bold font-mono text-[var(--color-text-primary)] block">
+      {/* Metrics Row */}
+      <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 font-mono">
+        <Card className="p-3.5 space-y-0.5">
+          <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider block">
+            Net Account Value
+          </span>
+          <span className="text-xl font-bold text-[var(--color-text-primary)] block">
             {formatCurrency(netPortfolioValue)}
           </span>
-          <span className="text-[10px] text-[var(--color-text-muted)]">Cash + Market Value</span>
+          <span className="text-[10px] text-[var(--color-text-muted)]">Cash + Open Holdings</span>
         </Card>
 
-        <Card className="p-4 space-y-1">
-          <span className="text-[11px] text-[var(--color-text-muted)] font-medium">Buying Power</span>
-          <span className="text-xl sm:text-2xl font-bold font-mono text-[var(--color-brand)] block">
+        <Card className="p-3.5 space-y-0.5">
+          <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider block">
+            Available Cash
+          </span>
+          <span className="text-xl font-bold text-[var(--color-brand)] block">
             {formatCurrency(walletBalance)}
           </span>
-          <span className="text-[10px] text-[var(--color-text-muted)]">Available Cash ({cashPercent}%)</span>
+          <span className="text-[10px] text-[var(--color-text-muted)]">{cashPercent}% of Account</span>
         </Card>
 
-        <Card className="p-4 space-y-1">
-          <span className="text-[11px] text-[var(--color-text-muted)] font-medium">Equity Value</span>
-          <span className="text-xl sm:text-2xl font-bold font-mono text-[var(--color-text-primary)] block">
+        <Card className="p-3.5 space-y-0.5">
+          <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider block">
+            Invested Equity
+          </span>
+          <span className="text-xl font-bold text-[var(--color-text-primary)] block">
             {formatCurrency(totalStockValue)}
           </span>
-          <span className="text-[10px] text-[var(--color-text-muted)]">{positions.length} Active Asset(s)</span>
+          <span className="text-[10px] text-[var(--color-text-muted)]">{positions.length} Active Position(s)</span>
         </Card>
 
-        <Card className="p-4 space-y-1">
-          <span className="text-[11px] text-[var(--color-text-muted)] font-medium">Total Unrealized P&L</span>
+        <Card className="p-3.5 space-y-0.5">
+          <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider block">
+            Unrealized Return
+          </span>
           <div
-            className={`text-xl sm:text-2xl font-bold font-mono flex items-center gap-1 ${
+            className={`text-xl font-bold flex items-center gap-1 ${
               unrealizedPnl >= 0 ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'
             }`}
           >
-            {unrealizedPnl >= 0 ? <TrendingUp className="w-5 h-5" /> : <TrendingDown className="w-5 h-5" />}
+            {unrealizedPnl >= 0 ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
             <span>{formatChange(unrealizedPnl).text}</span>
           </div>
           <span className="text-[10px] text-[var(--color-text-muted)]">
@@ -152,21 +155,21 @@ export default function Portfolio() {
         </Card>
       </div>
 
-      {/* Asset Allocation Bar */}
-      <div className="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-base)] space-y-2">
+      {/* Allocation Bar */}
+      <div className="p-3.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] space-y-1.5 font-mono">
         <div className="flex justify-between text-xs">
-          <span className="font-semibold text-[var(--color-text-secondary)]">Asset Allocation</span>
-          <span className="text-[var(--color-text-muted)] font-mono">
-            {stockPercent}% Equities / {cashPercent}% Cash
+          <span className="text-[var(--color-text-muted)]">Capital Split</span>
+          <span className="text-[var(--color-text-primary)] font-bold">
+            {stockPercent}% Equities &bull; {cashPercent}% Cash
           </span>
         </div>
-        <div className="w-full h-2.5 rounded-full bg-[var(--color-bg-raised)] overflow-hidden flex">
+        <div className="w-full h-1.5 rounded-full bg-[var(--color-bg-raised)] overflow-hidden flex">
           <div
             className="h-full bg-[var(--color-brand)] transition-all duration-300"
             style={{ width: `${stockPercent}%` }}
           />
           <div
-            className="h-full bg-[var(--color-success)]/70 transition-all duration-300"
+            className="h-full bg-[var(--color-success)]/80 transition-all duration-300"
             style={{ width: `${cashPercent}%` }}
           />
         </div>
@@ -179,19 +182,19 @@ export default function Portfolio() {
       {activeTab === 'positions' ? (
         <PortfolioTable positions={positions} marketPrices={SAMPLE_MARKET_PRICES} />
       ) : trades.length === 0 ? (
-        <div className="p-12 text-center rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-base)] text-xs text-[var(--color-text-muted)]">
-          No executed trade history recorded yet.
+        <div className="p-8 text-center rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] font-mono text-xs text-[var(--color-text-muted)]">
+          No executed trade records found in audit ledger.
         </div>
       ) : (
-        <div className="rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-base)] overflow-hidden shadow-xs">
+        <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] overflow-hidden shadow-xs font-mono">
           <Table>
             <TableHeader>
               <TableRow>
-                <TableHead>Type</TableHead>
+                <TableHead>Side</TableHead>
                 <TableHead>Symbol</TableHead>
                 <TableHead className="text-right">Shares</TableHead>
-                <TableHead className="text-right">Exec Price</TableHead>
-                <TableHead className="text-right">Total Consideration</TableHead>
+                <TableHead className="text-right">Price</TableHead>
+                <TableHead className="text-right">Consideration</TableHead>
                 <TableHead className="text-right">Timestamp</TableHead>
               </TableRow>
             </TableHeader>
@@ -199,17 +202,23 @@ export default function Portfolio() {
               {trades.map((trade, idx) => (
                 <TableRow key={idx}>
                   <TableCell>
-                    <Badge variant={trade.side === 'BUY' ? 'success' : 'error'} size="sm">
+                    <span
+                      className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
+                        trade.side === 'BUY'
+                          ? 'bg-[var(--color-success-subtle)] text-[var(--color-success)]'
+                          : 'bg-[var(--color-error-subtle)] text-[var(--color-error)]'
+                      }`}
+                    >
                       {trade.side}
-                    </Badge>
+                    </span>
                   </TableCell>
-                  <TableCell className="font-mono font-bold">{trade.symbol}</TableCell>
-                  <TableCell className="text-right font-mono">{trade.quantity}</TableCell>
-                  <TableCell className="text-right font-mono">{formatCurrency(trade.price)}</TableCell>
-                  <TableCell className="text-right font-mono font-semibold">
+                  <TableCell className="font-bold text-[var(--color-text-primary)]">{trade.symbol}</TableCell>
+                  <TableCell className="text-right">{trade.quantity}</TableCell>
+                  <TableCell className="text-right">{formatCurrency(trade.price)}</TableCell>
+                  <TableCell className="text-right font-bold text-[var(--color-text-primary)]">
                     {formatCurrency(trade.quantity * trade.price)}
                   </TableCell>
-                  <TableCell className="text-right text-[var(--color-text-muted)] font-mono text-[11px]">
+                  <TableCell className="text-right text-[var(--color-text-muted)] text-[10px]">
                     {new Date(trade.executedAt).toLocaleString()}
                   </TableCell>
                 </TableRow>
