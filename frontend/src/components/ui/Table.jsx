@@ -64,3 +64,4 @@ export function TableCell({ className, children, ...props }) {
     </td>
   );
 }
+
