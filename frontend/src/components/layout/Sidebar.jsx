@@ -6,9 +6,9 @@ import {
   PieChart,
   BookOpen,
   RotateCcw,
-  Activity,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Logo } from './Logo';
 
 const navItems = [
   { label: 'Overview', path: '/dashboard', icon: LayoutDashboard },
@@ -28,17 +28,8 @@ export function Sidebar({ className }) {
       )}
     >
       {/* Brand */}
-      <div className="h-14 flex items-center justify-between px-5 border-b border-[var(--color-border)]">
-        <div className="flex items-center gap-2.5">
-          <div className="w-6 h-6 rounded bg-[var(--color-brand)] flex items-center justify-center text-white font-mono font-bold text-xs shadow-xs">
-            TW
-          </div>
-          <div className="flex flex-col">
-            <span className="font-bold text-xs font-mono tracking-wider text-[var(--color-text-primary)]">
-              TRADEWISE
-            </span>
-          </div>
-        </div>
+      <div className="h-14 flex items-center justify-between px-4 border-b border-[var(--color-border)]">
+        <Logo to="/dashboard" size="sm" />
         <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[var(--color-bg-raised)] text-[var(--color-text-muted)] border border-[var(--color-border)]">
           v1.0
         </span>

@@ -1,7 +1,8 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Search, Wallet, User as UserIcon, LogOut, Menu, X, ArrowUpRight } from 'lucide-react';
-import { cn, formatCurrency } from '@/lib/utils';
+import { Search, User as UserIcon, LogOut, Menu, X, ArrowUpRight } from 'lucide-react';
+import { formatCurrency } from '@/lib/utils';
+import { Logo } from './Logo';
 
 export function TopBar({ onToggleMobileMenu, isMobileMenuOpen, user, walletBalance, onLogout }) {
   const [searchQuery, setSearchQuery] = useState('');
@@ -40,11 +41,16 @@ export function TopBar({ onToggleMobileMenu, isMobileMenuOpen, user, walletBalan
         <button
           type="button"
           onClick={onToggleMobileMenu}
-          className="md:hidden p-1.5 rounded-md text-[var(--color-text-muted)] hover:bg-[var(--color-bg-raised)]"
+          className="md:hidden p-1.5 rounded-md text-[var(--color-text-muted)] hover:bg-[var(--color-bg-raised)] cursor-pointer"
           aria-label="Toggle navigation"
         >
           {isMobileMenuOpen ? <X className="w-5 h-5" /> : <Menu className="w-5 h-5" />}
         </button>
+
+        {/* Mobile brand logo */}
+        <div className="md:hidden">
+          <Logo to="/dashboard" size="sm" />
+        </div>
 
         {/* Market Status Pill */}
         <div className="hidden sm:flex items-center gap-2 px-2.5 py-1 rounded-md bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-[11px] font-mono">
