@@ -171,7 +171,7 @@ export default function StockDetail() {
       <div>
         <Link
           to="/markets"
-          className="inline-flex items-center gap-1.5 text-xs font-mono text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] transition-colors"
+          className="inline-flex items-center gap-1.5 text-xs font-mono text-(--color-text-muted) hover:text-(--color-text-primary) transition-colors"
         >
           <ArrowLeft className="w-3.5 h-3.5" />
           <span>Screener / {upperSymbol}</span>
@@ -182,27 +182,27 @@ export default function StockDetail() {
       {isLoading && !quote ? (
         <Skeleton className="h-16 w-full" />
       ) : (
-        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[var(--color-border)]">
+        <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-(--color-border)">
           <div className="space-y-0.5">
             <div className="flex items-center gap-2.5">
-              <span className="text-2xl font-extrabold font-mono tracking-tight text-[var(--color-text-primary)]">
+              <span className="text-2xl font-extrabold font-mono tracking-tight text-(--color-text-primary)">
                 {upperSymbol}
               </span>
-              <span className="px-1.5 py-0.2 rounded text-[10px] font-mono bg-[var(--color-bg-raised)] text-[var(--color-text-muted)] border border-[var(--color-border)]">
+              <span className="px-1.5 py-0.2 rounded text-[10px] font-mono bg-(--color-bg-raised) text-(--color-text-muted) border border-(--color-border)">
                 US EQUITY &bull; NASDAQ
               </span>
             </div>
-            <p className="text-xs text-[var(--color-text-muted)]">{quote?.name || upperSymbol}</p>
+            <p className="text-xs text-(--color-text-muted)">{quote?.name || upperSymbol}</p>
           </div>
 
           <div className="flex items-end sm:items-center gap-4">
             <div className="text-right">
-              <div className="text-2xl sm:text-3xl font-extrabold font-mono text-[var(--color-text-primary)]">
+              <div className="text-2xl sm:text-3xl font-extrabold font-mono text-(--color-text-primary)">
                 {formatCurrency(currentPrice)}
               </div>
               <div
                 className={`inline-flex items-center gap-1 font-mono font-semibold text-xs ${
-                  isPositive ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'
+                  isPositive ? 'text-(--color-success)' : 'text-(--color-error)'
                 }`}
               >
                 {isPositive ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
@@ -235,7 +235,7 @@ export default function StockDetail() {
           </Card>
 
           <div className="space-y-2">
-            <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--color-text-muted)]">
+            <h2 className="text-xs font-mono font-bold uppercase tracking-wider text-(--color-text-muted)">
               Exchange Fundamentals
             </h2>
             <StatGrid stats={quote || {}} />
@@ -245,31 +245,31 @@ export default function StockDetail() {
         {/* Right: Quick Trade Panel */}
         <div>
           <Card className="p-4 sticky top-16 space-y-3.5">
-            <div className="flex items-center justify-between pb-2 border-b border-[var(--color-border)]">
+            <div className="flex items-center justify-between pb-2 border-b border-(--color-border)">
               <CardTitle className="text-xs font-mono uppercase tracking-wider">
                 Instant Order
               </CardTitle>
-              <span className="text-[10px] font-mono text-[var(--color-success)]">
+              <span className="text-[10px] font-mono text-(--color-success)">
                 SIMULATED FILL
               </span>
             </div>
 
             {isTradeSuccess && (
-              <div className="p-2.5 rounded bg-[var(--color-success-subtle)] border border-[var(--color-success)]/30 text-[var(--color-success)] text-xs font-mono flex items-center gap-2">
+              <div className="p-2.5 rounded bg-(--color-success-subtle) border border-(--color-success)/30 text-(--color-success) text-xs font-mono flex items-center gap-2">
                 <CheckCircle2 className="w-4 h-4 shrink-0" />
                 <span>Fill executed. Position updated.</span>
               </div>
             )}
 
             <form onSubmit={handleExecuteTrade} className="space-y-3.5">
-              <div className="grid grid-cols-2 p-0.5 rounded bg-[var(--color-bg-base)] border border-[var(--color-border)]">
+              <div className="grid grid-cols-2 p-0.5 rounded bg-(--color-bg-base) border border-(--color-border)">
                 <button
                   type="button"
                   onClick={() => setTradeSide('BUY')}
                   className={`py-1.5 text-xs font-bold font-mono rounded transition-colors cursor-pointer ${
                     tradeSide === 'BUY'
-                      ? 'bg-[var(--color-success)] text-white shadow-xs'
-                      : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
+                      ? 'bg-(--color-success) text-white shadow-xs'
+                      : 'text-(--color-text-muted) hover:text-(--color-text-primary)'
                   }`}
                 >
                   BUY (LONG)
@@ -279,8 +279,8 @@ export default function StockDetail() {
                   onClick={() => setTradeSide('SELL')}
                   className={`py-1.5 text-xs font-bold font-mono rounded transition-colors cursor-pointer ${
                     tradeSide === 'SELL'
-                      ? 'bg-[var(--color-error)] text-white shadow-xs'
-                      : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
+                      ? 'bg-(--color-error) text-white shadow-xs'
+                      : 'text-(--color-text-muted) hover:text-(--color-text-primary)'
                   }`}
                 >
                   SELL (CLOSE)
@@ -288,7 +288,7 @@ export default function StockDetail() {
               </div>
 
               <div className="space-y-1">
-                <div className="flex justify-between text-[11px] font-mono text-[var(--color-text-muted)]">
+                <div className="flex justify-between text-[11px] font-mono text-(--color-text-muted)">
                   <span>Shares</span>
                   <div className="flex items-center gap-1">
                     {[10, 25, 50].map((n) => (
@@ -296,7 +296,7 @@ export default function StockDetail() {
                         key={n}
                         type="button"
                         onClick={() => setShares(n)}
-                        className="px-1.5 rounded bg-[var(--color-bg-raised)] text-[10px] hover:text-[var(--color-text-primary)] cursor-pointer"
+                        className="px-1.5 rounded bg-(--color-bg-raised) text-[10px] hover:text-(--color-text-primary) cursor-pointer"
                       >
                         {n}
                       </button>
@@ -313,24 +313,24 @@ export default function StockDetail() {
                 />
               </div>
 
-              <div className="rounded bg-[var(--color-bg-base)] p-3 space-y-1.5 text-xs font-mono border border-[var(--color-border)]">
-                <div className="flex justify-between text-[var(--color-text-muted)]">
+              <div className="rounded bg-(--color-bg-base) p-3 space-y-1.5 text-xs font-mono border border-(--color-border)">
+                <div className="flex justify-between text-(--color-text-muted)">
                   <span>Quote</span>
-                  <span className="text-[var(--color-text-primary)]">{formatCurrency(currentPrice)}</span>
+                  <span className="text-(--color-text-primary)">{formatCurrency(currentPrice)}</span>
                 </div>
-                <div className="flex justify-between text-[var(--color-text-muted)]">
+                <div className="flex justify-between text-(--color-text-muted)">
                   <span>Type</span>
-                  <span className="text-[var(--color-text-primary)]">Market Order</span>
+                  <span className="text-(--color-text-primary)">Market Order</span>
                 </div>
-                <div className="flex justify-between pt-1.5 border-t border-[var(--color-border)] font-bold text-[var(--color-text-primary)]">
+                <div className="flex justify-between pt-1.5 border-t border-(--color-border) font-bold text-(--color-text-primary)">
                   <span>Consideration</span>
                   <span>{formatCurrency(estimatedTotal)}</span>
                 </div>
               </div>
 
-              <div className="text-[11px] font-mono text-[var(--color-text-muted)] flex justify-between">
+              <div className="text-[11px] font-mono text-(--color-text-muted) flex justify-between">
                 <span>Buying Power</span>
-                <span className="font-bold text-[var(--color-brand)]">
+                <span className="font-bold text-(--color-brand)">
                   {formatCurrency(walletBalance)}
                 </span>
               </div>

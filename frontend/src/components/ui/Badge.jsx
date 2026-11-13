@@ -1,12 +1,12 @@
 import { cn } from '@/lib/utils';
 
 const variantClasses = {
-  default: 'bg-[var(--color-bg-raised)] text-[var(--color-text-secondary)] border-[var(--color-border)]',
-  brand: 'bg-[var(--color-brand-subtle)] text-[var(--color-brand)] border-[var(--color-brand)]/20',
-  success: 'bg-[var(--color-success-subtle)] text-[var(--color-success)] border-[var(--color-success)]/20',
-  error: 'bg-[var(--color-error-subtle)] text-[var(--color-error)] border-[var(--color-error)]/20',
-  warning: 'bg-[var(--color-warning-subtle)] text-[var(--color-warning)] border-[var(--color-warning)]/20',
-  info: 'bg-[var(--color-info-subtle)] text-[var(--color-info)] border-[var(--color-info)]/20',
+  default: 'bg-(--color-bg-raised) text-(--color-text-secondary) border-(--color-border)',
+  brand: 'bg-(--color-brand-subtle) text-(--color-brand) border-(--color-brand)/20',
+  success: 'bg-(--color-success-subtle) text-(--color-success) border-(--color-success)/20',
+  error: 'bg-(--color-error-subtle) text-(--color-error) border-(--color-error)/20',
+  warning: 'bg-(--color-warning-subtle) text-(--color-warning) border-(--color-warning)/20',
+  info: 'bg-(--color-info-subtle) text-(--color-info) border-(--color-info)/20',
 };
 
 const sizeClasses = {

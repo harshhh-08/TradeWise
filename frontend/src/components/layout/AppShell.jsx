@@ -12,7 +12,7 @@ export function AppShell() {
   const location = useLocation();
 
   return (
-    <div className="flex h-svh w-full bg-[var(--color-bg-base)] text-[var(--color-text-primary)] overflow-hidden">
+    <div className="flex h-svh w-full bg-(--color-bg-base) text-(--color-text-primary) overflow-hidden">
       <Sidebar />
 
       {/* Mobile drawer backdrop */}
@@ -25,7 +25,7 @@ export function AppShell() {
 
       {/* Mobile drawer sidebar */}
       <div
-        className={`fixed inset-y-0 left-0 z-50 w-64 bg-[var(--color-bg-base)] transition-transform duration-200 md:hidden ${
+        className={`fixed inset-y-0 left-0 z-50 w-64 bg-(--color-bg-base) transition-transform duration-200 md:hidden ${
           isMobileMenuOpen ? 'translate-x-0' : '-translate-x-full'
         }`}
       >

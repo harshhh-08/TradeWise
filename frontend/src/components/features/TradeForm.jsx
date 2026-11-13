@@ -150,13 +150,13 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
 
   return (
     <Card className="p-5">
-      <CardHeader className="p-0 pb-3 border-b border-[var(--color-border)] mb-4">
+      <CardHeader className="p-0 pb-3 border-b border-(--color-border) mb-4">
         <div className="flex items-center justify-between">
           <CardTitle className="text-xs font-mono uppercase tracking-wider flex items-center gap-2">
-            <ArrowLeftRight className="w-3.5 h-3.5 text-[var(--color-brand)]" />
+            <ArrowLeftRight className="w-3.5 h-3.5 text-(--color-brand)" />
             <span>Order Ticket</span>
           </CardTitle>
-          <span className="text-[10px] font-mono text-[var(--color-text-muted)]">
+          <span className="text-[10px] font-mono text-(--color-text-muted)">
             ACCOUNT // CASH SIM
           </span>
         </div>
@@ -167,8 +167,8 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
           <div
             className={`p-3 rounded text-xs font-mono flex items-center gap-2 ${
               message.type === 'success'
-                ? 'bg-[var(--color-success-subtle)] border border-[var(--color-success)]/30 text-[var(--color-success)]'
-                : 'bg-[var(--color-error-subtle)] border border-[var(--color-error)]/30 text-[var(--color-error)]'
+                ? 'bg-(--color-success-subtle) border border-(--color-success)/30 text-(--color-success)'
+                : 'bg-(--color-error-subtle) border border-(--color-error)/30 text-(--color-error)'
             }`}
           >
             {message.type === 'success' ? (
@@ -183,7 +183,7 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
         <form onSubmit={handleSubmit} className="space-y-4">
           {/* Equity lookup */}
           <div className="space-y-1">
-            <label className="block text-[11px] font-mono text-[var(--color-text-muted)] uppercase tracking-wider">
+            <label className="block text-[11px] font-mono text-(--color-text-muted) uppercase tracking-wider">
               Asset Symbol
             </label>
             <SearchCombobox
@@ -191,15 +191,15 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
               onSelectStock={handleStockSelect}
             />
             <div className="flex items-center justify-between text-xs font-mono pt-1">
-              <span className="font-bold text-[var(--color-text-primary)]">{symbol}</span>
-              <span className="text-[var(--color-text-muted)]">
-                Last: <strong className="text-[var(--color-text-primary)]">{formatCurrency(currentPrice)}</strong>
+              <span className="font-bold text-(--color-text-primary)">{symbol}</span>
+              <span className="text-(--color-text-muted)">
+                Last: <strong className="text-(--color-text-primary)">{formatCurrency(currentPrice)}</strong>
               </span>
             </div>
           </div>
 
           {/* Buy / Sell Tab Segment */}
-          <div className="grid grid-cols-2 p-0.5 rounded bg-[var(--color-bg-base)] border border-[var(--color-border)]">
+          <div className="grid grid-cols-2 p-0.5 rounded bg-(--color-bg-base) border border-(--color-border)">
             <button
               type="button"
               onClick={() => {
@@ -208,8 +208,8 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
               }}
               className={`py-1.5 text-xs font-bold font-mono rounded cursor-pointer transition-colors ${
                 side === 'BUY'
-                  ? 'bg-[var(--color-success)] text-white shadow-xs'
-                  : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
+                  ? 'bg-(--color-success) text-white shadow-xs'
+                  : 'text-(--color-text-muted) hover:text-(--color-text-primary)'
               }`}
             >
               BUY (LONG)
@@ -222,8 +222,8 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
               }}
               className={`py-1.5 text-xs font-bold font-mono rounded cursor-pointer transition-colors ${
                 side === 'SELL'
-                  ? 'bg-[var(--color-error)] text-white shadow-xs'
-                  : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
+                  ? 'bg-(--color-error) text-white shadow-xs'
+                  : 'text-(--color-text-muted) hover:text-(--color-text-primary)'
               }`}
             >
               SELL (CLOSE)
@@ -233,13 +233,13 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
           {/* Order Type & Time In Force */}
           <div className="grid grid-cols-2 gap-3">
             <div className="space-y-1">
-              <label className="block text-[11px] font-mono text-[var(--color-text-muted)] uppercase tracking-wider">
+              <label className="block text-[11px] font-mono text-(--color-text-muted) uppercase tracking-wider">
                 Order Type
               </label>
               <select
                 value={orderType}
                 onChange={(e) => setOrderType(e.target.value)}
-                className="w-full h-8 rounded bg-[var(--color-bg-base)] border border-[var(--color-border)] px-2.5 text-xs font-mono text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-brand)]"
+                className="w-full h-8 rounded bg-(--color-bg-base) border border-(--color-border) px-2.5 text-xs font-mono text-(--color-text-primary) focus:outline-none focus:border-(--color-brand)"
               >
                 <option value="MARKET">Market</option>
                 <option value="LIMIT">Limit</option>
@@ -247,13 +247,13 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
             </div>
 
             <div className="space-y-1">
-              <label className="block text-[11px] font-mono text-[var(--color-text-muted)] uppercase tracking-wider">
+              <label className="block text-[11px] font-mono text-(--color-text-muted) uppercase tracking-wider">
                 Duration (TIF)
               </label>
               <select
                 value={timeInForce}
                 onChange={(e) => setTimeInForce(e.target.value)}
-                className="w-full h-8 rounded bg-[var(--color-bg-base)] border border-[var(--color-border)] px-2.5 text-xs font-mono text-[var(--color-text-primary)] focus:outline-none focus:border-[var(--color-brand)]"
+                className="w-full h-8 rounded bg-(--color-bg-base) border border-(--color-border) px-2.5 text-xs font-mono text-(--color-text-primary) focus:outline-none focus:border-(--color-brand)"
               >
                 <option value="DAY">Day Only</option>
                 <option value="GTC">Good &apos;Til Cancelled (GTC)</option>
@@ -263,7 +263,7 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
 
           {/* Shares Input with Quick presets */}
           <div className="space-y-1.5">
-            <div className="flex items-center justify-between text-[11px] font-mono text-[var(--color-text-muted)]">
+            <div className="flex items-center justify-between text-[11px] font-mono text-(--color-text-muted)">
               <span className="uppercase tracking-wider">Quantity</span>
               <div className="flex items-center gap-1">
                 {[10, 25, 50, 100].map((num) => (
@@ -271,7 +271,7 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
                     key={num}
                     type="button"
                     onClick={() => handleQuickQty(num)}
-                    className="px-1.5 py-0.2 rounded bg-[var(--color-bg-raised)] border border-[var(--color-border)] text-[10px] hover:text-[var(--color-text-primary)] cursor-pointer"
+                    className="px-1.5 py-0.2 rounded bg-(--color-bg-raised) border border-(--color-border) text-[10px] hover:text-(--color-text-primary) cursor-pointer"
                   >
                     {num}
                   </button>
@@ -279,7 +279,7 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
                 <button
                   type="button"
                   onClick={handleMaxQty}
-                  className="px-1.5 py-0.2 rounded bg-[var(--color-bg-raised)] border border-[var(--color-border)] text-[10px] text-[var(--color-brand)] font-bold cursor-pointer"
+                  className="px-1.5 py-0.2 rounded bg-(--color-bg-raised) border border-(--color-border) text-[10px] text-(--color-brand) font-bold cursor-pointer"
                 >
                   MAX
                 </button>
@@ -299,7 +299,7 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
 
           {orderType === 'LIMIT' && (
             <div className="space-y-1">
-              <label className="block text-[11px] font-mono text-[var(--color-text-muted)] uppercase tracking-wider">
+              <label className="block text-[11px] font-mono text-(--color-text-muted) uppercase tracking-wider">
                 Limit Price ($)
               </label>
               <Input
@@ -315,22 +315,22 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
           )}
 
           {/* Institutional Cost Breakdown */}
-          <div className="rounded bg-[var(--color-bg-base)] border border-[var(--color-border)] p-3 space-y-1.5 text-xs font-mono">
-            <div className="flex justify-between text-[var(--color-text-muted)]">
+          <div className="rounded bg-(--color-bg-base) border border-(--color-border) p-3 space-y-1.5 text-xs font-mono">
+            <div className="flex justify-between text-(--color-text-muted)">
               <span>Unit Fill Quote</span>
-              <span className="text-[var(--color-text-primary)]">{formatCurrency(executionPrice)}</span>
+              <span className="text-(--color-text-primary)">{formatCurrency(executionPrice)}</span>
             </div>
-            <div className="flex justify-between text-[var(--color-text-muted)]">
+            <div className="flex justify-between text-(--color-text-muted)">
               <span>Exchange Fee / Routing</span>
-              <span className="text-[var(--color-success)]">$0.00</span>
+              <span className="text-(--color-success)">$0.00</span>
             </div>
-            <div className="flex justify-between pt-1.5 border-t border-[var(--color-border)] font-bold text-[var(--color-text-primary)]">
+            <div className="flex justify-between pt-1.5 border-t border-(--color-border) font-bold text-(--color-text-primary)">
               <span>Order Value</span>
               <span>{formatCurrency(totalCost)}</span>
             </div>
-            <div className="flex justify-between text-[11px] text-[var(--color-text-muted)] pt-0.5">
+            <div className="flex justify-between text-[11px] text-(--color-text-muted) pt-0.5">
               <span>Est. Cash Remaining</span>
-              <span className={remainingCash < 0 ? 'text-[var(--color-error)]' : 'text-[var(--color-brand)]'}>
+              <span className={remainingCash < 0 ? 'text-(--color-error)' : 'text-(--color-brand)'}>
                 {formatCurrency(remainingCash)}
               </span>
             </div>

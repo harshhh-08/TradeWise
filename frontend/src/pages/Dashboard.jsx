@@ -35,12 +35,12 @@ export default function Dashboard() {
   return (
     <div className="space-y-5">
       {/* Dashboard Top bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-[var(--color-border)]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-(--color-border)">
         <div>
-          <h1 className="text-lg font-bold font-mono tracking-tight text-[var(--color-text-primary)]">
+          <h1 className="text-lg font-bold font-mono tracking-tight text-(--color-text-primary)">
             ACCOUNT OVERVIEW // {user?.name?.toUpperCase() || 'TRADER'}
           </h1>
-          <p className="text-[11px] font-mono text-[var(--color-text-muted)]">
+          <p className="text-[11px] font-mono text-(--color-text-muted)">
             Simulated NASDAQ / NYSE Brokerage Account &bull; USD Cash
           </p>
         </div>
@@ -79,13 +79,13 @@ export default function Dashboard() {
           {/* Candle Replay Backtester card */}
           <Card className="p-4 space-y-3">
             <div className="flex items-center justify-between text-xs font-mono">
-              <span className="font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
-                <RotateCcw className="w-3.5 h-3.5 text-[var(--color-brand)]" />
+              <span className="font-bold text-(--color-text-primary) flex items-center gap-1.5">
+                <RotateCcw className="w-3.5 h-3.5 text-(--color-brand)" />
                 <span>Candle Replay Mode</span>
               </span>
-              <span className="text-[10px] text-[var(--color-success)]">READY</span>
+              <span className="text-[10px] text-(--color-success)">READY</span>
             </div>
-            <p className="text-xs text-[var(--color-text-muted)] leading-relaxed">
+            <p className="text-xs text-(--color-text-muted) leading-relaxed">
               Step forward candle-by-candle through historical market regimes with zero future bias to test your entries.
             </p>
             <Link to="/replay" className="block pt-1">
@@ -98,17 +98,17 @@ export default function Dashboard() {
           {/* Education Curriculum Card */}
           <Card className="p-4 space-y-3">
             <div className="flex items-center justify-between text-xs font-mono">
-              <span className="font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
-                <BookOpen className="w-3.5 h-3.5 text-[var(--color-brand)]" />
+              <span className="font-bold text-(--color-text-primary) flex items-center gap-1.5">
+                <BookOpen className="w-3.5 h-3.5 text-(--color-brand)" />
                 <span>Trading Curriculum</span>
               </span>
-              <span className="text-[10px] text-[var(--color-text-muted)]">2 / 5</span>
+              <span className="text-[10px] text-(--color-text-muted)">2 / 5</span>
             </div>
-            <p className="text-xs text-[var(--color-text-muted)] leading-relaxed">
+            <p className="text-xs text-(--color-text-muted) leading-relaxed">
               Order mechanics, candlestick interpretation, and portfolio risk management modules.
             </p>
-            <div className="w-full h-1.5 rounded-full bg-[var(--color-bg-raised)] overflow-hidden">
-              <div className="h-full bg-[var(--color-brand)] rounded-full w-[40%]" />
+            <div className="w-full h-1.5 rounded-full bg-(--color-bg-raised) overflow-hidden">
+              <div className="h-full bg-(--color-brand) rounded-full w-[40%]" />
             </div>
             <Link to="/learn" className="block pt-1">
               <Button variant="outline" size="sm" className="w-full justify-between" rightIcon={<ArrowRight className="w-3.5 h-3.5" />}>

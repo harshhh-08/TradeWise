@@ -43,16 +43,16 @@ export default function Login() {
   return (
     <div className="space-y-6">
       <div className="space-y-1">
-        <h2 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
+        <h2 className="text-2xl font-bold tracking-tight text-(--color-text-primary)">
           Welcome back
         </h2>
-        <p className="text-xs text-[var(--color-text-muted)]">
+        <p className="text-xs text-(--color-text-muted)">
           Sign in to your TradeWise paper trading account.
         </p>
       </div>
 
       {error && (
-        <div className="flex items-center gap-2 p-3 rounded-lg bg-[var(--color-error-subtle)] border border-[var(--color-error)]/30 text-[var(--color-error)] text-xs">
+        <div className="flex items-center gap-2 p-3 rounded-lg bg-(--color-error-subtle) border border-(--color-error)/30 text-(--color-error) text-xs">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
@@ -91,11 +91,11 @@ export default function Login() {
         </Button>
       </form>
 
-      <div className="pt-2 text-center text-xs text-[var(--color-text-muted)]">
+      <div className="pt-2 text-center text-xs text-(--color-text-muted)">
         Don&apos;t have an account?{' '}
         <Link
           to="/register"
-          className="font-semibold text-[var(--color-brand)] hover:underline"
+          className="font-semibold text-(--color-brand) hover:underline"
         >
           Create one free
         </Link>

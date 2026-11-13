@@ -4,7 +4,7 @@ export function Card({ className, children, ...props }) {
   return (
     <div
       className={cn(
-        'rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] shadow-xs transition-colors',
+        'rounded-lg border border-(--color-border) bg-(--color-bg-subtle) shadow-xs transition-colors',
         className
       )}
       {...props}
@@ -26,7 +26,7 @@ export function CardTitle({ className, children, ...props }) {
   return (
     <h3
       className={cn(
-        'text-sm font-semibold tracking-tight text-[var(--color-text-primary)]',
+        'text-sm font-semibold tracking-tight text-(--color-text-primary)',
         className
       )}
       {...props}
@@ -38,7 +38,7 @@ export function CardTitle({ className, children, ...props }) {
 
 export function CardDescription({ className, children, ...props }) {
   return (
-    <p className={cn('text-xs text-[var(--color-text-muted)] leading-relaxed', className)} {...props}>
+    <p className={cn('text-xs text-(--color-text-muted) leading-relaxed', className)} {...props}>
       {children}
     </p>
   );
@@ -56,7 +56,7 @@ export function CardFooter({ className, children, ...props }) {
   return (
     <div
       className={cn(
-        'p-4 pt-0 flex items-center justify-between border-t border-[var(--color-border)] mt-3',
+        'p-4 pt-0 flex items-center justify-between border-t border-(--color-border) mt-3',
         className
       )}
       {...props}
