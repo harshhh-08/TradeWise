@@ -36,6 +36,7 @@ model User {
   positions      Position[]
   quizResults    QuizResult[]
   replaySessions ReplaySession[]
+  backtestRuns   BacktestRun[]
 }
 
 model Wallet {
@@ -62,13 +63,18 @@ model Candle {
 }
 
 model ReplaySession {
-  id          Int      @id @default(autoincrement())
-  userId      Int
-  symbol      String
-  startDate   DateTime
-  currentDate DateTime
-  cash        Decimal  @default(1000000) @db.Decimal(18, 2)
-  createdAt   DateTime @default(now())
+  id           Int      @id @default(autoincrement())
+  userId       Int
+  symbol       String
+  timeframe    String   @default("1D")
+  startDate    DateTime
+  endDate      DateTime
+  currentDate  DateTime
+  currentIndex Int      @default(0)
+  totalCandles Int      @default(0)
+  status       String   @default("INITIALIZED")
+  cash         Decimal  @default(1000000) @db.Decimal(18, 2)
+  createdAt    DateTime @default(now())
 
   user      User       @relation(fields: [userId], references: [id])
   orders    Order[]
@@ -155,4 +161,27 @@ model QuizResult {
 
   user   User   @relation(fields: [userId], references: [id])
   lesson Lesson @relation(fields: [lessonId], references: [id])
+}
+
+model BacktestRun {
+  id             Int      @id @default(autoincrement())
+  userId         Int
+  symbol         String
+  timeframe      String   @default("1D")
+  startDate      DateTime
+  endDate        DateTime
+  strategyType   String   @default("SMA_CROSSOVER")
+  strategyConfig Json
+  initialCapital Decimal  @db.Decimal(18, 2)
+  finalCapital   Decimal  @db.Decimal(18, 2)
+  totalPnl       Decimal  @db.Decimal(18, 2)
+  totalReturn    Decimal  @db.Decimal(18, 4)
+  metrics        Json
+  trades         Json
+  equityCurve    Json
+  createdAt      DateTime @default(now())
+
+  user User @relation(fields: [userId], references: [id])
+
+  @@index([userId, createdAt])
 }
