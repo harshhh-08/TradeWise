@@ -8,8 +8,8 @@ export function ProtectedRoute({ children }) {
 
   if (isLoading) {
     return (
-      <div className="min-h-svh flex items-center justify-center bg-[var(--color-bg-base)]">
-        <Loader2 className="w-8 h-8 animate-spin text-[var(--color-brand)]" />
+      <div className="min-h-svh flex items-center justify-center bg-(--color-bg-base)">
+        <Loader2 className="w-8 h-8 animate-spin text-(--color-brand)" />
       </div>
     );
   }

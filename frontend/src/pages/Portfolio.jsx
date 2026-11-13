@@ -78,12 +78,12 @@ export default function Portfolio() {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[var(--color-border)]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-(--color-border)">
         <div>
-          <h1 className="text-lg font-bold font-mono tracking-tight text-[var(--color-text-primary)]">
+          <h1 className="text-lg font-bold font-mono tracking-tight text-(--color-text-primary)">
             PORTFOLIO ACCOUNTING // POSITIONS &amp; P&amp;L
           </h1>
-          <p className="text-[11px] font-mono text-[var(--color-text-muted)]">
+          <p className="text-[11px] font-mono text-(--color-text-muted)">
             Mark-to-market valuations and trade audit log
           </p>
         </div>
@@ -98,7 +98,7 @@ export default function Portfolio() {
             size="sm"
             variant="ghost"
             onClick={handleResetPortfolio}
-            className="text-[var(--color-text-muted)] hover:text-[var(--color-error)] font-mono text-xs"
+            className="text-(--color-text-muted) hover:text-(--color-error) font-mono text-xs"
           >
             Reset Ledger
           </Button>
@@ -108,68 +108,68 @@ export default function Portfolio() {
       {/* Metrics Row */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-3 font-mono">
         <Card className="p-3.5 space-y-0.5">
-          <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider block">
+          <span className="text-[10px] text-(--color-text-muted) uppercase tracking-wider block">
             Net Account Value
           </span>
-          <span className="text-xl font-bold text-[var(--color-text-primary)] block">
+          <span className="text-xl font-bold text-(--color-text-primary) block">
             {formatCurrency(netPortfolioValue)}
           </span>
-          <span className="text-[10px] text-[var(--color-text-muted)]">Cash + Open Holdings</span>
+          <span className="text-[10px] text-(--color-text-muted)">Cash + Open Holdings</span>
         </Card>
 
         <Card className="p-3.5 space-y-0.5">
-          <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider block">
+          <span className="text-[10px] text-(--color-text-muted) uppercase tracking-wider block">
             Available Cash
           </span>
-          <span className="text-xl font-bold text-[var(--color-brand)] block">
+          <span className="text-xl font-bold text-(--color-brand) block">
             {formatCurrency(walletBalance)}
           </span>
-          <span className="text-[10px] text-[var(--color-text-muted)]">{cashPercent}% of Account</span>
+          <span className="text-[10px] text-(--color-text-muted)">{cashPercent}% of Account</span>
         </Card>
 
         <Card className="p-3.5 space-y-0.5">
-          <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider block">
+          <span className="text-[10px] text-(--color-text-muted) uppercase tracking-wider block">
             Invested Equity
           </span>
-          <span className="text-xl font-bold text-[var(--color-text-primary)] block">
+          <span className="text-xl font-bold text-(--color-text-primary) block">
             {formatCurrency(totalStockValue)}
           </span>
-          <span className="text-[10px] text-[var(--color-text-muted)]">{positions.length} Active Position(s)</span>
+          <span className="text-[10px] text-(--color-text-muted)">{positions.length} Active Position(s)</span>
         </Card>
 
         <Card className="p-3.5 space-y-0.5">
-          <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider block">
+          <span className="text-[10px] text-(--color-text-muted) uppercase tracking-wider block">
             Unrealized Return
           </span>
           <div
             className={`text-xl font-bold flex items-center gap-1 ${
-              unrealizedPnl >= 0 ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'
+              unrealizedPnl >= 0 ? 'text-(--color-success)' : 'text-(--color-error)'
             }`}
           >
             {unrealizedPnl >= 0 ? <TrendingUp className="w-4 h-4" /> : <TrendingDown className="w-4 h-4" />}
             <span>{formatChange(unrealizedPnl).text}</span>
           </div>
-          <span className="text-[10px] text-[var(--color-text-muted)]">
+          <span className="text-[10px] text-(--color-text-muted)">
             ({formatPercent(unrealizedPnlPercent).text})
           </span>
         </Card>
       </div>
 
       {/* Allocation Bar */}
-      <div className="p-3.5 rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] space-y-1.5 font-mono">
+      <div className="p-3.5 rounded-lg border border-(--color-border) bg-(--color-bg-subtle) space-y-1.5 font-mono">
         <div className="flex justify-between text-xs">
-          <span className="text-[var(--color-text-muted)]">Capital Split</span>
-          <span className="text-[var(--color-text-primary)] font-bold">
+          <span className="text-(--color-text-muted)">Capital Split</span>
+          <span className="text-(--color-text-primary) font-bold">
             {stockPercent}% Equities &bull; {cashPercent}% Cash
           </span>
         </div>
-        <div className="w-full h-1.5 rounded-full bg-[var(--color-bg-raised)] overflow-hidden flex">
+        <div className="w-full h-1.5 rounded-full bg-(--color-bg-raised) overflow-hidden flex">
           <div
-            className="h-full bg-[var(--color-brand)] transition-all duration-300"
+            className="h-full bg-(--color-brand) transition-all duration-300"
             style={{ width: `${stockPercent}%` }}
           />
           <div
-            className="h-full bg-[var(--color-success)]/80 transition-all duration-300"
+            className="h-full bg-(--color-success)/80 transition-all duration-300"
             style={{ width: `${cashPercent}%` }}
           />
         </div>
@@ -182,11 +182,11 @@ export default function Portfolio() {
       {activeTab === 'positions' ? (
         <PortfolioTable positions={positions} marketPrices={SAMPLE_MARKET_PRICES} />
       ) : trades.length === 0 ? (
-        <div className="p-8 text-center rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] font-mono text-xs text-[var(--color-text-muted)]">
+        <div className="p-8 text-center rounded-lg border border-(--color-border) bg-(--color-bg-subtle) font-mono text-xs text-(--color-text-muted)">
           No executed trade records found in audit ledger.
         </div>
       ) : (
-        <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] overflow-hidden shadow-xs font-mono">
+        <div className="rounded-lg border border-(--color-border) bg-(--color-bg-subtle) overflow-hidden shadow-xs font-mono">
           <Table>
             <TableHeader>
               <TableRow>
@@ -205,20 +205,20 @@ export default function Portfolio() {
                     <span
                       className={`px-1.5 py-0.5 rounded text-[10px] font-bold ${
                         trade.side === 'BUY'
-                          ? 'bg-[var(--color-success-subtle)] text-[var(--color-success)]'
-                          : 'bg-[var(--color-error-subtle)] text-[var(--color-error)]'
+                          ? 'bg-(--color-success-subtle) text-(--color-success)'
+                          : 'bg-(--color-error-subtle) text-(--color-error)'
                       }`}
                     >
                       {trade.side}
                     </span>
                   </TableCell>
-                  <TableCell className="font-bold text-[var(--color-text-primary)]">{trade.symbol}</TableCell>
+                  <TableCell className="font-bold text-(--color-text-primary)">{trade.symbol}</TableCell>
                   <TableCell className="text-right">{trade.quantity}</TableCell>
                   <TableCell className="text-right">{formatCurrency(trade.price)}</TableCell>
-                  <TableCell className="text-right font-bold text-[var(--color-text-primary)]">
+                  <TableCell className="text-right font-bold text-(--color-text-primary)">
                     {formatCurrency(trade.quantity * trade.price)}
                   </TableCell>
-                  <TableCell className="text-right text-[var(--color-text-muted)] text-[10px]">
+                  <TableCell className="text-right text-(--color-text-muted) text-[10px]">
                     {new Date(trade.executedAt).toLocaleString()}
                   </TableCell>
                 </TableRow>

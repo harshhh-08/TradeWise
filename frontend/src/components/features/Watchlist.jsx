@@ -48,16 +48,16 @@ export function Watchlist() {
     <div className="space-y-2.5">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+          <span className="text-xs font-mono font-bold uppercase tracking-wider text-(--color-text-primary)">
             Market Watch
           </span>
-          <span className="text-[10px] font-mono text-[var(--color-text-muted)]">
+          <span className="text-[10px] font-mono text-(--color-text-muted)">
             Mega-Cap Equities
           </span>
         </div>
         <Link
           to="/markets"
-          className="text-xs font-mono text-[var(--color-brand)] hover:underline inline-flex items-center gap-1 font-medium"
+          className="text-xs font-mono text-(--color-brand) hover:underline inline-flex items-center gap-1 font-medium"
         >
           <span>Full Scanner</span>
           <ArrowUpRight className="w-3.5 h-3.5" />

@@ -120,11 +120,11 @@ export function ReplayTradePanel({
   };
 
   return (
-    <Card className={cn('p-4 space-y-4 bg-[var(--color-bg-subtle)] border-[var(--color-border)] font-mono', className)}>
+    <Card className={cn('p-4 space-y-4 bg-(--color-bg-subtle) border-(--color-border) font-mono', className)}>
       {/* Header */}
-      <CardHeader className="p-0 pb-3 border-b border-[var(--color-border)] flex flex-row items-center justify-between">
+      <CardHeader className="p-0 pb-3 border-b border-(--color-border) flex flex-row items-center justify-between">
         <div className="flex items-center gap-2">
-          <ArrowLeftRight className="w-4 h-4 text-[var(--color-brand)]" />
+          <ArrowLeftRight className="w-4 h-4 text-(--color-brand)" />
           <CardTitle className="text-xs uppercase tracking-wider font-bold">
             Simulated Trade Terminal
           </CardTitle>
@@ -135,7 +135,7 @@ export function ReplayTradePanel({
       </CardHeader>
 
       {/* Buy / Sell Toggle Switch */}
-      <div className="grid grid-cols-2 p-1 rounded-lg bg-[var(--color-bg-base)] border border-[var(--color-border)]">
+      <div className="grid grid-cols-2 p-1 rounded-lg bg-(--color-bg-base) border border-(--color-border)">
         <button
           type="button"
           onClick={() => {
@@ -146,8 +146,8 @@ export function ReplayTradePanel({
           className={cn(
             'py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer',
             tradeType === 'BUY'
-              ? 'bg-[var(--color-success)] text-white shadow-xs'
-              : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
+              ? 'bg-(--color-success) text-white shadow-xs'
+              : 'text-(--color-text-muted) hover:text-(--color-text-primary)'
           )}
         >
           BUY {symbol}
@@ -162,8 +162,8 @@ export function ReplayTradePanel({
           className={cn(
             'py-1.5 text-xs font-bold rounded-md transition-all cursor-pointer',
             tradeType === 'SELL'
-              ? 'bg-[var(--color-error)] text-white shadow-xs'
-              : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
+              ? 'bg-(--color-error) text-white shadow-xs'
+              : 'text-(--color-text-muted) hover:text-(--color-text-primary)'
           )}
         >
           SELL {symbol}
@@ -195,7 +195,7 @@ export function ReplayTradePanel({
                 key={q}
                 type="button"
                 onClick={() => handleQuickQty(q)}
-                className="px-2 py-0.5 rounded bg-[var(--color-bg-raised)] border border-[var(--color-border)] text-[var(--color-text-secondary)] hover:text-[var(--color-text-primary)] hover:border-[var(--color-border-strong)] transition-colors cursor-pointer"
+                className="px-2 py-0.5 rounded bg-(--color-bg-raised) border border-(--color-border) text-(--color-text-secondary) hover:text-(--color-text-primary) hover:border-(--color-border-strong) transition-colors cursor-pointer"
               >
                 +{q}
               </button>
@@ -203,7 +203,7 @@ export function ReplayTradePanel({
             <button
               type="button"
               onClick={handleMaxQty}
-              className="px-2 py-0.5 rounded bg-[var(--color-brand-subtle)] border border-[var(--color-brand)]/30 text-[var(--color-brand)] font-bold hover:bg-[var(--color-brand)] hover:text-white transition-colors cursor-pointer ml-auto"
+              className="px-2 py-0.5 rounded bg-(--color-brand-subtle) border border-(--color-brand)/30 text-(--color-brand) font-bold hover:bg-(--color-brand) hover:text-white transition-colors cursor-pointer ml-auto"
             >
               MAX
             </button>
@@ -211,49 +211,49 @@ export function ReplayTradePanel({
         </div>
 
         {/* Pricing & Estimation Breakdown */}
-        <div className="p-3 rounded-lg bg-[var(--color-bg-base)] border border-[var(--color-border)] space-y-1.5 text-xs">
-          <div className="flex justify-between text-[var(--color-text-muted)]">
+        <div className="p-3 rounded-lg bg-(--color-bg-base) border border-(--color-border) space-y-1.5 text-xs">
+          <div className="flex justify-between text-(--color-text-muted)">
             <span>Execution Price</span>
-            <span className="font-semibold text-[var(--color-text-primary)]">
+            <span className="font-semibold text-(--color-text-primary)">
               {isPriceValid ? formatCurrency(currentPrice) : 'Invalid'}
             </span>
           </div>
 
-          <div className="flex justify-between text-[var(--color-text-muted)]">
+          <div className="flex justify-between text-(--color-text-muted)">
             <span>Transaction Type</span>
-            <span className="font-semibold text-[var(--color-text-primary)]">
+            <span className="font-semibold text-(--color-text-primary)">
               {tradeType === 'BUY' ? 'Market Buy Order' : 'Market Sell Order'}
             </span>
           </div>
 
-          <div className="flex justify-between text-[var(--color-text-muted)]">
+          <div className="flex justify-between text-(--color-text-muted)">
             <span>Replay Execution Date</span>
-            <span className="text-[var(--color-text-secondary)]">
+            <span className="text-(--color-text-secondary)">
               {currentDate || 'Current Candle'}
             </span>
           </div>
 
-          <div className="pt-2 border-t border-[var(--color-border)] flex justify-between font-bold">
-            <span className="text-[var(--color-text-secondary)]">
+          <div className="pt-2 border-t border-(--color-border) flex justify-between font-bold">
+            <span className="text-(--color-text-secondary)">
               {tradeType === 'BUY' ? 'Estimated Cost' : 'Estimated Proceeds'}
             </span>
-            <span className={tradeType === 'BUY' ? 'text-[var(--color-text-primary)]' : 'text-[var(--color-success)]'}>
+            <span className={tradeType === 'BUY' ? 'text-(--color-text-primary)' : 'text-(--color-success)'}>
               {formatCurrency(estimatedAmount)}
             </span>
           </div>
         </div>
 
         {/* Available Virtual Cash indicator */}
-        <div className="flex justify-between text-[11px] text-[var(--color-text-muted)] px-0.5">
+        <div className="flex justify-between text-[11px] text-(--color-text-muted) px-0.5">
           <span>Available Cash</span>
-          <span className="font-semibold text-[var(--color-brand)]">
+          <span className="font-semibold text-(--color-brand)">
             {formatCurrency(cash)}
           </span>
         </div>
 
         {/* Validation Error Message */}
         {errorMsg && (
-          <div className="p-2.5 rounded-lg bg-[var(--color-error-subtle)] border border-[var(--color-error)]/30 text-[var(--color-error)] text-xs flex items-start gap-2">
+          <div className="p-2.5 rounded-lg bg-(--color-error-subtle) border border-(--color-error)/30 text-(--color-error) text-xs flex items-start gap-2">
             <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
             <span className="leading-snug">{errorMsg}</span>
           </div>
@@ -261,7 +261,7 @@ export function ReplayTradePanel({
 
         {/* Success Confirmation Message */}
         {successMsg && (
-          <div className="p-2.5 rounded-lg bg-[var(--color-success-subtle)] border border-[var(--color-success)]/30 text-[var(--color-success)] text-xs flex items-center gap-2">
+          <div className="p-2.5 rounded-lg bg-(--color-success-subtle) border border-(--color-success)/30 text-(--color-success) text-xs flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
             <span className="leading-snug">{successMsg}</span>
           </div>
@@ -278,37 +278,37 @@ export function ReplayTradePanel({
       </form>
 
       {/* Position Status Widget */}
-      <CardContent className="p-0 pt-3 border-t border-[var(--color-border)] space-y-2">
-        <div className="flex items-center justify-between text-xs font-semibold text-[var(--color-text-secondary)]">
+      <CardContent className="p-0 pt-3 border-t border-(--color-border) space-y-2">
+        <div className="flex items-center justify-between text-xs font-semibold text-(--color-text-secondary)">
           <div className="flex items-center gap-1.5">
-            <PieChart className="w-3.5 h-3.5 text-[var(--color-brand)]" />
+            <PieChart className="w-3.5 h-3.5 text-(--color-brand)" />
             <span>Position: {symbol}</span>
           </div>
-          <span className="text-[var(--color-text-primary)]">
+          <span className="text-(--color-text-primary)">
             {currentPosition.quantity} shares
           </span>
         </div>
 
         {currentPosition.quantity > 0 ? (
-          <div className="p-2.5 rounded-lg bg-[var(--color-bg-base)] border border-[var(--color-border)] space-y-1 text-[11px]">
-            <div className="flex justify-between text-[var(--color-text-muted)]">
+          <div className="p-2.5 rounded-lg bg-(--color-bg-base) border border-(--color-border) space-y-1 text-[11px]">
+            <div className="flex justify-between text-(--color-text-muted)">
               <span>Avg Purchase Price</span>
-              <span className="text-[var(--color-text-primary)] font-semibold">
+              <span className="text-(--color-text-primary) font-semibold">
                 {formatCurrency(currentPosition.avgPrice)}
               </span>
             </div>
-            <div className="flex justify-between text-[var(--color-text-muted)]">
+            <div className="flex justify-between text-(--color-text-muted)">
               <span>Market Holding Value</span>
-              <span className="text-[var(--color-text-primary)] font-semibold">
+              <span className="text-(--color-text-primary) font-semibold">
                 {formatCurrency(positionMarketValue)}
               </span>
             </div>
-            <div className="flex justify-between pt-1 border-t border-[var(--color-border)]">
-              <span className="text-[var(--color-text-muted)]">Unrealized P&amp;L</span>
+            <div className="flex justify-between pt-1 border-t border-(--color-border)">
+              <span className="text-(--color-text-muted)">Unrealized P&amp;L</span>
               <span
                 className={cn(
                   'font-bold flex items-center gap-0.5',
-                  positionUnrealizedPnl >= 0 ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'
+                  positionUnrealizedPnl >= 0 ? 'text-(--color-success)' : 'text-(--color-error)'
                 )}
               >
                 {positionUnrealizedPnl >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
@@ -317,7 +317,7 @@ export function ReplayTradePanel({
             </div>
           </div>
         ) : (
-          <div className="p-2 rounded bg-[var(--color-bg-base)] text-[10px] text-[var(--color-text-muted)] text-center">
+          <div className="p-2 rounded bg-(--color-bg-base) text-[10px] text-(--color-text-muted) text-center">
             No active holdings for {symbol} in this session.
           </div>
         )}

@@ -58,14 +58,14 @@ export function LessonCard({ lesson, quizResult, className, onClick }) {
       }}
       className={cn(
         'group flex flex-col justify-between transition-all duration-200',
-        'hover:-translate-y-1 hover:border-[var(--color-border-strong)] hover:shadow-md cursor-pointer',
-        isCompleted && 'border-[var(--color-success)]/20',
+        'hover:-translate-y-1 hover:border-(--color-border-strong) hover:shadow-md cursor-pointer',
+        isCompleted && 'border-(--color-success)/20',
         className
       )}
     >
       <div>
         <CardHeader className="flex flex-row items-start justify-between space-y-0 pb-3">
-          <div className="w-10 h-10 rounded-lg bg-[var(--color-brand-subtle)] border border-[var(--color-brand)]/20 flex items-center justify-center text-[var(--color-brand)] transition-transform duration-200 group-hover:scale-105">
+          <div className="w-10 h-10 rounded-lg bg-(--color-brand-subtle) border border-(--color-brand)/20 flex items-center justify-center text-(--color-brand) transition-transform duration-200 group-hover:scale-105">
             <IconComponent className="w-5 h-5" />
           </div>
           <Badge variant={badgeVariant} size="sm">
@@ -74,7 +74,7 @@ export function LessonCard({ lesson, quizResult, className, onClick }) {
         </CardHeader>
 
         <CardContent className="space-y-2 pt-0">
-          <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-[var(--color-text-muted)]">
+          <div className="flex items-center gap-2 text-[10px] font-mono uppercase tracking-wider text-(--color-text-muted)">
             <span>Lesson {lesson.order ?? 1}</span>
             {lesson.category && (
               <>
@@ -83,28 +83,28 @@ export function LessonCard({ lesson, quizResult, className, onClick }) {
               </>
             )}
           </div>
-          <CardTitle className="text-sm font-semibold text-[var(--color-text-primary)] group-hover:text-[var(--color-brand)] transition-colors">
+          <CardTitle className="text-sm font-semibold text-(--color-text-primary) group-hover:text-(--color-brand) transition-colors">
             {lesson.title}
           </CardTitle>
-          <CardDescription className="text-xs text-[var(--color-text-muted)] line-clamp-3 leading-relaxed">
+          <CardDescription className="text-xs text-(--color-text-muted) line-clamp-3 leading-relaxed">
             {lesson.description || lesson.summary}
           </CardDescription>
         </CardContent>
       </div>
 
-      <CardFooter className="pt-3 pb-4 border-t border-[var(--color-border)] flex items-center justify-between text-[11px] font-mono text-[var(--color-text-muted)]">
+      <CardFooter className="pt-3 pb-4 border-t border-(--color-border) flex items-center justify-between text-[11px] font-mono text-(--color-text-muted)">
         <div className="flex items-center gap-1.5">
           <Clock className="w-3.5 h-3.5" />
           <span>{lesson.estimatedMinutes ? `${lesson.estimatedMinutes} min` : '10 min'}</span>
         </div>
 
         {scoreText ? (
-          <div className="flex items-center gap-1 text-[var(--color-success)] font-semibold">
+          <div className="flex items-center gap-1 text-(--color-success) font-semibold">
             <CheckCircle2 className="w-3.5 h-3.5" />
             <span>Score: {scoreText}</span>
           </div>
         ) : (
-          <span className="text-[var(--color-text-muted)]">
+          <span className="text-(--color-text-muted)">
             {lesson.quizCount || 5} Questions
           </span>
         )}

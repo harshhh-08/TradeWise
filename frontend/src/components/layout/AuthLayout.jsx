@@ -4,20 +4,20 @@ import { Logo } from './Logo';
 
 export function AuthLayout() {
   return (
-    <div className="min-h-svh flex bg-[var(--color-bg-base)] text-[var(--color-text-primary)] selection:bg-[var(--color-brand)] selection:text-white">
+    <div className="min-h-svh flex bg-(--color-bg-base) text-(--color-text-primary) selection:bg-(--color-brand) selection:text-white">
       {/* Brand panel (hidden on mobile) */}
-      <div className="hidden lg:flex flex-col justify-between w-1/2 p-12 bg-[var(--color-bg-subtle)] border-r border-[var(--color-border)] relative overflow-hidden">
+      <div className="hidden lg:flex flex-col justify-between w-1/2 p-12 bg-(--color-bg-subtle) border-r border-(--color-border) relative overflow-hidden">
         <div className="flex items-center justify-between">
           <Logo to="/" size="md" showSubtitle />
-          <div className="flex items-center gap-1.5 text-[10px] font-mono text-[var(--color-success)] px-2 py-0.5 rounded bg-[var(--color-bg-raised)] border border-[var(--color-border)]">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)] animate-pulse" />
+          <div className="flex items-center gap-1.5 text-[10px] font-mono text-(--color-success) px-2 py-0.5 rounded bg-(--color-bg-raised) border border-(--color-border)">
+            <span className="w-1.5 h-1.5 rounded-full bg-(--color-success) animate-pulse" />
             <span>LIVE DATA FEED</span>
           </div>
         </div>
 
         <div className="space-y-6 max-w-md">
           <div className="space-y-2">
-            <span className="text-[11px] font-mono uppercase tracking-wider text-[var(--color-brand)]">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-(--color-brand)">
               Paper Trading Environment
             </span>
             <h2 className="text-3xl font-extrabold tracking-tight leading-tight">
@@ -25,32 +25,32 @@ export function AuthLayout() {
             </h2>
           </div>
 
-          <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-base)] p-4 space-y-3 font-mono text-xs">
-            <div className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider border-b border-[var(--color-border)] pb-2">
+          <div className="rounded-lg border border-(--color-border) bg-(--color-bg-base) p-4 space-y-3 font-mono text-xs">
+            <div className="text-[10px] text-(--color-text-muted) uppercase tracking-wider border-b border-(--color-border) pb-2">
               Default Account Provisioning
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-[var(--color-text-muted)]">Initial Buying Power</span>
-              <span className="font-bold text-[var(--color-text-primary)]">$100,000.00 USD</span>
+              <span className="text-(--color-text-muted)">Initial Buying Power</span>
+              <span className="font-bold text-(--color-text-primary)">$100,000.00 USD</span>
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-[var(--color-text-muted)]">Execution Model</span>
-              <span className="font-semibold text-[var(--color-text-primary)]">Market &amp; Limit Sim</span>
+              <span className="text-(--color-text-muted)">Execution Model</span>
+              <span className="font-semibold text-(--color-text-primary)">Market &amp; Limit Sim</span>
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-[var(--color-text-muted)]">Exchange Feeds</span>
-              <span className="font-semibold text-[var(--color-text-primary)]">NASDAQ / NYSE Equities</span>
+              <span className="text-(--color-text-muted)">Exchange Feeds</span>
+              <span className="font-semibold text-(--color-text-primary)">NASDAQ / NYSE Equities</span>
             </div>
             <div className="flex justify-between py-1">
-              <span className="text-[var(--color-text-muted)]">Commission Schedule</span>
-              <span className="text-[var(--color-success)]">$0.00 (Zero Fee)</span>
+              <span className="text-(--color-text-muted)">Commission Schedule</span>
+              <span className="text-(--color-success)">$0.00 (Zero Fee)</span>
             </div>
           </div>
         </div>
 
-        <div className="text-xs font-mono text-[var(--color-text-muted)] flex items-center justify-between pt-6 border-t border-[var(--color-border)]">
+        <div className="text-xs font-mono text-(--color-text-muted) flex items-center justify-between pt-6 border-t border-(--color-border)">
           <span>&copy; {new Date().getFullYear()} TradeWise.</span>
-          <Link to="/" className="text-[var(--color-brand)] hover:underline inline-flex items-center gap-1">
+          <Link to="/" className="text-(--color-brand) hover:underline inline-flex items-center gap-1">
             <span>Terminal Home</span>
             <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>

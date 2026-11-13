@@ -17,10 +17,10 @@ export function StatGrid({ stats = {} }) {
     <div className="grid grid-cols-2 sm:grid-cols-4 gap-2.5 font-mono">
       {items.map((item, idx) => (
         <Card key={idx} className="p-3 space-y-0.5">
-          <span className="text-[10px] text-[var(--color-text-muted)] uppercase tracking-wider block">
+          <span className="text-[10px] text-(--color-text-muted) uppercase tracking-wider block">
             {item.label}
           </span>
-          <span className="text-xs font-bold text-[var(--color-text-primary)] block">
+          <span className="text-xs font-bold text-(--color-text-primary) block">
             {item.value}
           </span>
         </Card>

@@ -40,6 +40,50 @@ export function isYahooSymbol(symbol) {
   return POPULAR_NSE_STOCKS.some(s => s.baseSymbol === upper);
 }
 
+export async function fetchBatchYahooQuotes(symbols) {
+  if (!symbols || symbols.length === 0) return [];
+  const resolved = symbols.map(s => resolveYahooSymbol(s));
+  try {
+    const raw = await yf.quote(resolved);
+    const list = Array.isArray(raw) ? raw : (raw ? [raw] : []);
+    return list.map(rawQuote => {
+      if (!rawQuote || rawQuote.regularMarketPrice === undefined) return null;
+      const price = Number(rawQuote.regularMarketPrice);
+      const previousClose = rawQuote.regularMarketPreviousClose !== undefined
+        ? Number(rawQuote.regularMarketPreviousClose)
+        : price;
+      const change = rawQuote.regularMarketChange !== undefined
+        ? Number(rawQuote.regularMarketChange)
+        : Number((price - previousClose).toFixed(4));
+      const changePercent = rawQuote.regularMarketChangePercent !== undefined
+        ? Number(rawQuote.regularMarketChangePercent)
+        : previousClose !== 0 ? Number(((change / previousClose) * 100).toFixed(4)) : 0;
+
+      const sym = rawQuote.symbol || '';
+      const isNSE = sym.endsWith('.NS') || sym.endsWith('.BO');
+      return {
+        symbol: sym,
+        name: rawQuote.longName || rawQuote.shortName || sym,
+        exchange: rawQuote.exchange || (isNSE ? 'NSE' : 'US'),
+        currency: rawQuote.currency || (isNSE ? 'INR' : 'USD'),
+        price,
+        open: rawQuote.regularMarketOpen !== undefined ? Number(rawQuote.regularMarketOpen) : price,
+        high: rawQuote.regularMarketDayHigh !== undefined ? Number(rawQuote.regularMarketDayHigh) : price,
+        low: rawQuote.regularMarketDayLow !== undefined ? Number(rawQuote.regularMarketDayLow) : price,
+        low52: rawQuote.fiftyTwoWeekLow !== undefined ? Number(rawQuote.fiftyTwoWeekLow) : null,
+        high52: rawQuote.fiftyTwoWeekHigh !== undefined ? Number(rawQuote.fiftyTwoWeekHigh) : null,
+        previousClose,
+        change,
+        changePercent,
+        volume: rawQuote.regularMarketVolume !== undefined ? Number(rawQuote.regularMarketVolume) : 0,
+      };
+    }).filter(Boolean);
+  } catch (err) {
+    console.warn('Batch quote error:', err.message);
+    return [];
+  }
+}
+
 export async function fetchYahooQuote(symbol) {
   const resolved = resolveYahooSymbol(symbol);
 

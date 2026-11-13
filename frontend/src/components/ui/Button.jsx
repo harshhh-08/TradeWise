@@ -4,17 +4,17 @@ import { cn } from '@/lib/utils';
 
 const variantClasses = {
   primary:
-    'bg-[var(--color-brand)] text-white hover:bg-[var(--color-brand-hover)] active:bg-[var(--color-brand-active)] shadow-xs font-semibold',
+    'bg-(--color-brand) text-white hover:bg-(--color-brand-hover) active:bg-(--color-brand-active) shadow-xs font-semibold',
   secondary:
-    'bg-[var(--color-bg-raised)] text-[var(--color-text-primary)] hover:bg-[var(--color-border-strong)] border border-[var(--color-border)]',
+    'bg-(--color-bg-raised) text-(--color-text-primary) hover:bg-(--color-border-strong) border border-(--color-border)',
   outline:
-    'border border-[var(--color-border)] text-[var(--color-text-primary)] hover:bg-[var(--color-bg-raised)] hover:border-[var(--color-border-strong)]',
+    'border border-(--color-border) text-(--color-text-primary) hover:bg-(--color-bg-raised) hover:border-(--color-border-strong)',
   ghost:
-    'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-raised)]',
+    'text-(--color-text-muted) hover:text-(--color-text-primary) hover:bg-(--color-bg-raised)',
   danger:
-    'bg-[var(--color-error)] text-white hover:opacity-90 active:opacity-100 shadow-xs font-semibold',
+    'bg-(--color-error) text-white hover:opacity-90 active:opacity-100 shadow-xs font-semibold',
   success:
-    'bg-[var(--color-success)] text-white hover:opacity-90 active:opacity-100 shadow-xs font-semibold',
+    'bg-(--color-success) text-white hover:opacity-90 active:opacity-100 shadow-xs font-semibold',
 };
 
 const sizeClasses = {

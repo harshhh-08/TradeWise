@@ -503,7 +503,7 @@ export default function LessonDetail({ className }) {
           <Skeleton className="h-8 w-3/4" />
           <Skeleton className="h-4 w-1/3" />
         </div>
-        <div className="space-y-4 pt-4 border-t border-[var(--color-border)]">
+        <div className="space-y-4 pt-4 border-t border-(--color-border)">
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-4 w-full" />
           <Skeleton className="h-4 w-5/6" />
@@ -517,13 +517,13 @@ export default function LessonDetail({ className }) {
   if (!lesson) {
     return (
       <div className={cn('max-w-3xl mx-auto py-12 px-4 text-center space-y-4', className)}>
-        <div className="w-12 h-12 mx-auto rounded-full bg-[var(--color-error-subtle)] text-[var(--color-error)] flex items-center justify-center">
+        <div className="w-12 h-12 mx-auto rounded-full bg-(--color-error-subtle) text-(--color-error) flex items-center justify-center">
           <AlertCircle className="w-6 h-6" />
         </div>
-        <h2 className="text-xl font-bold text-[var(--color-text-primary)]">
+        <h2 className="text-xl font-bold text-(--color-text-primary)">
           Lesson Not Found
         </h2>
-        <p className="text-xs text-[var(--color-text-muted)] max-w-md mx-auto">
+        <p className="text-xs text-(--color-text-muted) max-w-md mx-auto">
           {error || `The requested lesson slug "${slug}" does not exist in our curriculum catalog.`}
         </p>
         <div className="pt-2">
@@ -545,7 +545,7 @@ export default function LessonDetail({ className }) {
   return (
     <div className={cn('max-w-3xl mx-auto space-y-8 py-2 pb-12', className)}>
       {/* Top navigation bar */}
-      <div className="flex items-center justify-between pb-3 border-b border-[var(--color-border)]">
+      <div className="flex items-center justify-between pb-3 border-b border-(--color-border)">
         <Link to="/learn">
           <Button
             variant="ghost"
@@ -570,16 +570,16 @@ export default function LessonDetail({ className }) {
 
       {/* Lesson Header */}
       <div className="space-y-3">
-        <div className="flex items-center gap-2 text-xs font-mono text-[var(--color-brand)] uppercase tracking-wider">
+        <div className="flex items-center gap-2 text-xs font-mono text-(--color-brand) uppercase tracking-wider">
           <GraduationCap className="w-4 h-4" />
           <span>{lesson.category || 'Trading Foundations'}</span>
         </div>
 
-        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-[var(--color-text-primary)] leading-tight">
+        <h1 className="text-2xl sm:text-3xl font-bold tracking-tight text-(--color-text-primary) leading-tight">
           {lesson.title}
         </h1>
 
-        <div className="flex items-center gap-4 text-xs font-mono text-[var(--color-text-muted)] pt-1">
+        <div className="flex items-center gap-4 text-xs font-mono text-(--color-text-muted) pt-1">
           <div className="flex items-center gap-1.5">
             <Clock className="w-3.5 h-3.5" />
             <span>{lesson.estimatedMinutes || 10} min read</span>
@@ -592,19 +592,19 @@ export default function LessonDetail({ className }) {
       </div>
 
       {/* Lesson Reading Content */}
-      <article className="space-y-5 text-sm text-[var(--color-text-secondary)] leading-relaxed border-t border-[var(--color-border)] pt-6">
+      <article className="space-y-5 text-sm text-(--color-text-secondary) leading-relaxed border-t border-(--color-border) pt-6">
         {paragraphs.map((para, index) => (
-          <p key={index} className="text-sm leading-relaxed text-[var(--color-text-primary)]/90">
+          <p key={index} className="text-sm leading-relaxed text-(--color-text-primary)/90">
             {para}
           </p>
         ))}
       </article>
 
       {/* Quiz Section below lesson content */}
-      <section className="pt-6 border-t border-[var(--color-border)] space-y-4">
+      <section className="pt-6 border-t border-(--color-border) space-y-4">
         <div className="flex items-center gap-2">
-          <BookOpen className="w-4 h-4 text-[var(--color-brand)]" />
-          <h2 className="text-lg font-bold text-[var(--color-text-primary)] tracking-tight">
+          <BookOpen className="w-4 h-4 text-(--color-brand)" />
+          <h2 className="text-lg font-bold text-(--color-text-primary) tracking-tight">
             Assessment &amp; Knowledge Check
           </h2>
         </div>
@@ -617,22 +617,22 @@ export default function LessonDetail({ className }) {
       </section>
 
       {/* Previous / Next Lesson Navigation */}
-      <nav className="pt-6 border-t border-[var(--color-border)] grid grid-cols-1 sm:grid-cols-2 gap-4">
+      <nav className="pt-6 border-t border-(--color-border) grid grid-cols-1 sm:grid-cols-2 gap-4">
         {prevLesson ? (
           <Link
             to={`/learn/${prevLesson.slug}`}
-            className="group block p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-subtle)] hover:bg-[var(--color-bg-raised)] transition-colors"
+            className="group block p-4 rounded-xl border border-(--color-border) bg-(--color-bg-subtle) hover:bg-(--color-bg-raised) transition-colors"
           >
-            <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-wider text-[var(--color-text-muted)] mb-1">
+            <div className="flex items-center gap-2 text-[11px] font-mono uppercase tracking-wider text-(--color-text-muted) mb-1">
               <ArrowLeft className="w-3.5 h-3.5 transition-transform group-hover:-translate-x-1" />
               <span>Previous Lesson</span>
             </div>
-            <div className="text-sm font-semibold text-[var(--color-text-primary)] group-hover:text-[var(--color-brand)] transition-colors line-clamp-1">
+            <div className="text-sm font-semibold text-(--color-text-primary) group-hover:text-(--color-brand) transition-colors line-clamp-1">
               {prevLesson.title}
             </div>
           </Link>
         ) : (
-          <div className="p-4 rounded-xl border border-dashed border-[var(--color-border)]/50 text-[11px] font-mono text-[var(--color-text-muted)] flex items-center justify-center">
+          <div className="p-4 rounded-xl border border-dashed border-(--color-border)/50 text-[11px] font-mono text-(--color-text-muted) flex items-center justify-center">
             Beginning of curriculum
           </div>
         )}
@@ -640,18 +640,18 @@ export default function LessonDetail({ className }) {
         {nextLesson ? (
           <Link
             to={`/learn/${nextLesson.slug}`}
-            className="group block p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-subtle)] hover:bg-[var(--color-bg-raised)] transition-colors text-right"
+            className="group block p-4 rounded-xl border border-(--color-border) bg-(--color-bg-subtle) hover:bg-(--color-bg-raised) transition-colors text-right"
           >
-            <div className="flex items-center justify-end gap-2 text-[11px] font-mono uppercase tracking-wider text-[var(--color-text-muted)] mb-1">
+            <div className="flex items-center justify-end gap-2 text-[11px] font-mono uppercase tracking-wider text-(--color-text-muted) mb-1">
               <span>Next Lesson</span>
               <ArrowRight className="w-3.5 h-3.5 transition-transform group-hover:translate-x-1" />
             </div>
-            <div className="text-sm font-semibold text-[var(--color-text-primary)] group-hover:text-[var(--color-brand)] transition-colors line-clamp-1">
+            <div className="text-sm font-semibold text-(--color-text-primary) group-hover:text-(--color-brand) transition-colors line-clamp-1">
               {nextLesson.title}
             </div>
           </Link>
         ) : (
-          <div className="p-4 rounded-xl border border-dashed border-[var(--color-border)]/50 text-[11px] font-mono text-[var(--color-text-muted)] flex items-center justify-center">
+          <div className="p-4 rounded-xl border border-dashed border-(--color-border)/50 text-[11px] font-mono text-(--color-text-muted) flex items-center justify-center">
             You have reached the end of this track
           </div>
         )}

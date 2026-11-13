@@ -10,16 +10,22 @@ export function cn(...inputs) {
 }
 
 /**
- * Format a number as currency (USD).
- * Usage: formatCurrency(12345.67) → "$12,345.67"
+ * Format a number as currency (USD, INR, etc.).
+ * Usage: formatCurrency(12345.67, 'INR') → "₹12,345.67"
  */
-export function formatCurrency(value) {
-  return new Intl.NumberFormat('en-US', {
-    style: 'currency',
-    currency: 'USD',
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2,
-  }).format(value);
+export function formatCurrency(value, currency = 'USD') {
+  const safeCurrency = currency || 'USD';
+  const locale = safeCurrency === 'INR' ? 'en-IN' : 'en-US';
+  try {
+    return new Intl.NumberFormat(locale, {
+      style: 'currency',
+      currency: safeCurrency,
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2,
+    }).format(Number(value) || 0);
+  } catch {
+    return `${safeCurrency === 'INR' ? '₹' : '$'}${(Number(value) || 0).toFixed(2)}`;
+  }
 }
 
 /**

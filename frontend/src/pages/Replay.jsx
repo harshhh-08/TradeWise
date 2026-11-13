@@ -311,20 +311,20 @@ export default function Replay({ className }) {
   return (
     <div className={cn('space-y-5', className)}>
       {/* Header section */}
-      <div className="pb-3 border-b border-[var(--color-border)] flex flex-col md:flex-row md:items-center justify-between gap-3">
+      <div className="pb-3 border-b border-(--color-border) flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="p-1 rounded bg-[var(--color-brand-subtle)] text-[var(--color-brand)]">
+            <span className="p-1 rounded bg-(--color-brand-subtle) text-(--color-brand)">
               <RotateCcw className="w-4 h-4" />
             </span>
-            <span className="text-[11px] font-mono uppercase tracking-wider text-[var(--color-brand)] font-semibold">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-(--color-brand) font-semibold">
               Time Machine Engine
             </span>
           </div>
-          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-[var(--color-text-primary)] font-mono">
+          <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-(--color-text-primary) font-mono">
             Market Replay
           </h1>
-          <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
+          <p className="text-xs text-(--color-text-muted) mt-0.5">
             Step through simulated historical candles day-by-day and execute virtual paper trades against replay data.
           </p>
         </div>
@@ -334,10 +334,10 @@ export default function Replay({ className }) {
           <Badge variant="warning" size="sm" className="font-mono text-[10px]">
             Simulated Mock Data &bull; Virtual Trading
           </Badge>
-          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-[var(--color-bg-subtle)] border border-[var(--color-border)] font-mono text-xs">
-            <Wallet className="w-3.5 h-3.5 text-[var(--color-brand)]" />
-            <span className="text-[var(--color-text-muted)]">Cash:</span>
-            <span className="font-bold text-[var(--color-text-primary)]">
+          <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-(--color-bg-subtle) border border-(--color-border) font-mono text-xs">
+            <Wallet className="w-3.5 h-3.5 text-(--color-brand)" />
+            <span className="text-(--color-text-muted)">Cash:</span>
+            <span className="font-bold text-(--color-text-primary)">
               {formatCurrency(session.cash)}
             </span>
           </div>
@@ -346,50 +346,50 @@ export default function Replay({ className }) {
 
       {/* Financial Portfolio Telemetry Bar */}
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 font-mono text-xs">
-        <div className="p-3 rounded-lg bg-[var(--color-bg-subtle)] border border-[var(--color-border)]">
-          <span className="text-[10px] text-[var(--color-text-muted)] uppercase block">Net Portfolio Value</span>
-          <span className="text-sm font-bold text-[var(--color-text-primary)]">
+        <div className="p-3 rounded-lg bg-(--color-bg-subtle) border border-(--color-border)">
+          <span className="text-[10px] text-(--color-text-muted) uppercase block">Net Portfolio Value</span>
+          <span className="text-sm font-bold text-(--color-text-primary)">
             {formatCurrency(totalPortfolioValue)}
           </span>
         </div>
 
-        <div className="p-3 rounded-lg bg-[var(--color-bg-subtle)] border border-[var(--color-border)]">
-          <span className="text-[10px] text-[var(--color-text-muted)] uppercase block">Stock Holdings Value</span>
-          <span className="text-sm font-bold text-[var(--color-text-primary)]">
+        <div className="p-3 rounded-lg bg-(--color-bg-subtle) border border-(--color-border)">
+          <span className="text-[10px] text-(--color-text-muted) uppercase block">Stock Holdings Value</span>
+          <span className="text-sm font-bold text-(--color-text-primary)">
             {formatCurrency(totalPositionValue)}
           </span>
         </div>
 
-        <div className="p-3 rounded-lg bg-[var(--color-bg-subtle)] border border-[var(--color-border)]">
-          <span className="text-[10px] text-[var(--color-text-muted)] uppercase block">Realized P&amp;L</span>
+        <div className="p-3 rounded-lg bg-(--color-bg-subtle) border border-(--color-border)">
+          <span className="text-[10px] text-(--color-text-muted) uppercase block">Realized P&amp;L</span>
           <span
             className={cn(
               'text-sm font-bold',
-              realizedPnl >= 0 ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'
+              realizedPnl >= 0 ? 'text-(--color-success)' : 'text-(--color-error)'
             )}
           >
             {realizedPnl >= 0 ? '+' : ''}{formatCurrency(realizedPnl)}
           </span>
         </div>
 
-        <div className="p-3 rounded-lg bg-[var(--color-bg-subtle)] border border-[var(--color-border)]">
-          <span className="text-[10px] text-[var(--color-text-muted)] uppercase block">Unrealized P&amp;L</span>
+        <div className="p-3 rounded-lg bg-(--color-bg-subtle) border border-(--color-border)">
+          <span className="text-[10px] text-(--color-text-muted) uppercase block">Unrealized P&amp;L</span>
           <span
             className={cn(
               'text-sm font-bold',
-              unrealizedPnl >= 0 ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'
+              unrealizedPnl >= 0 ? 'text-(--color-success)' : 'text-(--color-error)'
             )}
           >
             {unrealizedPnl >= 0 ? '+' : ''}{formatCurrency(unrealizedPnl)}
           </span>
         </div>
 
-        <div className="p-3 rounded-lg bg-[var(--color-bg-subtle)] border border-[var(--color-border)] col-span-2 sm:col-span-1">
-          <span className="text-[10px] text-[var(--color-text-muted)] uppercase block">Total Session P&amp;L</span>
+        <div className="p-3 rounded-lg bg-(--color-bg-subtle) border border-(--color-border) col-span-2 sm:col-span-1">
+          <span className="text-[10px] text-(--color-text-muted) uppercase block">Total Session P&amp;L</span>
           <span
             className={cn(
               'text-sm font-bold flex items-center gap-1',
-              sessionPnl >= 0 ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'
+              sessionPnl >= 0 ? 'text-(--color-success)' : 'text-(--color-error)'
             )}
           >
             {sessionPnl >= 0 ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
@@ -399,17 +399,17 @@ export default function Replay({ className }) {
       </div>
 
       {/* Session Configuration Bar */}
-      <Card className="p-3.5 bg-[var(--color-bg-subtle)] border-[var(--color-border)]">
+      <Card className="p-3.5 bg-(--color-bg-subtle) border-(--color-border)">
         <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 items-end font-mono text-xs">
           {/* Stock Selector */}
           <div>
-            <label className="block text-[11px] font-semibold text-[var(--color-text-secondary)] mb-1">
+            <label className="block text-[11px] font-semibold text-(--color-text-secondary) mb-1">
               Select Ticker
             </label>
             <select
               value={selectedSymbol}
               onChange={(e) => handleSymbolChange(e.target.value)}
-              className="w-full h-8 px-2.5 rounded-md border border-[var(--color-border)] bg-[var(--color-bg-raised)] text-[var(--color-text-primary)] text-xs focus:outline-none focus:border-[var(--color-brand)]"
+              className="w-full h-8 px-2.5 rounded-md border border-(--color-border) bg-(--color-bg-raised) text-(--color-text-primary) text-xs focus:outline-none focus:border-(--color-brand)"
             >
               {AVAILABLE_STOCKS.map((stock) => (
                 <option key={stock.symbol} value={stock.symbol}>
@@ -421,7 +421,7 @@ export default function Replay({ className }) {
 
           {/* Starting Date */}
           <div>
-            <label className="block text-[11px] font-semibold text-[var(--color-text-secondary)] mb-1">
+            <label className="block text-[11px] font-semibold text-(--color-text-secondary) mb-1">
               Replay Start Date
             </label>
             <div className="relative flex items-center">
@@ -429,30 +429,30 @@ export default function Replay({ className }) {
                 type="date"
                 value={startDate}
                 onChange={(e) => handleStartDateChange(e.target.value)}
-                className="w-full h-8 px-2.5 rounded-md border border-[var(--color-border)] bg-[var(--color-bg-raised)] text-[var(--color-text-primary)] text-xs focus:outline-none focus:border-[var(--color-brand)]"
+                className="w-full h-8 px-2.5 rounded-md border border-(--color-border) bg-(--color-bg-raised) text-(--color-text-primary) text-xs focus:outline-none focus:border-(--color-brand)"
               />
-              <Calendar className="w-3.5 h-3.5 absolute right-2.5 text-[var(--color-text-muted)] pointer-events-none" />
+              <Calendar className="w-3.5 h-3.5 absolute right-2.5 text-(--color-text-muted) pointer-events-none" />
             </div>
           </div>
 
           {/* Active Ticker Details */}
           <div>
-            <span className="block text-[11px] font-semibold text-[var(--color-text-secondary)] mb-1">
+            <span className="block text-[11px] font-semibold text-(--color-text-secondary) mb-1">
               Simulation Scope
             </span>
-            <div className="h-8 px-2.5 rounded-md border border-[var(--color-border)] bg-[var(--color-bg-base)] flex items-center justify-between text-[11px] text-[var(--color-text-muted)]">
+            <div className="h-8 px-2.5 rounded-md border border-(--color-border) bg-(--color-bg-base) flex items-center justify-between text-[11px] text-(--color-text-muted)">
               <span>60 Trading Days</span>
-              <span className="text-[var(--color-brand)] font-bold">1D Candles</span>
+              <span className="text-(--color-brand) font-bold">1D Candles</span>
             </div>
           </div>
 
           {/* Current Revealed Price Card */}
           <div>
-            <span className="block text-[11px] font-semibold text-[var(--color-text-secondary)] mb-1">
+            <span className="block text-[11px] font-semibold text-(--color-text-secondary) mb-1">
               Current Replay Quote
             </span>
-            <div className="h-8 px-2.5 rounded-md border border-[var(--color-border)] bg-[var(--color-bg-base)] flex items-center justify-between">
-              <span className="font-bold text-[var(--color-text-primary)]">
+            <div className="h-8 px-2.5 rounded-md border border-(--color-border) bg-(--color-bg-base) flex items-center justify-between">
+              <span className="font-bold text-(--color-text-primary)">
                 {currentCandle ? formatCurrency(currentCandle.close) : '--'}
               </span>
               {currentCandle && (
@@ -460,8 +460,8 @@ export default function Replay({ className }) {
                   className={cn(
                     'text-[10px] font-semibold',
                     currentCandle.close >= currentCandle.open
-                      ? 'text-[var(--color-success)]'
-                      : 'text-[var(--color-error)]'
+                      ? 'text-(--color-success)'
+                      : 'text-(--color-error)'
                   )}
                 >
                   {currentCandle.close >= currentCandle.open ? '+' : ''}
@@ -483,7 +483,7 @@ export default function Replay({ className }) {
 
       {/* Error state */}
       {!isLoading && error && (
-        <Card className="p-6 bg-[var(--color-error-subtle)] border-[var(--color-error)]/30 text-xs text-[var(--color-error)] flex items-center gap-3">
+        <Card className="p-6 bg-(--color-error-subtle) border-(--color-error)/30 text-xs text-(--color-error) flex items-center gap-3">
           <AlertCircle className="w-5 h-5 shrink-0" />
           <span>{error}</span>
         </Card>
@@ -491,8 +491,8 @@ export default function Replay({ className }) {
 
       {/* Empty state */}
       {!isLoading && !error && session.candles.length === 0 && (
-        <Card className="p-12 text-center text-xs text-[var(--color-text-muted)] space-y-2">
-          <HelpCircle className="w-8 h-8 mx-auto text-[var(--color-text-muted)]" />
+        <Card className="p-12 text-center text-xs text-(--color-text-muted) space-y-2">
+          <HelpCircle className="w-8 h-8 mx-auto text-(--color-text-muted)" />
           <p>No replay candles available for the selected parameters.</p>
         </Card>
       )}
@@ -503,7 +503,7 @@ export default function Replay({ className }) {
           {/* Left Column (2 cols on lg): Chart & Timeline Controls */}
           <div className="lg:col-span-2 space-y-4">
             {/* Market Replay Chart */}
-            <Card className="p-4 sm:p-5 bg-[var(--color-bg-subtle)] border-[var(--color-border)] shadow-xs">
+            <Card className="p-4 sm:p-5 bg-(--color-bg-subtle) border-(--color-border) shadow-xs">
               <ReplayChart
                 candles={session.candles}
                 visibleCount={session.currentIndex}
@@ -520,15 +520,15 @@ export default function Replay({ className }) {
             />
 
             {/* Trade Execution History Section */}
-            <Card className="p-4 bg-[var(--color-bg-subtle)] border-[var(--color-border)] space-y-3 font-mono">
-              <div className="flex items-center justify-between pb-2 border-b border-[var(--color-border)]">
+            <Card className="p-4 bg-(--color-bg-subtle) border-(--color-border) space-y-3 font-mono">
+              <div className="flex items-center justify-between pb-2 border-b border-(--color-border)">
                 <div className="flex items-center gap-2">
-                  <History className="w-4 h-4 text-[var(--color-brand)]" />
-                  <h3 className="text-xs font-bold uppercase tracking-wider text-[var(--color-text-primary)]">
+                  <History className="w-4 h-4 text-(--color-brand)" />
+                  <h3 className="text-xs font-bold uppercase tracking-wider text-(--color-text-primary)">
                     Replay Transaction Ledger
                   </h3>
                 </div>
-                <span className="text-[10px] text-[var(--color-text-muted)]">
+                <span className="text-[10px] text-(--color-text-muted)">
                   {session.trades.length} recorded trade{session.trades.length === 1 ? '' : 's'}
                 </span>
               </div>
@@ -550,10 +550,10 @@ export default function Replay({ className }) {
                     <TableBody>
                       {session.trades.map((trade) => (
                         <TableRow key={trade.id}>
-                          <TableCell className="text-[11px] text-[var(--color-text-muted)] whitespace-nowrap">
+                          <TableCell className="text-[11px] text-(--color-text-muted) whitespace-nowrap">
                             {trade.displayDate || trade.date}
                           </TableCell>
-                          <TableCell className="font-bold text-[var(--color-text-primary)]">
+                          <TableCell className="font-bold text-(--color-text-primary)">
                             {trade.symbol}
                           </TableCell>
                           <TableCell>
@@ -564,19 +564,19 @@ export default function Replay({ className }) {
                           <TableCell className="text-right font-medium">
                             {trade.quantity}
                           </TableCell>
-                          <TableCell className="text-right text-[var(--color-text-muted)]">
+                          <TableCell className="text-right text-(--color-text-muted)">
                             {formatCurrency(trade.price)}
                           </TableCell>
-                          <TableCell className="text-right font-semibold text-[var(--color-text-primary)]">
+                          <TableCell className="text-right font-semibold text-(--color-text-primary)">
                             {formatCurrency(trade.total)}
                           </TableCell>
                           <TableCell className="text-right font-semibold">
                             {trade.type === 'SELL' ? (
-                              <span className={trade.realizedPnl >= 0 ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}>
+                              <span className={trade.realizedPnl >= 0 ? 'text-(--color-success)' : 'text-(--color-error)'}>
                                 {trade.realizedPnl >= 0 ? '+' : ''}{formatCurrency(trade.realizedPnl)}
                               </span>
                             ) : (
-                              <span className="text-[var(--color-text-muted)]">&mdash;</span>
+                              <span className="text-(--color-text-muted)">&mdash;</span>
                             )}
                           </TableCell>
                         </TableRow>
@@ -585,7 +585,7 @@ export default function Replay({ className }) {
                   </Table>
                 </div>
               ) : (
-                <div className="p-6 text-center text-xs text-[var(--color-text-muted)] border border-dashed border-[var(--color-border)] rounded-lg">
+                <div className="p-6 text-center text-xs text-(--color-text-muted) border border-dashed border-(--color-border) rounded-lg">
                   No replay trades executed yet. Place an order on any revealed day to simulate strategy returns.
                 </div>
               )}
@@ -604,8 +604,8 @@ export default function Replay({ className }) {
             />
 
             {/* Execution Disclaimers & Rules Card */}
-            <Card className="p-3.5 bg-[var(--color-bg-base)] border-[var(--color-border)] font-mono text-[11px] text-[var(--color-text-muted)] space-y-2">
-              <div className="flex items-center gap-1.5 text-[var(--color-brand)] font-semibold uppercase text-[10px]">
+            <Card className="p-3.5 bg-(--color-bg-base) border-(--color-border) font-mono text-[11px] text-(--color-text-muted) space-y-2">
+              <div className="flex items-center gap-1.5 text-(--color-brand) font-semibold uppercase text-[10px]">
                 <DollarSign className="w-3.5 h-3.5" />
                 <span>Simulation Rules</span>
               </div>

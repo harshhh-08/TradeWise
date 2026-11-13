@@ -23,21 +23,21 @@ export function Sidebar({ className }) {
   return (
     <aside
       className={cn(
-        'hidden md:flex flex-col w-56 border-r border-[var(--color-border)] bg-[var(--color-bg-base)] shrink-0 select-none',
+        'hidden md:flex flex-col w-56 border-r border-(--color-border) bg-(--color-bg-base) shrink-0 select-none',
         className
       )}
     >
       {/* Brand */}
-      <div className="h-14 flex items-center justify-between px-4 border-b border-[var(--color-border)]">
+      <div className="h-14 flex items-center justify-between px-4 border-b border-(--color-border)">
         <Logo to="/dashboard" size="sm" />
-        <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-[var(--color-bg-raised)] text-[var(--color-text-muted)] border border-[var(--color-border)]">
+        <span className="text-[10px] font-mono px-1.5 py-0.2 rounded bg-(--color-bg-raised) text-(--color-text-muted) border border-(--color-border)">
           v1.0
         </span>
       </div>
 
       {/* Nav */}
       <nav className="flex-1 p-2 space-y-0.5 overflow-y-auto">
-        <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-[var(--color-text-muted)]">
+        <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-(--color-text-muted)">
           Terminal
         </div>
         {navItems.map((item) => {
@@ -50,8 +50,8 @@ export function Sidebar({ className }) {
                 cn(
                   'flex items-center gap-2.5 px-3 py-2 rounded-md text-xs font-medium transition-colors relative',
                   isActive
-                    ? 'bg-[var(--color-bg-raised)] text-[var(--color-text-primary)] font-semibold shadow-xs before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:rounded-r before:bg-[var(--color-brand)]'
-                    : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)] hover:bg-[var(--color-bg-raised)]/60'
+                    ? 'bg-(--color-bg-raised) text-(--color-text-primary) font-semibold shadow-xs before:absolute before:left-0 before:top-2 before:bottom-2 before:w-1 before:rounded-r before:bg-(--color-brand)'
+                    : 'text-(--color-text-muted) hover:text-(--color-text-primary) hover:bg-(--color-bg-raised)/60'
                 )
               }
             >
@@ -63,21 +63,21 @@ export function Sidebar({ className }) {
       </nav>
 
       {/* Terminal Telemetry / Benchmark */}
-      <div className="p-3 m-2 rounded-lg bg-[var(--color-bg-subtle)] border border-[var(--color-border)] space-y-2">
+      <div className="p-3 m-2 rounded-lg bg-(--color-bg-subtle) border border-(--color-border) space-y-2">
         <div className="flex items-center justify-between text-[10px] font-mono">
-          <span className="text-[var(--color-text-muted)]">SYSTEM FEED</span>
-          <span className="inline-flex items-center gap-1 text-[var(--color-success)] font-medium">
-            <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-success)]" />
+          <span className="text-(--color-text-muted)">SYSTEM FEED</span>
+          <span className="inline-flex items-center gap-1 text-(--color-success) font-medium">
+            <span className="w-1.5 h-1.5 rounded-full bg-(--color-success)" />
             LIVE
           </span>
         </div>
-        <div className="flex items-center justify-between text-[11px] font-mono pt-1 border-t border-[var(--color-border)]">
-          <span className="text-[var(--color-text-secondary)]">S&amp;P 500</span>
-          <span className="font-semibold text-[var(--color-success)]">+0.42%</span>
+        <div className="flex items-center justify-between text-[11px] font-mono pt-1 border-t border-(--color-border)">
+          <span className="text-(--color-text-secondary)">S&amp;P 500</span>
+          <span className="font-semibold text-(--color-success)">+0.42%</span>
         </div>
         <div className="flex items-center justify-between text-[11px] font-mono">
-          <span className="text-[var(--color-text-secondary)]">NASDAQ</span>
-          <span className="font-semibold text-[var(--color-success)]">+0.81%</span>
+          <span className="text-(--color-text-secondary)">NASDAQ</span>
+          <span className="font-semibold text-(--color-success)">+0.81%</span>
         </div>
       </div>
     </aside>
