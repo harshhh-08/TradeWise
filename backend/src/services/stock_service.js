@@ -1,6 +1,7 @@
 import prisma from '../config/prisma.js';
 import {
   fetchYahooQuote,
+  fetchBatchYahooQuotes,
   fetchYahooCandles,
   searchYahoo,
   isYahooSymbol,
@@ -100,9 +101,42 @@ export async function getStockList({ search, page = 1, limit = 20 } = {}) {
   const offset = (page - 1) * limit;
   const paginated = filtered.slice(offset, offset + limit);
 
+  const symbolsToQuote = paginated.map(s => s.symbol);
+  let enriched = paginated;
+
+  try {
+    const quotes = await fetchBatchYahooQuotes(symbolsToQuote);
+    const quoteMap = new Map();
+    quotes.forEach(q => {
+      if (q?.symbol) quoteMap.set(q.symbol.toUpperCase(), q);
+    });
+
+    enriched = paginated.map(stock => {
+      const q = quoteMap.get(stock.symbol.toUpperCase());
+      if (q) {
+        return {
+          ...stock,
+          name: q.name || stock.name,
+          price: q.price,
+          change: q.change,
+          changePercent: q.changePercent,
+          volume: q.volume,
+          low52: q.low52,
+          high52: q.high52,
+          currency: q.currency || stock.currency || (stock.symbol.endsWith('.NS') ? 'INR' : 'USD'),
+          exchange: q.exchange || stock.exchange || (stock.symbol.endsWith('.NS') ? 'NSE' : 'US'),
+          sector: stock.sector || (stock.exchange === 'NSE' || stock.symbol.endsWith('.NS') ? 'NSE Equity' : 'US Equity'),
+        };
+      }
+      return stock;
+    });
+  } catch (err) {
+    console.warn('Batch quote enrichment warning:', err.message);
+  }
+
   return {
     source: 'multiprovider',
-    stocks: paginated,
+    stocks: enriched,
     pagination: { page, limit, total, totalPages },
   };
 }
