@@ -14,15 +14,15 @@ import { Button } from '@/components/ui/Button';
 export function PortfolioTable({ positions = [], marketPrices = {} }) {
   if (!positions || positions.length === 0) {
     return (
-      <div className="p-8 text-center rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] space-y-2.5 font-mono">
-        <div className="w-9 h-9 rounded bg-[var(--color-bg-raised)] text-[var(--color-text-muted)] flex items-center justify-center mx-auto">
+      <div className="p-8 text-center rounded-lg border border-(--color-border) bg-(--color-bg-subtle) space-y-2.5 font-mono">
+        <div className="w-9 h-9 rounded bg-(--color-bg-raised) text-(--color-text-muted) flex items-center justify-center mx-auto">
           <PieChart className="w-5 h-5" />
         </div>
         <div className="space-y-0.5">
-          <h3 className="text-xs font-bold text-[var(--color-text-primary)]">
+          <h3 className="text-xs font-bold text-(--color-text-primary)">
             NO OPEN POSITIONS
           </h3>
-          <p className="text-[11px] text-[var(--color-text-muted)] max-w-sm mx-auto">
+          <p className="text-[11px] text-(--color-text-muted) max-w-sm mx-auto">
             100% Cash Allocation. Transmit an equity order to establish an open holding.
           </p>
         </div>
@@ -36,7 +36,7 @@ export function PortfolioTable({ positions = [], marketPrices = {} }) {
   }
 
   return (
-    <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] overflow-hidden shadow-xs">
+    <div className="rounded-lg border border-(--color-border) bg-(--color-bg-subtle) overflow-hidden shadow-xs">
       <Table>
         <TableHeader>
           <TableRow>
@@ -63,7 +63,7 @@ export function PortfolioTable({ positions = [], marketPrices = {} }) {
                 <TableCell>
                   <Link
                     to={`/stocks/${pos.symbol}`}
-                    className="font-bold font-mono text-xs text-[var(--color-text-primary)] hover:text-[var(--color-brand)] transition-colors"
+                    className="font-bold font-mono text-xs text-(--color-text-primary) hover:text-(--color-brand) transition-colors"
                   >
                     {pos.symbol}
                   </Link>
@@ -73,7 +73,7 @@ export function PortfolioTable({ positions = [], marketPrices = {} }) {
                   {pos.quantity}
                 </TableCell>
 
-                <TableCell className="text-right font-mono text-[var(--color-text-muted)]">
+                <TableCell className="text-right font-mono text-(--color-text-muted)">
                   {formatCurrency(pos.avgCost)}
                 </TableCell>
 
@@ -88,7 +88,7 @@ export function PortfolioTable({ positions = [], marketPrices = {} }) {
                 <TableCell className="text-right">
                   <div
                     className={`inline-flex items-center gap-1 font-mono font-semibold text-xs ${
-                      isPos ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'
+                      isPos ? 'text-(--color-success)' : 'text-(--color-error)'
                     }`}
                   >
                     {isPos ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}

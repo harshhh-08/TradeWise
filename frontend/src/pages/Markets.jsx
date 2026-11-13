@@ -93,12 +93,12 @@ export default function Markets() {
   return (
     <div className="space-y-4">
       {/* Header & Search */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-[var(--color-border)]">
+      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4 pb-3 border-b border-(--color-border)">
         <div>
-          <h1 className="text-lg font-bold font-mono tracking-tight text-[var(--color-text-primary)]">
+          <h1 className="text-lg font-bold font-mono tracking-tight text-(--color-text-primary)">
             MARKET SCREENER // LEVEL 1 FEEDS
           </h1>
-          <p className="text-[11px] font-mono text-[var(--color-text-muted)]">
+          <p className="text-[11px] font-mono text-(--color-text-muted)">
             Real-time equity quotes powered by Twelve Data &bull; Automated pricing updates
           </p>
         </div>
@@ -116,7 +116,7 @@ export default function Markets() {
       />
 
       {/* High Density Table */}
-      <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)] overflow-hidden shadow-xs">
+      <div className="rounded-lg border border-(--color-border) bg-(--color-bg-subtle) overflow-hidden shadow-xs">
         {isLoading ? (
           <div className="p-4 space-y-3">
             {[...Array(6)].map((_, i) => (
@@ -124,7 +124,7 @@ export default function Markets() {
             ))}
           </div>
         ) : filteredStocks.length === 0 ? (
-          <div className="p-10 text-center font-mono text-xs text-[var(--color-text-muted)]">
+          <div className="p-10 text-center font-mono text-xs text-(--color-text-muted)">
             No matching equity records located.
           </div>
         ) : (
@@ -151,16 +151,16 @@ export default function Markets() {
                     <TableCell>
                       <Link
                         to={`/stocks/${stock.symbol}`}
-                        className="flex items-center gap-2 hover:text-[var(--color-brand)] transition-colors group"
+                        className="flex items-center gap-2 hover:text-(--color-brand) transition-colors group"
                       >
-                        <span className="w-14 font-bold font-mono text-xs text-[var(--color-text-primary)] group-hover:text-[var(--color-brand)]">
+                        <span className="w-14 font-bold font-mono text-xs text-(--color-text-primary) group-hover:text-(--color-brand)">
                           {stock.symbol}
                         </span>
                         <div className="min-w-0">
-                          <span className="text-[11px] text-[var(--color-text-secondary)] block truncate max-w-[140px] sm:max-w-[200px]">
+                          <span className="text-[11px] text-(--color-text-secondary) block truncate max-w-[140px] sm:max-w-[200px]">
                             {stock.name || stock.symbol}
                           </span>
-                          <span className="text-[10px] font-mono text-[var(--color-text-muted)] block">
+                          <span className="text-[10px] font-mono text-(--color-text-muted) block">
                             {stock.sector || 'US Equity'}
                           </span>
                         </div>
@@ -174,7 +174,7 @@ export default function Markets() {
                     <TableCell className="text-right">
                       <div
                         className={`inline-flex items-center gap-0.5 font-mono font-semibold text-xs ${
-                          isPos ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'
+                          isPos ? 'text-(--color-success)' : 'text-(--color-error)'
                         }`}
                       >
                         {isPos ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
@@ -184,11 +184,11 @@ export default function Markets() {
 
                     {/* 52-Week Visual Range */}
                     <TableCell className="text-right hidden sm:table-cell">
-                      <div className="flex items-center justify-end gap-2 text-[10px] font-mono text-[var(--color-text-muted)]">
+                      <div className="flex items-center justify-end gap-2 text-[10px] font-mono text-(--color-text-muted)">
                         <span>${Number(low).toFixed(0)}</span>
-                        <div className="w-20 h-1.5 rounded-full bg-[var(--color-bg-raised)] relative overflow-hidden">
+                        <div className="w-20 h-1.5 rounded-full bg-(--color-bg-raised) relative overflow-hidden">
                           <div
-                            className="absolute top-0 bottom-0 bg-[var(--color-brand)] rounded-full"
+                            className="absolute top-0 bottom-0 bg-(--color-brand) rounded-full"
                             style={{ left: 0, width: `${rangePct}%` }}
                           />
                         </div>
@@ -196,7 +196,7 @@ export default function Markets() {
                       </div>
                     </TableCell>
 
-                    <TableCell className="text-right font-mono text-[var(--color-text-muted)] text-[11px] hidden md:table-cell">
+                    <TableCell className="text-right font-mono text-(--color-text-muted) text-[11px] hidden md:table-cell">
                       {formatCompact(stock.volume || 18000000)}
                     </TableCell>
 

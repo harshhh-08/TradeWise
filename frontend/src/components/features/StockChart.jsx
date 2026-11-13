@@ -25,8 +25,8 @@ export function StockChart({ data = [], isPositive = true, onTimeframeChange, ti
   return (
     <div className="space-y-3">
       {/* Chart Top Controls */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-[var(--color-border)]">
-        <div className="flex items-center gap-1 bg-[var(--color-bg-base)] p-0.5 rounded border border-[var(--color-border)]">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-(--color-border)">
+        <div className="flex items-center gap-1 bg-(--color-bg-base) p-0.5 rounded border border-(--color-border)">
           {TIMEFRAMES.map((tf) => (
             <button
               key={tf}
@@ -34,8 +34,8 @@ export function StockChart({ data = [], isPositive = true, onTimeframeChange, ti
               onClick={() => onTimeframeChange && onTimeframeChange(tf)}
               className={`px-2.5 py-1 rounded text-xs font-mono font-semibold transition-colors cursor-pointer ${
                 timeframe === tf
-                  ? 'bg-[var(--color-brand)] text-white shadow-xs'
-                  : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
+                  ? 'bg-(--color-brand) text-white shadow-xs'
+                  : 'text-(--color-text-muted) hover:text-(--color-text-primary)'
               }`}
             >
               {tf}
@@ -43,15 +43,15 @@ export function StockChart({ data = [], isPositive = true, onTimeframeChange, ti
           ))}
         </div>
 
-        <div className="flex items-center gap-3 text-[11px] font-mono text-[var(--color-text-muted)]">
+        <div className="flex items-center gap-3 text-[11px] font-mono text-(--color-text-muted)">
           <div className="flex items-center gap-1">
             <button
               type="button"
               onClick={() => setChartMode('area')}
               className={`px-2 py-0.5 rounded text-[10px] font-mono cursor-pointer ${
                 chartMode === 'area'
-                  ? 'bg-[var(--color-bg-raised)] text-[var(--color-text-primary)] font-bold'
-                  : 'hover:text-[var(--color-text-primary)]'
+                  ? 'bg-(--color-bg-raised) text-(--color-text-primary) font-bold'
+                  : 'hover:text-(--color-text-primary)'
               }`}
             >
               Area
@@ -61,14 +61,14 @@ export function StockChart({ data = [], isPositive = true, onTimeframeChange, ti
               onClick={() => setChartMode('bar')}
               className={`px-2 py-0.5 rounded text-[10px] font-mono cursor-pointer ${
                 chartMode === 'bar'
-                  ? 'bg-[var(--color-bg-raised)] text-[var(--color-text-primary)] font-bold'
-                  : 'hover:text-[var(--color-text-primary)]'
+                  ? 'bg-(--color-bg-raised) text-(--color-text-primary) font-bold'
+                  : 'hover:text-(--color-text-primary)'
               }`}
             >
               Volume / Delta
             </button>
           </div>
-          <span className="hidden sm:inline border-l border-[var(--color-border)] pl-3">
+          <span className="hidden sm:inline border-l border-(--color-border) pl-3">
             LOGARITHMIC SCALE: OFF
           </span>
         </div>
@@ -106,15 +106,15 @@ export function StockChart({ data = [], isPositive = true, onTimeframeChange, ti
                   if (active && payload && payload.length) {
                     const d = payload[0].payload;
                     return (
-                      <div className="rounded border border-[var(--color-border)] bg-[var(--color-bg-subtle)]/95 backdrop-blur-md p-2.5 shadow-xl space-y-1 font-mono text-xs">
-                        <div className="text-[10px] text-[var(--color-text-muted)]">
+                      <div className="rounded border border-(--color-border) bg-(--color-bg-subtle)/95 backdrop-blur-md p-2.5 shadow-xl space-y-1 font-mono text-xs">
+                        <div className="text-[10px] text-(--color-text-muted)">
                           {d.date}
                         </div>
-                        <div className="text-sm font-bold text-[var(--color-text-primary)]">
+                        <div className="text-sm font-bold text-(--color-text-primary)">
                           {formatCurrency(d.close || d.price)}
                         </div>
                         {d.open && (
-                          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-[10px] text-[var(--color-text-muted)] pt-1 border-t border-[var(--color-border)]">
+                          <div className="grid grid-cols-2 gap-x-3 gap-y-0.5 text-[10px] text-(--color-text-muted) pt-1 border-t border-(--color-border)">
                             <span>Open: ${Number(d.open).toFixed(2)}</span>
                             <span>High: ${Number(d.high).toFixed(2)}</span>
                             <span>Low: ${Number(d.low).toFixed(2)}</span>
@@ -145,7 +145,7 @@ export function StockChart({ data = [], isPositive = true, onTimeframeChange, ti
                   if (active && payload && payload.length) {
                     const d = payload[0].payload;
                     return (
-                      <div className="rounded border border-[var(--color-border)] bg-[var(--color-bg-subtle)] p-2 text-xs font-mono">
+                      <div className="rounded border border-(--color-border) bg-(--color-bg-subtle) p-2 text-xs font-mono">
                         <div>{d.date}</div>
                         <div className="font-bold">Vol: {Number(d.volume || 0).toLocaleString()}</div>
                       </div>

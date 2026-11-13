@@ -57,16 +57,16 @@ export default function Register() {
   return (
     <div className="space-y-5">
       <div className="space-y-1">
-        <h2 className="text-xl font-bold tracking-tight text-[var(--color-text-primary)]">
+        <h2 className="text-xl font-bold tracking-tight text-(--color-text-primary)">
           Create Account
         </h2>
-        <p className="text-xs text-[var(--color-text-muted)] font-mono">
+        <p className="text-xs text-(--color-text-muted) font-mono">
           Starting balance: $100,000.00 USD (Virtual)
         </p>
       </div>
 
       {error && (
-        <div className="flex items-center gap-2 p-3 rounded bg-[var(--color-error-subtle)] border border-[var(--color-error)]/30 text-[var(--color-error)] text-xs">
+        <div className="flex items-center gap-2 p-3 rounded bg-(--color-error-subtle) border border-(--color-error)/30 text-(--color-error) text-xs">
           <AlertCircle className="w-4 h-4 shrink-0" />
           <span>{error}</span>
         </div>
@@ -127,11 +127,11 @@ export default function Register() {
         </Button>
       </form>
 
-      <div className="pt-2 text-center text-xs text-[var(--color-text-muted)]">
+      <div className="pt-2 text-center text-xs text-(--color-text-muted)">
         Existing account?{' '}
         <Link
           to="/login"
-          className="font-semibold text-[var(--color-brand)] hover:underline"
+          className="font-semibold text-(--color-brand) hover:underline"
         >
           Sign in to Terminal
         </Link>

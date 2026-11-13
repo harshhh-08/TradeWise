@@ -44,7 +44,7 @@ export function ReplayChart({ candles = [], visibleCount = 0, className }) {
 
   if (!candles || candles.length === 0) {
     return (
-      <Card className={cn('h-80 flex items-center justify-center p-6 text-xs text-[var(--color-text-muted)]', className)}>
+      <Card className={cn('h-80 flex items-center justify-center p-6 text-xs text-(--color-text-muted)', className)}>
         No candle data available for replay session.
       </Card>
     );
@@ -66,15 +66,15 @@ export function ReplayChart({ candles = [], visibleCount = 0, className }) {
   });
 
   const isCurrentPositive = latestCandle ? (latestCandle.close >= latestCandle.open) : true;
-  const currentPriceColor = isCurrentPositive ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]';
+  const currentPriceColor = isCurrentPositive ? 'text-(--color-success)' : 'text-(--color-error)';
 
   return (
     <div className={cn('space-y-3 font-mono', className)}>
       {/* Top chart telemetry bar */}
-      <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-[var(--color-border)] text-xs">
+      <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-(--color-border) text-xs">
         <div className="flex items-center gap-3">
           <div className="flex items-baseline gap-2">
-            <span className="text-base font-bold tracking-tight text-[var(--color-text-primary)]">
+            <span className="text-base font-bold tracking-tight text-(--color-text-primary)">
               {latestCandle ? formatCurrency(latestCandle.close) : '--'}
             </span>
             {latestCandle && (
@@ -85,21 +85,21 @@ export function ReplayChart({ candles = [], visibleCount = 0, className }) {
               </span>
             )}
           </div>
-          <span className="hidden sm:inline-block text-[11px] text-[var(--color-text-muted)] border-l border-[var(--color-border)] pl-3">
+          <span className="hidden sm:inline-block text-[11px] text-(--color-text-muted) border-l border-(--color-border) pl-3">
             Revealed: {visibleCandles.length} / {candles.length} candles
           </span>
         </div>
 
         {/* View mode toggle */}
-        <div className="flex items-center gap-1 bg-[var(--color-bg-base)] p-0.5 rounded border border-[var(--color-border)] text-[10px]">
+        <div className="flex items-center gap-1 bg-(--color-bg-base) p-0.5 rounded border border-(--color-border) text-[10px]">
           <button
             type="button"
             onClick={() => setViewMode('candle')}
             className={cn(
               'px-2 py-1 rounded transition-colors cursor-pointer',
               viewMode === 'candle'
-                ? 'bg-[var(--color-bg-raised)] text-[var(--color-text-primary)] font-bold'
-                : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
+                ? 'bg-(--color-bg-raised) text-(--color-text-primary) font-bold'
+                : 'text-(--color-text-muted) hover:text-(--color-text-primary)'
             )}
           >
             Candlestick
@@ -110,8 +110,8 @@ export function ReplayChart({ candles = [], visibleCount = 0, className }) {
             className={cn(
               'px-2 py-1 rounded transition-colors cursor-pointer',
               viewMode === 'line'
-                ? 'bg-[var(--color-bg-raised)] text-[var(--color-text-primary)] font-bold'
-                : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
+                ? 'bg-(--color-bg-raised) text-(--color-text-primary) font-bold'
+                : 'text-(--color-text-muted) hover:text-(--color-text-primary)'
             )}
           >
             Line
@@ -155,31 +155,31 @@ export function ReplayChart({ candles = [], visibleCount = 0, className }) {
                 const pct = ((delta / d.open) * 100).toFixed(2);
 
                 return (
-                  <div className="rounded-lg border border-[var(--color-border)] bg-[var(--color-bg-subtle)]/95 backdrop-blur-md p-3 shadow-2xl space-y-1.5 text-xs font-mono min-w-[180px]">
-                    <div className="flex items-center justify-between text-[10px] text-[var(--color-text-muted)] pb-1 border-b border-[var(--color-border)]">
+                  <div className="rounded-lg border border-(--color-border) bg-(--color-bg-subtle)/95 backdrop-blur-md p-3 shadow-2xl space-y-1.5 text-xs font-mono min-w-[180px]">
+                    <div className="flex items-center justify-between text-[10px] text-(--color-text-muted) pb-1 border-b border-(--color-border)">
                       <span>{d.displayDate || d.date}</span>
-                      <span className={cn('font-bold', isGain ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]')}>
+                      <span className={cn('font-bold', isGain ? 'text-(--color-success)' : 'text-(--color-error)')}>
                         {isGain ? 'BULLISH' : 'BEARISH'}
                       </span>
                     </div>
 
                     <div className="flex items-baseline justify-between pt-0.5">
-                      <span className="text-[11px] text-[var(--color-text-muted)]">Close:</span>
-                      <span className="text-sm font-bold text-[var(--color-text-primary)]">
+                      <span className="text-[11px] text-(--color-text-muted)">Close:</span>
+                      <span className="text-sm font-bold text-(--color-text-primary)">
                         {formatCurrency(d.close)}
                       </span>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[10px] text-[var(--color-text-muted)] pt-1 border-t border-[var(--color-border)]">
-                      <div>Open: <span className="text-[var(--color-text-primary)]">${d.open.toFixed(2)}</span></div>
-                      <div>High: <span className="text-[var(--color-text-primary)]">${d.high.toFixed(2)}</span></div>
-                      <div>Low: <span className="text-[var(--color-text-primary)]">${d.low.toFixed(2)}</span></div>
-                      <div>Vol: <span className="text-[var(--color-text-primary)]">{formatCompact(d.volume)}</span></div>
+                    <div className="grid grid-cols-2 gap-x-3 gap-y-1 text-[10px] text-(--color-text-muted) pt-1 border-t border-(--color-border)">
+                      <div>Open: <span className="text-(--color-text-primary)">${d.open.toFixed(2)}</span></div>
+                      <div>High: <span className="text-(--color-text-primary)">${d.high.toFixed(2)}</span></div>
+                      <div>Low: <span className="text-(--color-text-primary)">${d.low.toFixed(2)}</span></div>
+                      <div>Vol: <span className="text-(--color-text-primary)">{formatCompact(d.volume)}</span></div>
                     </div>
 
-                    <div className="text-[10px] pt-1 border-t border-[var(--color-border)] flex justify-between">
-                      <span className="text-[var(--color-text-muted)]">Day Change:</span>
-                      <span className={isGain ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'}>
+                    <div className="text-[10px] pt-1 border-t border-(--color-border) flex justify-between">
+                      <span className="text-(--color-text-muted)">Day Change:</span>
+                      <span className={isGain ? 'text-(--color-success)' : 'text-(--color-error)'}>
                         {isGain ? '+' : ''}{delta.toFixed(2)} ({isGain ? '+' : ''}{pct}%)
                       </span>
                     </div>

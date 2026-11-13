@@ -156,36 +156,36 @@ export default function Learn({ className }) {
   return (
     <div className={cn('space-y-6', className)}>
       {/* Header section */}
-      <div className="pb-4 border-b border-[var(--color-border)] flex flex-col md:flex-row md:items-end justify-between gap-4">
+      <div className="pb-4 border-b border-(--color-border) flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="p-1 rounded bg-[var(--color-brand-subtle)] text-[var(--color-brand)]">
+            <span className="p-1 rounded bg-(--color-brand-subtle) text-(--color-brand)">
               <GraduationCap className="w-4 h-4" />
             </span>
-            <span className="text-[11px] font-mono uppercase tracking-wider text-[var(--color-brand)] font-semibold">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-(--color-brand) font-semibold">
               Curriculum &amp; Knowledge Base
             </span>
           </div>
-          <h1 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
+          <h1 className="text-2xl font-bold tracking-tight text-(--color-text-primary)">
             Lessons
           </h1>
-          <p className="text-sm text-[var(--color-text-muted)] mt-0.5">
+          <p className="text-sm text-(--color-text-muted) mt-0.5">
             Learn the fundamentals of trading.
           </p>
         </div>
 
         {/* Progress tracker widget */}
         {!isLoading && totalLessons > 0 && (
-          <div className="bg-[var(--color-bg-subtle)] border border-[var(--color-border)] rounded-lg p-3.5 w-full md:w-80 space-y-2">
+          <div className="bg-(--color-bg-subtle) border border-(--color-border) rounded-lg p-3.5 w-full md:w-80 space-y-2">
             <div className="flex items-center justify-between text-xs font-mono">
-              <span className="text-[var(--color-text-secondary)] font-medium">Curriculum Progress</span>
-              <span className="text-[var(--color-text-primary)] font-bold">
+              <span className="text-(--color-text-secondary) font-medium">Curriculum Progress</span>
+              <span className="text-(--color-text-primary) font-bold">
                 {completedLessons} of {totalLessons} completed ({progressPercentage}%)
               </span>
             </div>
-            <div className="w-full bg-[var(--color-bg-raised)] h-2 rounded-full overflow-hidden border border-[var(--color-border)]">
+            <div className="w-full bg-(--color-bg-raised) h-2 rounded-full overflow-hidden border border-(--color-border)">
               <div
-                className="bg-[var(--color-brand)] h-full rounded-full transition-all duration-500"
+                className="bg-(--color-brand) h-full rounded-full transition-all duration-500"
                 style={{ width: `${progressPercentage}%` }}
               />
             </div>
@@ -212,7 +212,7 @@ export default function Learn({ className }) {
                   <Skeleton className="h-3 w-full" />
                   <Skeleton className="h-3 w-3/4" />
                 </div>
-                <div className="pt-3 border-t border-[var(--color-border)] flex justify-between">
+                <div className="pt-3 border-t border-(--color-border) flex justify-between">
                   <Skeleton className="h-3 w-16" />
                   <Skeleton className="h-3 w-24" />
                 </div>
@@ -224,15 +224,15 @@ export default function Learn({ className }) {
 
       {/* Error state */}
       {!isLoading && error && (
-        <Card className="border-[var(--color-error)]/30 bg-[var(--color-error-subtle)] p-6">
+        <Card className="border-(--color-error)/30 bg-(--color-error-subtle) p-6">
           <CardContent className="p-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <AlertCircle className="w-5 h-5 text-[var(--color-error)] shrink-0" />
+              <AlertCircle className="w-5 h-5 text-(--color-error) shrink-0" />
               <div>
-                <h3 className="text-sm font-semibold text-[var(--color-text-primary)]">
+                <h3 className="text-sm font-semibold text-(--color-text-primary)">
                   Unable to load trading lessons
                 </h3>
-                <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
+                <p className="text-xs text-(--color-text-muted) mt-0.5">
                   {error}
                 </p>
               </div>
@@ -251,14 +251,14 @@ export default function Learn({ className }) {
 
       {/* Empty state */}
       {!isLoading && !error && lessons.length === 0 && (
-        <div className="text-center py-16 px-4 rounded-xl border border-dashed border-[var(--color-border)] bg-[var(--color-bg-subtle)]/50 space-y-3">
-          <div className="w-12 h-12 mx-auto rounded-full bg-[var(--color-bg-raised)] flex items-center justify-center text-[var(--color-text-muted)]">
+        <div className="text-center py-16 px-4 rounded-xl border border-dashed border-(--color-border) bg-(--color-bg-subtle)/50 space-y-3">
+          <div className="w-12 h-12 mx-auto rounded-full bg-(--color-bg-raised) flex items-center justify-center text-(--color-text-muted)">
             <BookOpen className="w-6 h-6" />
           </div>
-          <h3 className="text-base font-semibold text-[var(--color-text-primary)]">
+          <h3 className="text-base font-semibold text-(--color-text-primary)">
             No lessons available yet
           </h3>
-          <p className="text-xs text-[var(--color-text-muted)] max-w-sm mx-auto">
+          <p className="text-xs text-(--color-text-muted) max-w-sm mx-auto">
             Interactive modules and trading quizzes will appear here as soon as the curriculum is published.
           </p>
         </div>

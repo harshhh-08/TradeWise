@@ -25,11 +25,11 @@ export default function Trade() {
   return (
     <div className="space-y-4">
       {/* Header */}
-      <div className="pb-3 border-b border-[var(--color-border)]">
-        <h1 className="text-lg font-bold font-mono tracking-tight text-[var(--color-text-primary)]">
+      <div className="pb-3 border-b border-(--color-border)">
+        <h1 className="text-lg font-bold font-mono tracking-tight text-(--color-text-primary)">
           ORDER TRANSMISSION ENGINE
         </h1>
-        <p className="text-[11px] font-mono text-[var(--color-text-muted)]">
+        <p className="text-[11px] font-mono text-(--color-text-muted)">
           Real-time Level 1 quote routing &bull; Instant cash account margin validation
         </p>
       </div>
@@ -48,28 +48,28 @@ export default function Trade() {
                 Execution Parameters
               </CardTitle>
             </CardHeader>
-            <CardContent className="p-0 text-xs text-[var(--color-text-muted)] space-y-2 leading-relaxed">
+            <CardContent className="p-0 text-xs text-(--color-text-muted) space-y-2 leading-relaxed">
               <div className="flex items-start gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] mt-1.5 shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-full bg-(--color-brand) mt-1.5 shrink-0" />
                 <span><strong>Fill Protocol:</strong> Market orders fill instantaneously at best national bid/ask.</span>
               </div>
               <div className="flex items-start gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] mt-1.5 shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-full bg-(--color-brand) mt-1.5 shrink-0" />
                 <span><strong>Fee Structure:</strong> 100% zero-commission simulation. No exchange levies.</span>
               </div>
               <div className="flex items-start gap-2">
-                <span className="w-1.5 h-1.5 rounded-full bg-[var(--color-brand)] mt-1.5 shrink-0" />
+                <span className="w-1.5 h-1.5 rounded-full bg-(--color-brand) mt-1.5 shrink-0" />
                 <span><strong>Account Leverage:</strong> Strictly cash backed. Short sales require inventory.</span>
               </div>
             </CardContent>
           </Card>
 
           <Card className="p-4 space-y-2.5 font-mono">
-            <h3 className="text-xs font-bold text-[var(--color-text-primary)] flex items-center gap-1.5">
-              <BarChart2 className="w-3.5 h-3.5 text-[var(--color-brand)]" />
+            <h3 className="text-xs font-bold text-(--color-text-primary) flex items-center gap-1.5">
+              <BarChart2 className="w-3.5 h-3.5 text-(--color-brand)" />
               <span>Full Technical Chart</span>
             </h3>
-            <p className="text-[11px] text-[var(--color-text-muted)] leading-relaxed">
+            <p className="text-[11px] text-(--color-text-muted) leading-relaxed">
               Inspect candlestick geometry, moving averages, and 52-week parameters for {symbol}.
             </p>
             <Link to={`/stocks/${symbol}`} className="block pt-1">

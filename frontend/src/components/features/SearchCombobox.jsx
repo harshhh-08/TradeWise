@@ -76,7 +76,7 @@ export function SearchCombobox({ onSelectStock, placeholder = 'Search by ticker 
   return (
     <div ref={containerRef} className="relative w-full">
       <div className="relative flex items-center">
-        <Search className="absolute left-3.5 w-4 h-4 text-[var(--color-text-muted)] pointer-events-none" />
+        <Search className="absolute left-3.5 w-4 h-4 text-(--color-text-muted) pointer-events-none" />
         <input
           type="search"
           value={query}
@@ -86,15 +86,15 @@ export function SearchCombobox({ onSelectStock, placeholder = 'Search by ticker 
           }}
           onFocus={() => query && setIsOpen(true)}
           placeholder={placeholder}
-          className="w-full h-11 pl-10 pr-10 rounded-xl bg-[var(--color-bg-subtle)] border border-[var(--color-border)] text-sm text-[var(--color-text-primary)] placeholder:text-[var(--color-text-muted)] focus:outline-none focus:border-[var(--color-brand)] focus:ring-1 focus:ring-[var(--color-brand)] transition-colors shadow-xs"
+          className="w-full h-11 pl-10 pr-10 rounded-xl bg-(--color-bg-subtle) border border-(--color-border) text-sm text-(--color-text-primary) placeholder:text-(--color-text-muted) focus:outline-none focus:border-(--color-brand) focus:ring-1 focus:ring-(--color-brand) transition-colors shadow-xs"
         />
         {isLoading && (
-          <Loader2 className="absolute right-3.5 w-4 h-4 text-[var(--color-text-muted)] animate-spin" />
+          <Loader2 className="absolute right-3.5 w-4 h-4 text-(--color-text-muted) animate-spin" />
         )}
       </div>
 
       {isOpen && results.length > 0 && (
-        <div className="absolute left-0 right-0 top-full mt-2 rounded-xl bg-[var(--color-bg-base)] border border-[var(--color-border)] shadow-xl z-30 max-h-80 overflow-y-auto divide-y divide-[var(--color-border)]">
+        <div className="absolute left-0 right-0 top-full mt-2 rounded-xl bg-(--color-bg-base) border border-(--color-border) shadow-xl z-30 max-h-80 overflow-y-auto divide-y divide-(--color-border)">
           {results.map((stock) => {
             const isPos = (stock.changePercent ?? 0) >= 0;
             return (
@@ -102,14 +102,14 @@ export function SearchCombobox({ onSelectStock, placeholder = 'Search by ticker 
                 key={stock.symbol}
                 type="button"
                 onClick={() => handleSelect(stock)}
-                className="w-full flex items-center justify-between p-3.5 hover:bg-[var(--color-bg-raised)] text-left transition-colors cursor-pointer"
+                className="w-full flex items-center justify-between p-3.5 hover:bg-(--color-bg-raised) text-left transition-colors cursor-pointer"
               >
                 <div>
                   <div className="flex items-center gap-2">
-                    <span className="font-bold font-mono text-sm text-[var(--color-text-primary)]">
+                    <span className="font-bold font-mono text-sm text-(--color-text-primary)">
                       {stock.symbol}
                     </span>
-                    <span className="text-xs text-[var(--color-text-muted)] truncate max-w-[200px]">
+                    <span className="text-xs text-(--color-text-muted) truncate max-w-[200px]">
                       {stock.name}
                     </span>
                   </div>
@@ -117,19 +117,19 @@ export function SearchCombobox({ onSelectStock, placeholder = 'Search by ticker 
 
                 <div className="flex items-center gap-3">
                   <div className="text-right">
-                    <div className="font-mono text-xs font-semibold text-[var(--color-text-primary)]">
+                    <div className="font-mono text-xs font-semibold text-(--color-text-primary)">
                       {formatCurrency(stock.price || 0)}
                     </div>
                     <div
                       className={`inline-flex items-center gap-0.5 text-[10px] font-mono font-medium ${
-                        isPos ? 'text-[var(--color-success)]' : 'text-[var(--color-error)]'
+                        isPos ? 'text-(--color-success)' : 'text-(--color-error)'
                       }`}
                     >
                       {isPos ? <TrendingUp className="w-2.5 h-2.5" /> : <TrendingDown className="w-2.5 h-2.5" />}
                       <span>{formatPercent(stock.changePercent || 0).text}</span>
                     </div>
                   </div>
-                  <ArrowRight className="w-4 h-4 text-[var(--color-text-muted)] shrink-0" />
+                  <ArrowRight className="w-4 h-4 text-(--color-text-muted) shrink-0" />
                 </div>
               </button>
             );

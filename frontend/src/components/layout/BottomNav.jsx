@@ -18,7 +18,7 @@ const mobileNavItems = [
 
 export function BottomNav() {
   return (
-    <nav className="md:hidden fixed bottom-0 inset-x-0 h-16 bg-[var(--color-bg-base)]/90 backdrop-blur-md border-t border-[var(--color-border)] z-30 flex items-center justify-around px-2">
+    <nav className="md:hidden fixed bottom-0 inset-x-0 h-16 bg-(--color-bg-base)/90 backdrop-blur-md border-t border-(--color-border) z-30 flex items-center justify-around px-2">
       {mobileNavItems.map((item) => {
         const Icon = item.icon;
         return (
@@ -29,8 +29,8 @@ export function BottomNav() {
               cn(
                 'flex flex-col items-center justify-center gap-1 w-14 py-1 rounded-lg text-[10px] font-medium transition-colors',
                 isActive
-                  ? 'text-[var(--color-brand)]'
-                  : 'text-[var(--color-text-muted)] hover:text-[var(--color-text-primary)]'
+                  ? 'text-(--color-brand)'
+                  : 'text-(--color-text-muted) hover:text-(--color-text-primary)'
               )
             }
           >

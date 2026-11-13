@@ -56,22 +56,22 @@ export function ReplayControls({
   const progressPercent = total > 1 ? ((current - 1) / (total - 1)) * 100 : 100;
 
   return (
-    <Card className={cn('p-4 bg-[var(--color-bg-subtle)] border-[var(--color-border)] space-y-4 font-mono', className)}>
+    <Card className={cn('p-4 bg-(--color-bg-subtle) border-(--color-border) space-y-4 font-mono', className)}>
       {/* Top telemetry & Day indicator */}
       <div className="flex items-center justify-between text-xs">
         <div className="flex items-center gap-2">
-          <span className="w-2 h-2 rounded-full bg-[var(--color-brand)] animate-pulse" />
-          <span className="text-[var(--color-text-primary)] font-bold text-sm">
+          <span className="w-2 h-2 rounded-full bg-(--color-brand) animate-pulse" />
+          <span className="text-(--color-text-primary) font-bold text-sm">
             Day {current} of {total}
           </span>
-          <span className="text-[11px] text-[var(--color-text-muted)]">
+          <span className="text-[11px] text-(--color-text-muted)">
             ({Math.round(progressPercent)}% revealed)
           </span>
         </div>
 
-        <div className="flex items-center gap-2 text-[11px] text-[var(--color-text-muted)]">
+        <div className="flex items-center gap-2 text-[11px] text-(--color-text-muted)">
           <span className="hidden sm:inline">Speed: 1 candle/sec</span>
-          <span className={cn('px-2 py-0.5 rounded text-[10px] font-bold uppercase', isPlaying ? 'bg-[var(--color-success-subtle)] text-[var(--color-success)] border border-[var(--color-success)]/30' : 'bg-[var(--color-bg-raised)] text-[var(--color-text-muted)]')}>
+          <span className={cn('px-2 py-0.5 rounded text-[10px] font-bold uppercase', isPlaying ? 'bg-(--color-success-subtle) text-(--color-success) border border-(--color-success)/30' : 'bg-(--color-bg-raised) text-(--color-text-muted)')}>
             {isPlaying ? 'RUNNING' : 'PAUSED'}
           </span>
         </div>
@@ -87,10 +87,10 @@ export function ReplayControls({
             value={current}
             onChange={handleSliderChange}
             aria-label="Replay timeline progress"
-            className="w-full h-2 bg-[var(--color-bg-raised)] rounded-lg appearance-none cursor-pointer accent-[var(--color-brand)] focus:outline-none"
+            className="w-full h-2 bg-(--color-bg-raised) rounded-lg appearance-none cursor-pointer accent-(--color-brand) focus:outline-none"
           />
         </div>
-        <div className="flex justify-between text-[10px] text-[var(--color-text-muted)]">
+        <div className="flex justify-between text-[10px] text-(--color-text-muted)">
           <span>Day 1 (Start)</span>
           <span>Day {Math.round(total / 2)}</span>
           <span>Day {total} (Latest)</span>
@@ -98,7 +98,7 @@ export function ReplayControls({
       </div>
 
       {/* Replay action buttons */}
-      <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-[var(--color-border)]">
+      <div className="flex flex-wrap items-center justify-between gap-2 pt-2 border-t border-(--color-border)">
         {/* Left: Rewind controls */}
         <div className="flex items-center gap-1">
           <Button

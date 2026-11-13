@@ -17,7 +17,7 @@ export function QuizWidget({
 
   if (!questions || questions.length === 0) {
     return (
-      <Card className={cn('p-6 text-center text-xs text-[var(--color-text-muted)]', className)}>
+      <Card className={cn('p-6 text-center text-xs text-(--color-text-muted)', className)}>
         No quiz questions available for this module.
       </Card>
     );
@@ -72,21 +72,21 @@ export function QuizWidget({
   };
 
   return (
-    <Card className={cn('border-[var(--color-border)] bg-[var(--color-bg-subtle)] space-y-6 p-6', className)}>
-      <CardHeader className="p-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-[var(--color-border)]">
+    <Card className={cn('border-(--color-border) bg-(--color-bg-subtle) space-y-6 p-6', className)}>
+      <CardHeader className="p-0 flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-4 border-b border-(--color-border)">
         <div>
           <div className="flex items-center gap-2 mb-1">
-            <span className="p-1 rounded bg-[var(--color-brand-subtle)] text-[var(--color-brand)]">
+            <span className="p-1 rounded bg-(--color-brand-subtle) text-(--color-brand)">
               <HelpCircle className="w-4 h-4" />
             </span>
-            <span className="text-[11px] font-mono uppercase tracking-wider text-[var(--color-brand)] font-semibold">
+            <span className="text-[11px] font-mono uppercase tracking-wider text-(--color-brand) font-semibold">
               Module Assessment
             </span>
           </div>
-          <CardTitle className="text-base font-bold text-[var(--color-text-primary)]">
+          <CardTitle className="text-base font-bold text-(--color-text-primary)">
             Knowledge Check Quiz
           </CardTitle>
-          <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
+          <p className="text-xs text-(--color-text-muted) mt-0.5">
             Answer all {totalQuestions} questions to test your comprehension and mark this lesson completed.
           </p>
         </div>
@@ -114,29 +114,29 @@ export function QuizWidget({
           className={cn(
             'p-4 rounded-xl border flex flex-col sm:flex-row sm:items-center justify-between gap-3',
             isPassed
-              ? 'bg-[var(--color-success-subtle)] border-[var(--color-success)]/30 text-[var(--color-success)]'
-              : 'bg-[var(--color-error-subtle)] border-[var(--color-error)]/30 text-[var(--color-error)]'
+              ? 'bg-(--color-success-subtle) border-(--color-success)/30 text-(--color-success)'
+              : 'bg-(--color-error-subtle) border-(--color-error)/30 text-(--color-error)'
           )}
         >
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-lg bg-[var(--color-bg-base)] flex items-center justify-center shrink-0">
+            <div className="w-10 h-10 rounded-lg bg-(--color-bg-base) flex items-center justify-center shrink-0">
               <Award className="w-5 h-5" />
             </div>
             <div>
-              <h4 className="text-sm font-bold text-[var(--color-text-primary)]">
+              <h4 className="text-sm font-bold text-(--color-text-primary)">
                 {isPassed ? 'Great Job! Assessment Complete.' : 'Quiz Completed — Review Concepts'}
               </h4>
-              <p className="text-xs text-[var(--color-text-muted)]">
+              <p className="text-xs text-(--color-text-muted)">
                 You correctly answered {score} out of {totalQuestions} questions ({percentage}%).
               </p>
             </div>
           </div>
 
           <div className="text-right">
-            <span className="text-2xl font-mono font-bold tracking-tight text-[var(--color-text-primary)]">
+            <span className="text-2xl font-mono font-bold tracking-tight text-(--color-text-primary)">
               {score}/{totalQuestions}
             </span>
-            <span className="block text-[10px] font-mono uppercase text-[var(--color-text-muted)]">
+            <span className="block text-[10px] font-mono uppercase text-(--color-text-muted)">
               Final Score
             </span>
           </div>
@@ -152,22 +152,22 @@ export function QuizWidget({
           return (
             <div
               key={questionItem.id || qIndex}
-              className="p-4 rounded-xl border border-[var(--color-border)] bg-[var(--color-bg-base)]/50 space-y-3"
+              className="p-4 rounded-xl border border-(--color-border) bg-(--color-bg-base)/50 space-y-3"
             >
               {/* Question header */}
               <div className="flex items-start justify-between gap-3">
-                <span className="text-xs font-mono text-[var(--color-brand)] font-semibold shrink-0 mt-0.5">
+                <span className="text-xs font-mono text-(--color-brand) font-semibold shrink-0 mt-0.5">
                   Q{qIndex + 1}.
                 </span>
-                <p className="text-sm font-medium text-[var(--color-text-primary)] flex-1 leading-snug">
+                <p className="text-sm font-medium text-(--color-text-primary) flex-1 leading-snug">
                   {questionItem.question}
                 </p>
                 {isSubmitted && (
                   <span className="shrink-0">
                     {isCorrectChoice ? (
-                      <CheckCircle2 className="w-4 h-4 text-[var(--color-success)]" />
+                      <CheckCircle2 className="w-4 h-4 text-(--color-success)" />
                     ) : (
-                      <XCircle className="w-4 h-4 text-[var(--color-error)]" />
+                      <XCircle className="w-4 h-4 text-(--color-error)" />
                     )}
                   </span>
                 )}
@@ -179,18 +179,18 @@ export function QuizWidget({
                   const isSelected = selectedOption === optIndex;
                   const isCorrectAnswer = optIndex === questionItem.correctAnswer;
 
-                  let optionStyle = 'border-[var(--color-border)] hover:bg-[var(--color-bg-raised)] text-[var(--color-text-secondary)]';
+                  let optionStyle = 'border-(--color-border) hover:bg-(--color-bg-raised) text-(--color-text-secondary)';
 
                   if (isSubmitted) {
                     if (isCorrectAnswer) {
-                      optionStyle = 'border-[var(--color-success)] bg-[var(--color-success-subtle)] text-[var(--color-success)] font-medium';
+                      optionStyle = 'border-(--color-success) bg-(--color-success-subtle) text-(--color-success) font-medium';
                     } else if (isSelected && !isCorrectAnswer) {
-                      optionStyle = 'border-[var(--color-error)] bg-[var(--color-error-subtle)] text-[var(--color-error)] font-medium';
+                      optionStyle = 'border-(--color-error) bg-(--color-error-subtle) text-(--color-error) font-medium';
                     } else {
-                      optionStyle = 'border-[var(--color-border)] opacity-60 text-[var(--color-text-muted)]';
+                      optionStyle = 'border-(--color-border) opacity-60 text-(--color-text-muted)';
                     }
                   } else if (isSelected) {
-                    optionStyle = 'border-[var(--color-brand)] bg-[var(--color-brand-subtle)] text-[var(--color-brand)] font-medium';
+                    optionStyle = 'border-(--color-brand) bg-(--color-brand-subtle) text-(--color-brand) font-medium';
                   }
 
                   return (
@@ -216,7 +216,7 @@ export function QuizWidget({
                           'w-4 h-4 rounded-full border flex items-center justify-center shrink-0 transition-colors',
                           isSelected
                             ? 'border-current bg-current/20'
-                            : 'border-[var(--color-border-strong)] bg-transparent'
+                            : 'border-(--color-border-strong) bg-transparent'
                         )}
                       >
                         {isSelected && (
@@ -225,7 +225,7 @@ export function QuizWidget({
                       </div>
                       <span className="flex-1 leading-relaxed">{optionText}</span>
                       {isSubmitted && isCorrectAnswer && (
-                        <Check className="w-3.5 h-3.5 shrink-0 text-[var(--color-success)]" />
+                        <Check className="w-3.5 h-3.5 shrink-0 text-(--color-success)" />
                       )}
                     </label>
                   );
@@ -234,8 +234,8 @@ export function QuizWidget({
 
               {/* Explanation after submission */}
               {isSubmitted && questionItem.explanation && (
-                <div className="mt-3 p-3 rounded-lg bg-[var(--color-bg-raised)] border border-[var(--color-border)] text-xs text-[var(--color-text-secondary)] leading-relaxed">
-                  <span className="font-semibold text-[var(--color-text-primary)]">Explanation: </span>
+                <div className="mt-3 p-3 rounded-lg bg-(--color-bg-raised) border border-(--color-border) text-xs text-(--color-text-secondary) leading-relaxed">
+                  <span className="font-semibold text-(--color-text-primary)">Explanation: </span>
                   {questionItem.explanation}
                 </div>
               )}
@@ -246,8 +246,8 @@ export function QuizWidget({
 
       {/* Action footer */}
       {!isSubmitted ? (
-        <div className="pt-4 border-t border-[var(--color-border)] flex flex-col sm:flex-row sm:items-center justify-between gap-3">
-          <span className="text-xs font-mono text-[var(--color-text-muted)]">
+        <div className="pt-4 border-t border-(--color-border) flex flex-col sm:flex-row sm:items-center justify-between gap-3">
+          <span className="text-xs font-mono text-(--color-text-muted)">
             {Object.keys(selectedAnswers).length} of {totalQuestions} answered
           </span>
           <Button
@@ -259,7 +259,7 @@ export function QuizWidget({
           </Button>
         </div>
       ) : (
-        <div className="pt-4 border-t border-[var(--color-border)] flex justify-end">
+        <div className="pt-4 border-t border-(--color-border) flex justify-end">
           <Button
             variant="secondary"
             size="sm"
