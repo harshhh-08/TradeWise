@@ -1,13 +1,15 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Search, Wallet, User as UserIcon, LogOut, Menu, X, ArrowUpRight } from 'lucide-react';
+import { Search, User as UserIcon, LogOut, Menu, X, ArrowUpRight, Sun, Moon } from 'lucide-react';
 import { cn, formatCurrency } from '@/lib/utils';
+import { useTheme } from '@/context/ThemeContext';
 
 export function TopBar({ onToggleMobileMenu, isMobileMenuOpen, user, walletBalance, onLogout }) {
   const [searchQuery, setSearchQuery] = useState('');
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [marketTime, setMarketTime] = useState('');
   const navigate = useNavigate();
+  const { theme, toggleTheme } = useTheme();
 
   useEffect(() => {
     const updateClock = () => {
@@ -91,6 +93,16 @@ export function TopBar({ onToggleMobileMenu, isMobileMenuOpen, user, walletBalan
             <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
         </div>
+
+        {/* Theme Toggle */}
+        <button
+          type="button"
+          onClick={toggleTheme}
+          aria-label={theme === 'dark' ? 'Switch to light mode' : 'Switch to dark mode'}
+          className="p-1.5 rounded-md text-(--color-text-muted) hover:text-(--color-text-primary) hover:bg-(--color-bg-raised) transition-colors"
+        >
+          {theme === 'dark' ? <Sun className="w-4 h-4" /> : <Moon className="w-4 h-4" />}
+        </button>
 
         {/* User Account Menu */}
         <div className="relative">
