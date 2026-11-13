@@ -60,10 +60,6 @@ export function AuthLayout() {
       {/* Form panel */}
       <div className="flex-1 flex flex-col justify-center items-center p-6 sm:p-12 relative">
         <div className="w-full max-w-sm">
-          <div className="lg:hidden mb-8">
-            <Logo to="/" size="md" />
-          </div>
-
           <Outlet />
         </div>
       </div>

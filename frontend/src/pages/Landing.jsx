@@ -1,18 +1,15 @@
 import { useState } from 'react';
 import { Link } from 'react-router-dom';
 import {
-  TrendingUp,
-  TrendingDown,
   ArrowRight,
-  Shield,
   BarChart2,
   Cpu,
   History,
   CheckCircle2,
-  Lock,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { formatCurrency } from '@/lib/utils';
+import { Logo } from '@/components/layout/Logo';
 
 const BENCHMARKS = [
   { name: 'S&P 500', value: '5,864.67', change: '+0.42%', isPos: true },
@@ -63,12 +60,7 @@ export default function Landing() {
       {/* Primary Header */}
       <header className="h-14 border-b border-[var(--color-border)] sticky top-0 z-30 bg-[var(--color-bg-base)]/90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-6 h-6 rounded bg-[var(--color-brand)] flex items-center justify-center text-white font-mono font-bold text-xs shadow-xs">
-              TW
-            </div>
-            <span className="font-bold font-mono tracking-wider text-xs">TRADEWISE</span>
-          </Link>
+          <Logo to="/" size="sm" />
 
           <nav className="hidden md:flex items-center gap-6 text-xs text-[var(--color-text-secondary)]">
             <Link to="/markets" className="hover:text-[var(--color-text-primary)] transition-colors">
@@ -106,8 +98,11 @@ export default function Landing() {
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left copy (7 cols) */}
             <div className="lg:col-span-7 space-y-5">
-              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[var(--color-bg-raised)] border border-[var(--color-border)] text-[11px] font-mono text-[var(--color-brand)]">
-                <span>SIMULATED BROKERAGE ENVIRONMENT</span>
+              <div className="flex flex-wrap items-center gap-3">
+                <Logo variant="banner" size="md" className="rounded-lg border border-[var(--color-border)] shadow-xs" />
+                <div className="hidden sm:inline-flex items-center gap-2 px-2.5 py-1 rounded bg-[var(--color-bg-raised)] border border-[var(--color-border)] text-[11px] font-mono text-[var(--color-brand)]">
+                  <span>SIMULATED BROKERAGE ENVIRONMENT</span>
+                </div>
               </div>
 
               <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-[1.12] text-[var(--color-text-primary)]">
@@ -333,10 +328,7 @@ export default function Landing() {
       {/* Footer */}
       <footer className="mt-auto border-t border-[var(--color-border)] bg-[var(--color-bg-base)] py-8">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-[var(--color-text-muted)]">
-          <div className="flex items-center gap-2">
-            <span className="font-bold text-[var(--color-text-primary)]">TRADEWISE</span>
-            <span>&bull; Simulated Brokerage Platform</span>
-          </div>
+          <Logo to="/" size="sm" showSubtitle />
 
           <div className="flex items-center gap-5">
             <Link to="/markets" className="hover:text-[var(--color-text-primary)]">

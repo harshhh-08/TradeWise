@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { useAuth } from '@/context/AuthContext';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { Logo } from '@/components/layout/Logo';
 
 export default function Register() {
   const [name, setName] = useState('');
@@ -56,13 +57,16 @@ export default function Register() {
 
   return (
     <div className="space-y-5">
-      <div className="space-y-1">
-        <h2 className="text-xl font-bold tracking-tight text-[var(--color-text-primary)]">
-          Create Account
-        </h2>
-        <p className="text-xs text-[var(--color-text-muted)] font-mono">
-          Starting balance: $100,000.00 USD (Virtual)
-        </p>
+      <div className="space-y-3">
+        <Logo to="/" size="sm" showSubtitle />
+        <div>
+          <h2 className="text-xl font-bold tracking-tight text-[var(--color-text-primary)]">
+            Create Account
+          </h2>
+          <p className="text-xs text-[var(--color-text-muted)] font-mono mt-0.5">
+            Starting balance: $100,000.00 USD (Virtual)
+          </p>
+        </div>
       </div>
 
       {error && (

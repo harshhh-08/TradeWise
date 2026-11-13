@@ -5,6 +5,7 @@ import toast from 'react-hot-toast';
 import { useAuth } from '@/context/AuthContext';
 import { Input } from '@/components/ui/Input';
 import { Button } from '@/components/ui/Button';
+import { Logo } from '@/components/layout/Logo';
 
 export default function Login() {
   const [email, setEmail] = useState('');
@@ -42,13 +43,16 @@ export default function Login() {
 
   return (
     <div className="space-y-6">
-      <div className="space-y-1">
-        <h2 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
-          Welcome back
-        </h2>
-        <p className="text-xs text-[var(--color-text-muted)]">
-          Sign in to your TradeWise paper trading account.
-        </p>
+      <div className="space-y-3">
+        <Logo to="/" size="sm" showSubtitle />
+        <div>
+          <h2 className="text-2xl font-bold tracking-tight text-[var(--color-text-primary)]">
+            Welcome back
+          </h2>
+          <p className="text-xs text-[var(--color-text-muted)] mt-0.5">
+            Sign in to your TradeWise paper trading account.
+          </p>
+        </div>
       </div>
 
       {error && (
