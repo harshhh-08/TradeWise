@@ -189,7 +189,7 @@ export default function StockDetail() {
                 {upperSymbol}
               </span>
               <span className="px-1.5 py-0.2 rounded text-[10px] font-mono bg-(--color-bg-raised) text-(--color-text-muted) border border-(--color-border)">
-                US EQUITY &bull; NASDAQ
+                {quote?.exchange || (upperSymbol.endsWith('.NS') ? 'NSE' : 'US')} &bull; {quote?.currency || (upperSymbol.endsWith('.NS') ? 'INR' : 'USD')}
               </span>
             </div>
             <p className="text-xs text-(--color-text-muted)">{quote?.name || upperSymbol}</p>
@@ -198,7 +198,7 @@ export default function StockDetail() {
           <div className="flex items-end sm:items-center gap-4">
             <div className="text-right">
               <div className="text-2xl sm:text-3xl font-extrabold font-mono text-(--color-text-primary)">
-                {formatCurrency(currentPrice)}
+                {formatCurrency(currentPrice, quote?.currency || (upperSymbol.endsWith('.NS') ? 'INR' : 'USD'))}
               </div>
               <div
                 className={`inline-flex items-center gap-1 font-mono font-semibold text-xs ${
@@ -207,7 +207,7 @@ export default function StockDetail() {
               >
                 {isPositive ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
                 <span>
-                  {formatCurrency(quote?.change || 0)} ({formatPercent(quote?.changePercent || 0).text})
+                  {formatCurrency(quote?.change || 0, quote?.currency || (upperSymbol.endsWith('.NS') ? 'INR' : 'USD'))} ({formatPercent(quote?.changePercent || 0).text})
                 </span>
               </div>
             </div>
@@ -316,7 +316,9 @@ export default function StockDetail() {
               <div className="rounded bg-(--color-bg-base) p-3 space-y-1.5 text-xs font-mono border border-(--color-border)">
                 <div className="flex justify-between text-(--color-text-muted)">
                   <span>Quote</span>
-                  <span className="text-(--color-text-primary)">{formatCurrency(currentPrice)}</span>
+                  <span className="text-(--color-text-primary)">
+                    {formatCurrency(currentPrice, quote?.currency || (upperSymbol.endsWith('.NS') ? 'INR' : 'USD'))}
+                  </span>
                 </div>
                 <div className="flex justify-between text-(--color-text-muted)">
                   <span>Type</span>
@@ -324,7 +326,9 @@ export default function StockDetail() {
                 </div>
                 <div className="flex justify-between pt-1.5 border-t border-(--color-border) font-bold text-(--color-text-primary)">
                   <span>Consideration</span>
-                  <span>{formatCurrency(estimatedTotal)}</span>
+                  <span>
+                    {formatCurrency(estimatedTotal, quote?.currency || (upperSymbol.endsWith('.NS') ? 'INR' : 'USD'))}
+                  </span>
                 </div>
               </div>
 
