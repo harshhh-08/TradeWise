@@ -58,9 +58,9 @@ All monetary attributes (`cash`, `price`, `avgCost`, `realizedPnl`, `totalReturn
 - **Volume-Weighted Average Cost (VWAC)**:
   $$\text{AvgCost}_{\text{new}} = \frac{(Q_{\text{existing}} \times \text{AvgCost}_{\text{existing}}) + (Q_{\text{new}} \times P_{\text{executed}})}{Q_{\text{existing}} + Q_{\text{new}}}$$
 - **Realized P&L**:
-  $$\text{Realized P&L} = Q_{\text{sold}} \times (P_{\text{executed}} - \text{AvgCost})$$
+  $$\text{Realized PnL} = Q_{\text{sold}} \times (P_{\text{executed}} - \text{AvgCost})$$
 - **Unrealized P&L**:
-  $$\text{Unrealized P&L} = Q_{\text{held}} \times (P_{\text{market}} - \text{AvgCost})$$
+  $$\text{Unrealized PnL} = Q_{\text{held}} \times (P_{\text{market}} - \text{AvgCost})$$
 - **SMA Crossover Backtesting**: Signals are evaluated at bar $i$ close and filled on bar $i+1$ open to eliminate lookahead bias.
 
 ---
