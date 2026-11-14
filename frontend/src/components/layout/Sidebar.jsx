@@ -29,11 +29,8 @@ export function Sidebar({ className }) {
       )}
     >
       {/* Brand Header */}
-      <div className="h-14 flex items-center justify-between px-4 border-b border-border-subtle">
+      <div className="h-14 flex items-center px-4 border-b border-border-subtle">
         <Logo size={26} layout="horizontal" />
-        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-sm bg-elevated text-ink-secondary border border-border-subtle">
-          v2.4
-        </span>
       </div>
 
       {/* Nav Items */}
