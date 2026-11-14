@@ -49,7 +49,6 @@ export default function StockDetail() {
   const [timeframe, setTimeframe] = useState('1D');
   const [isLoading, setIsLoading] = useState(true);
 
-  // Quick Trade panel state
   const { walletBalance, updateWalletCash } = useAuth();
   const [tradeSide, setTradeSide] = useState('BUY');
   const [shares, setShares] = useState(10);
@@ -113,61 +112,46 @@ export default function StockDetail() {
   const isPositive = (quote?.changePercent ?? 0) >= 0;
   const estimatedTotal = shares * currentPrice;
 
-  const handleExecuteTrade = (e) => {
-    e.preventDefault();
-    if (shares <= 0) return;
+  const [isSubmittingTrade, setIsSubmittingTrade] = useState(false);
 
-    if (tradeSide === 'BUY') {
-      if (estimatedTotal > walletBalance) {
-        toast.error('Insufficient virtual buying power.');
-        return;
-      }
-      updateWalletCash(walletBalance - estimatedTotal);
-    } else {
-      updateWalletCash(walletBalance + estimatedTotal);
+  const handleExecuteTrade = async (e) => {
+    e.preventDefault();
+    const qty = Number(shares);
+    if (!qty || qty <= 0) {
+      toast.error('Please enter a valid quantity of shares.');
+      return;
     }
 
-    // Save trade to local storage history
+    setIsSubmittingTrade(true);
     try {
-      const existingTrades = JSON.parse(localStorage.getItem('tradewise_trades') || '[]');
-      const newTrade = {
+      const res = await api.post('/api/orders', {
         symbol: upperSymbol,
         side: tradeSide,
-        quantity: Number(shares),
-        price: currentPrice,
-        executedAt: new Date().toISOString(),
-      };
-      localStorage.setItem('tradewise_trades', JSON.stringify([newTrade, ...existingTrades]));
+        quantity: qty,
+        type: 'MARKET',
+      });
 
-      // Update positions
-      const existingPos = JSON.parse(localStorage.getItem('tradewise_positions') || '[]');
-      const idx = existingPos.findIndex((p) => p.symbol === upperSymbol);
-      if (tradeSide === 'BUY') {
-        if (idx >= 0) {
-          const cur = existingPos[idx];
-          const newQty = cur.quantity + Number(shares);
-          const newAvg = (cur.quantity * cur.avgCost + estimatedTotal) / newQty;
-          existingPos[idx] = { ...cur, quantity: newQty, avgCost: newAvg };
-        } else {
-          existingPos.push({ symbol: upperSymbol, quantity: Number(shares), avgCost: currentPrice });
+      if (res.data?.success) {
+        if (res.data.wallet?.cash !== undefined) {
+          updateWalletCash(res.data.wallet.cash);
         }
-      } else if (idx >= 0) {
-        const cur = existingPos[idx];
-        const newQty = Math.max(0, cur.quantity - Number(shares));
-        if (newQty === 0) existingPos.splice(idx, 1);
-        else existingPos[idx] = { ...cur, quantity: newQty };
+        setIsTradeSuccess(true);
+        toast.success(res.data.message || `${tradeSide} order executed for ${qty} ${upperSymbol}!`);
+        setTimeout(() => setIsTradeSuccess(false), 3000);
+      } else {
+        throw new Error(res.data?.message || 'Order execution failed');
       }
-      localStorage.setItem('tradewise_positions', JSON.stringify(existingPos));
-    } catch (_) {}
-
-    setIsTradeSuccess(true);
-    toast.success(`${tradeSide} order executed for ${shares} ${upperSymbol}!`);
-    setTimeout(() => setIsTradeSuccess(false), 3000);
+    } catch (err) {
+      const errMsg = err.response?.data?.message || err.message || 'Failed to execute order';
+      toast.error(errMsg);
+    } finally {
+      setIsSubmittingTrade(false);
+    }
   };
 
   return (
     <div className="space-y-4">
-      {/* Navigation Breadcrumb */}
+      
       <div>
         <Link
           to="/markets"
@@ -178,7 +162,7 @@ export default function StockDetail() {
         </Link>
       </div>
 
-      {/* Ticker Header */}
+      
       {isLoading && !quote ? (
         <Skeleton className="h-16 w-full" />
       ) : (
@@ -221,9 +205,9 @@ export default function StockDetail() {
         </div>
       )}
 
-      {/* 2-Column Layout */}
+      
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Left: Chart & Stats */}
+        
         <div className="lg:col-span-2 space-y-4">
           <Card className="p-4">
             <StockChart
@@ -242,7 +226,7 @@ export default function StockDetail() {
           </div>
         </div>
 
-        {/* Right: Quick Trade Panel */}
+        
         <div>
           <Card className="p-4 sticky top-16 space-y-3.5">
             <div className="flex items-center justify-between pb-2 border-b border-(--color-border)">
@@ -341,11 +325,12 @@ export default function StockDetail() {
 
               <Button
                 type="submit"
+                disabled={isSubmittingTrade || isLoading}
                 variant={tradeSide === 'BUY' ? 'success' : 'danger'}
                 className="w-full font-mono text-xs font-bold"
                 leftIcon={<ArrowLeftRight className="w-3.5 h-3.5" />}
               >
-                Transmit {tradeSide} Order
+                {isSubmittingTrade ? 'Executing Order...' : `Transmit ${tradeSide} Order`}
               </Button>
             </form>
           </Card>

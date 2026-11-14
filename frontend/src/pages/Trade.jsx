@@ -1,6 +1,7 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useSearchParams, Link } from 'react-router-dom';
-import { BarChart2, ShieldCheck, Clock } from 'lucide-react';
+import { BarChart2 } from 'lucide-react';
+import api from '@/services/api';
 import { TradeForm } from '@/components/features/TradeForm';
 import { RecentTrades } from '@/components/features/RecentTrades';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
@@ -8,41 +9,49 @@ import { Button } from '@/components/ui/Button';
 
 export default function Trade() {
   const [searchParams] = useSearchParams();
-  const symbol = searchParams.get('symbol') || 'AAPL';
+  const symbol = searchParams.get('symbol') || 'RELIANCE.NS';
   const [trades, setTrades] = useState([]);
+  const [isLoadingTrades, setIsLoadingTrades] = useState(false);
 
-  const loadTrades = () => {
+  const loadTrades = useCallback(async () => {
+    setIsLoadingTrades(true);
     try {
-      const saved = localStorage.getItem('tradewise_trades');
-      if (saved) setTrades(JSON.parse(saved));
-    } catch (_) {}
-  };
+      const res = await api.get('/api/trades?limit=10');
+      if (res.data?.success && Array.isArray(res.data.trades)) {
+        setTrades(res.data.trades);
+      }
+    } catch (err) {
+      console.warn('Could not load user trades:', err.message);
+    } finally {
+      setIsLoadingTrades(false);
+    }
+  }, []);
 
   useEffect(() => {
     loadTrades();
-  }, []);
+  }, [loadTrades]);
 
   return (
     <div className="space-y-4">
-      {/* Header */}
+      
       <div className="pb-3 border-b border-border-subtle flex flex-col sm:flex-row sm:items-center justify-between gap-2">
         <div>
           <h1 className="text-lg font-semibold tracking-tight text-ink-primary font-sans">
             Order Execution
           </h1>
           <p className="text-xs text-ink-secondary font-sans">
-            Real-time Level 1 quote routing • Instant cash validation
+            Real-time Level 1 quote routing • Instant cash validation • PostgreSQL Ledger
           </p>
         </div>
       </div>
 
       <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
-        {/* Main Order Ticket (2 cols) */}
+        
         <div className="lg:col-span-2">
           <TradeForm initialSymbol={symbol} onTradeExecuted={loadTrades} />
         </div>
 
-        {/* Sidebar Info (1 col) */}
+        
         <div className="space-y-4">
           <Card>
             <CardHeader className="pb-2">
@@ -87,8 +96,8 @@ export default function Trade() {
         </div>
       </div>
 
-      {/* Execution Ledger */}
-      <RecentTrades trades={trades} />
+      
+      <RecentTrades trades={trades} isLoading={isLoadingTrades} />
     </div>
   );
 }

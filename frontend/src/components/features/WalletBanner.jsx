@@ -8,13 +8,13 @@ export function WalletBanner({ cash = 100000, invested = 0, dayPnl = 0 }) {
 
   return (
     <div className="border border-border-subtle rounded overflow-hidden bg-surface">
-      {/* Edge-to-Edge Metric Strip (Replaces Floating Bento Cards) */}
+      
       <div className="grid grid-cols-2 lg:grid-cols-4 divide-x divide-y lg:divide-y-0 divide-border-subtle bg-surface">
         <div className="px-5 py-4">
           <span className="text-xs text-ink-secondary font-sans">Net Liquidation</span>
           <div className="mt-1 flex items-baseline gap-2 font-mono">
             <span className="text-2xl font-semibold text-ink-primary tabular-nums tracking-tight">
-              {formatCurrency(totalValue)}
+              {formatCurrency(totalValue, 'INR')}
             </span>
             <span
               className={`text-xs font-mono tabular-nums ${
@@ -30,14 +30,14 @@ export function WalletBanner({ cash = 100000, invested = 0, dayPnl = 0 }) {
         <div className="px-5 py-4">
           <span className="text-xs text-ink-secondary font-sans">Buying Power</span>
           <div className="mt-1 font-mono text-xl font-medium text-ink-primary tabular-nums tracking-tight">
-            {formatCurrency(cash)}
+            {formatCurrency(cash, 'INR')}
           </div>
         </div>
 
         <div className="px-5 py-4">
           <span className="text-xs text-ink-secondary font-sans">Invested Equity</span>
           <div className="mt-1 font-mono text-xl font-medium text-ink-primary tabular-nums tracking-tight">
-            {formatCurrency(invested)}
+            {formatCurrency(invested, 'INR')}
           </div>
         </div>
 
@@ -55,14 +55,14 @@ export function WalletBanner({ cash = 100000, invested = 0, dayPnl = 0 }) {
 export function AccountHeader({ cash = 100000, invested = 0, dayPnl = 0 }) {
   return (
     <div className="border border-border-subtle rounded overflow-hidden bg-canvas">
-      {/* Top Bar */}
+      
       <div className="flex items-center justify-between px-6 py-4 border-b border-border-subtle bg-canvas">
         <div>
           <h1 className="text-lg font-semibold tracking-tight text-ink-primary font-sans">
             Account Overview
           </h1>
           <p className="text-xs text-ink-secondary font-sans">
-            Paper Trading Account • USD Cash
+            Paper Trading Account • INR Cash
           </p>
         </div>
         <div className="flex items-center gap-2">
@@ -79,7 +79,7 @@ export function AccountHeader({ cash = 100000, invested = 0, dayPnl = 0 }) {
         </div>
       </div>
 
-      {/* Docked Metric Strip */}
+      
       <WalletBanner cash={cash} invested={invested} dayPnl={dayPnl} />
     </div>
   );

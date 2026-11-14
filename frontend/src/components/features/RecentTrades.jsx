@@ -72,14 +72,14 @@ export function RecentTrades({ trades = [] }) {
                     {trade.symbol}
                   </span>
                   <span className="text-xs text-ink-secondary font-mono tabular-nums ml-2">
-                    {trade.quantity} shs @ {formatCurrency(trade.price)}
+                    {trade.quantity} shs @ {formatCurrency(trade.price, 'INR')}
                   </span>
                 </div>
               </div>
 
               <div className="text-right">
                 <span className="font-mono font-medium text-ink-primary text-xs tabular-nums block">
-                  {formatCurrency(trade.quantity * trade.price)}
+                  {formatCurrency(trade.quantity * trade.price, 'INR')}
                 </span>
                 <span className="text-[11px] text-ink-muted font-mono tabular-nums">
                   {new Date(trade.executedAt || Date.now()).toLocaleTimeString([], {
