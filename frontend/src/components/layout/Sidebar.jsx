@@ -7,6 +7,7 @@ import {
   BookOpen,
   RotateCcw,
   Activity,
+  BarChart3,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
 import { Logo } from '@/components/ui/Logo';
@@ -18,6 +19,7 @@ const navItems = [
   { label: 'Portfolio & P&L', path: '/portfolio', icon: PieChart },
   { label: 'Curriculum', path: '/learn', icon: BookOpen },
   { label: 'Candle Replay', path: '/replay', icon: RotateCcw },
+  { label: 'Backtesting', path: '/backtest', icon: BarChart3 },
 ];
 
 export function Sidebar({ className }) {
