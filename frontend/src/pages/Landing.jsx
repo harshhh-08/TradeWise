@@ -12,6 +12,7 @@ import {
   Lock,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
+import { Logo } from '@/components/ui/Logo';
 import { formatCurrency } from '@/lib/utils';
 
 const BENCHMARKS = [
@@ -66,11 +67,8 @@ export default function Landing() {
       {/* Primary Header */}
       <header className="h-14 border-b border-(--color-border) sticky top-0 z-30 bg-(--color-bg-base)/90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-7 h-7 rounded-lg bg-(--color-brand) flex items-center justify-center text-white font-mono font-bold text-xs shadow-[0_2px_10px_var(--color-brand-subtle),inset_0_1px_0_rgba(255,255,255,0.35)]">
-              TW
-            </div>
-            <span className="font-bold font-mono tracking-wider text-xs">TRADEWISE</span>
+          <Link to="/" className="flex items-center">
+            <Logo size={28} showText={true} />
           </Link>
 
           <nav className="hidden md:flex items-center gap-6 text-xs text-(--color-text-secondary) font-medium">

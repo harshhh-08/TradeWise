@@ -1,17 +1,16 @@
 import { Link, Outlet } from 'react-router-dom';
 import { Activity, Shield, Terminal, ArrowUpRight } from 'lucide-react';
+import { Logo } from '@/components/ui/Logo';
 
 export function AuthLayout() {
   return (
-    <div className="min-h-svh flex bg-(--color-bg-base) text-(--color-text-primary) selection:bg-(--color-brand) selection:text-white">
+    <div className="min-h-svh flex bg-(--color-bg-base) text-(--color-text-primary) selection:bg-(--color-brand) selection:text-white bg-grid-pattern relative">
+      <div className="ambient-glow" />
       {/* Brand panel (hidden on mobile) */}
-      <div className="hidden lg:flex flex-col justify-between w-1/2 p-12 bg-(--color-bg-subtle) border-r border-(--color-border) relative overflow-hidden">
+      <div className="hidden lg:flex flex-col justify-between w-1/2 p-12 bg-(--color-bg-subtle)/90 backdrop-blur-md border-r border-(--color-border) relative overflow-hidden z-10">
         <div className="flex items-center justify-between">
-          <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-6 h-6 rounded bg-(--color-brand) flex items-center justify-center text-white font-mono font-bold text-xs shadow-xs">
-              TW
-            </div>
-            <span className="font-bold font-mono tracking-wider text-xs">TRADEWISE</span>
+          <Link to="/" className="flex items-center">
+            <Logo size={30} showText={true} />
           </Link>
           <div className="flex items-center gap-1.5 text-[10px] font-mono text-(--color-success) px-2 py-0.5 rounded bg-(--color-bg-raised) border border-(--color-border)">
             <span className="w-1.5 h-1.5 rounded-full bg-(--color-success) animate-pulse" />

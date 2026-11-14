@@ -9,6 +9,7 @@ import {
   Activity,
 } from 'lucide-react';
 import { cn } from '@/lib/utils';
+import { Logo } from '@/components/ui/Logo';
 
 const navItems = [
   { label: 'Overview', path: '/dashboard', icon: LayoutDashboard },
@@ -29,20 +30,7 @@ export function Sidebar({ className }) {
     >
       {/* Brand */}
       <div className="h-14 flex items-center justify-between px-4 border-b border-(--color-border)">
-        <div className="flex items-center gap-2.5">
-          <div className="w-7 h-7 rounded-lg bg-(--color-brand) flex items-center justify-center text-white font-mono font-bold text-xs shadow-[0_2px_10px_var(--color-brand-subtle),inset_0_1px_0_rgba(255,255,255,0.35)]">
-            TW
-          </div>
-          <div className="flex flex-col">
-            <span className="font-bold text-xs font-mono tracking-wider text-(--color-text-primary) flex items-center gap-1.5">
-              TRADEWISE
-              <span className="w-1.5 h-1.5 rounded-full bg-(--color-success) beacon-live" />
-            </span>
-            <span className="text-[9px] font-mono text-(--color-text-muted) tracking-tight">
-              TERMINAL // PRO
-            </span>
-          </div>
-        </div>
+        <Logo size={28} showText={true} />
         <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-(--color-bg-raised) text-(--color-brand) font-semibold border border-(--color-border)">
           v2.4
         </span>
