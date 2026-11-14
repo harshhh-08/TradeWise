@@ -38,24 +38,27 @@ export default function Landing() {
   const orderTotal = previewShares * stock.price;
 
   return (
-    <div className="min-h-svh bg-(--color-bg-base) text-(--color-text-primary) flex flex-col selection:bg-(--color-brand) selection:text-white">
+    <div className="min-h-svh bg-(--color-bg-base) text-(--color-text-primary) flex flex-col selection:bg-(--color-brand) selection:text-white relative overflow-hidden bg-grid-pattern">
+      {/* Ambient Lighting Beam */}
+      <div className="ambient-glow" />
+
       {/* Benchmark Ticker Strip */}
-      <div className="border-b border-(--color-border) bg-(--color-bg-subtle)/70 py-1.5 px-4 overflow-x-auto no-scrollbar">
+      <div className="border-b border-(--color-border) bg-(--color-bg-subtle)/80 backdrop-blur-sm py-1.5 px-4 overflow-x-auto no-scrollbar relative z-10">
         <div className="max-w-7xl mx-auto flex items-center justify-between min-w-[700px] text-[11px] font-mono">
           <div className="flex items-center gap-6">
             {BENCHMARKS.map((b) => (
               <div key={b.name} className="flex items-center gap-2">
                 <span className="text-(--color-text-muted)">{b.name}</span>
-                <span className="font-semibold text-(--color-text-primary)">{b.value}</span>
-                <span className={b.isPos ? 'text-(--color-success)' : 'text-(--color-error)'}>
+                <span className="font-semibold text-(--color-text-primary) tabular">{b.value}</span>
+                <span className={b.isPos ? 'text-(--color-success) font-semibold' : 'text-(--color-error) font-semibold'}>
                   {b.change}
                 </span>
               </div>
             ))}
           </div>
           <div className="flex items-center gap-2 text-[10px] text-(--color-text-muted) border-l border-(--color-border) pl-4">
-            <span className="w-1.5 h-1.5 rounded-full bg-(--color-success) animate-pulse" />
-            <span>US MARKETS OPEN</span>
+            <span className="w-2 h-2 rounded-full bg-(--color-success) beacon-live" />
+            <span className="font-bold text-(--color-text-primary)">US MARKETS OPEN</span>
           </div>
         </div>
       </div>
@@ -64,13 +67,13 @@ export default function Landing() {
       <header className="h-14 border-b border-(--color-border) sticky top-0 z-30 bg-(--color-bg-base)/90 backdrop-blur-md">
         <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <Link to="/" className="flex items-center gap-2.5">
-            <div className="w-6 h-6 rounded bg-(--color-brand) flex items-center justify-center text-white font-mono font-bold text-xs shadow-xs">
+            <div className="w-7 h-7 rounded-lg bg-(--color-brand) flex items-center justify-center text-white font-mono font-bold text-xs shadow-[0_2px_10px_var(--color-brand-subtle),inset_0_1px_0_rgba(255,255,255,0.35)]">
               TW
             </div>
             <span className="font-bold font-mono tracking-wider text-xs">TRADEWISE</span>
           </Link>
 
-          <nav className="hidden md:flex items-center gap-6 text-xs text-(--color-text-secondary)">
+          <nav className="hidden md:flex items-center gap-6 text-xs text-(--color-text-secondary) font-medium">
             <Link to="/markets" className="hover:text-(--color-text-primary) transition-colors">
               Market Quotes
             </Link>
@@ -101,17 +104,18 @@ export default function Landing() {
       </header>
 
       {/* Hero Section */}
-      <section className="pt-14 pb-16 sm:pt-20 sm:pb-24 border-b border-(--color-border)">
+      <section className="pt-14 pb-16 sm:pt-20 sm:pb-24 border-b border-(--color-border) relative z-10">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
             {/* Left copy (7 cols) */}
             <div className="lg:col-span-7 space-y-5">
-              <div className="inline-flex items-center gap-2 px-2.5 py-1 rounded bg-(--color-bg-raised) border border-(--color-border) text-[11px] font-mono text-(--color-brand)">
-                <span>SIMULATED BROKERAGE ENVIRONMENT</span>
+              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-(--color-brand-subtle) border border-(--color-brand)/20 text-[11px] font-mono text-(--color-brand) font-bold shadow-xs">
+                <span className="w-1.5 h-1.5 rounded-full bg-(--color-brand) animate-ping" />
+                <span>INSTITUTIONAL BROKERAGE SIMULATOR</span>
               </div>
 
-              <h1 className="text-3xl sm:text-5xl font-extrabold tracking-tight leading-[1.12] text-(--color-text-primary)">
-                The institutional paper trading terminal.
+              <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.08] text-(--color-text-primary)">
+                The terminal for <span className="text-gradient-silver">elite market execution.</span>
               </h1>
 
               <p className="text-sm sm:text-base text-(--color-text-muted) leading-relaxed max-w-xl">
@@ -120,7 +124,7 @@ export default function Landing() {
 
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <Link to="/register">
-                  <Button size="lg" className="px-5 font-semibold" rightIcon={<ArrowRight className="w-4 h-4" />}>
+                  <Button size="lg" className="px-6 font-semibold" rightIcon={<ArrowRight className="w-4 h-4" />}>
                     Open $100k Paper Account
                   </Button>
                 </Link>
@@ -133,26 +137,26 @@ export default function Landing() {
 
               <div className="pt-4 flex items-center gap-6 text-xs text-(--color-text-muted) font-mono">
                 <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-(--color-success)" />
+                  <CheckCircle2 className="w-4 h-4 text-(--color-success)" />
                   <span>Real Yahoo &amp; Twelve Data Feeds</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-3.5 h-3.5 text-(--color-success)" />
-                  <span>Zero Financial Risk</span>
+                  <CheckCircle2 className="w-4 h-4 text-(--color-success)" />
+                  <span>Zero Capital Risk</span>
                 </div>
               </div>
             </div>
 
             {/* Right Interactive Preview (5 cols) */}
             <div className="lg:col-span-5">
-              <div className="rounded-lg border border-(--color-border) bg-(--color-bg-subtle) shadow-xl overflow-hidden">
+              <div className="card-worldclass rounded-2xl border border-(--color-border) bg-(--color-bg-subtle) shadow-2xl overflow-hidden relative">
                 {/* Terminal top chrome */}
-                <div className="h-9 px-3 bg-(--color-bg-raised) border-b border-(--color-border) flex items-center justify-between text-[11px] font-mono">
+                <div className="h-10 px-4 bg-(--color-bg-raised) border-b border-(--color-border) flex items-center justify-between text-[11px] font-mono">
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-(--color-success)" />
-                    <span className="font-semibold text-(--color-text-primary)">TICKER SIMULATOR</span>
+                    <span className="w-2 h-2 rounded-full bg-(--color-success) beacon-live" />
+                    <span className="font-bold text-(--color-text-primary)">TICKER SIMULATOR</span>
                   </div>
-                  <span className="text-(--color-text-muted)">CASH: $100,000.00</span>
+                  <span className="text-(--color-brand) font-semibold">BUYING POWER: $100,000.00</span>
                 </div>
 
                 {/* Ticker switch pills */}
@@ -162,9 +166,9 @@ export default function Landing() {
                       key={sym}
                       type="button"
                       onClick={() => setActiveTicker(sym)}
-                      className={`px-2.5 py-1 rounded text-xs font-mono font-semibold transition-colors cursor-pointer ${
+                      className={`px-3 py-1 rounded-md text-xs font-mono font-bold transition-all cursor-pointer ${
                         activeTicker === sym
-                          ? 'bg-(--color-brand) text-white'
+                          ? 'bg-(--color-brand) text-white shadow-xs'
                           : 'text-(--color-text-muted) hover:text-(--color-text-primary) hover:bg-(--color-bg-raised)'
                       }`}
                     >
@@ -174,21 +178,21 @@ export default function Landing() {
                 </div>
 
                 {/* Price display & mini sparkline */}
-                <div className="p-4 space-y-3">
+                <div className="p-5 space-y-4">
                   <div className="flex items-baseline justify-between">
                     <div>
-                      <div className="text-lg font-bold font-mono">{activeTicker}</div>
+                      <div className="text-xl font-black font-mono tracking-tight">{activeTicker}</div>
                       <div className="text-[11px] text-(--color-text-muted) truncate max-w-[160px]">
                         {stock.name}
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-xl font-extrabold font-mono text-(--color-text-primary)">
+                      <div className="text-2xl font-black font-mono text-(--color-text-primary) tabular">
                         {formatCurrency(stock.price)}
                       </div>
                       <div
-                        className={`text-xs font-mono font-semibold ${
-                          stock.isPos ? 'text-(--color-success)' : 'text-(--color-error)'
+                        className={`text-xs font-mono font-bold inline-block px-1.5 py-0.5 rounded ${
+                          stock.isPos ? 'bg-(--color-success-subtle) text-(--color-success)' : 'bg-(--color-error-subtle) text-(--color-error)'
                         }`}
                       >
                         {stock.change}
@@ -196,18 +200,40 @@ export default function Landing() {
                     </div>
                   </div>
 
-                  {/* SVG Line Preview */}
-                  <div className="h-24 w-full bg-(--color-bg-base) rounded border border-(--color-border) p-2 flex items-center">
+                  {/* SVG Line Preview with Glowing Area Fill */}
+                  <div className="h-28 w-full bg-(--color-bg-base) rounded-xl border border-(--color-border) p-3 flex items-center overflow-hidden relative">
                     <svg className="w-full h-full overflow-visible" viewBox="0 0 100 40" preserveAspectRatio="none">
+                      <defs>
+                        <linearGradient id={`grad-${activeTicker}`} x1="0" y1="0" x2="0" y2="1">
+                          <stop offset="0%" stopColor={stock.isPos ? '#10b981' : '#f43f5e'} stopOpacity="0.35" />
+                          <stop offset="100%" stopColor={stock.isPos ? '#10b981' : '#f43f5e'} stopOpacity="0" />
+                        </linearGradient>
+                      </defs>
+                      {/* Polygon fill */}
+                      <polygon
+                        fill={`url(#grad-${activeTicker})`}
+                        points={`0,40 ${stock.points
+                          .map((val, i) => {
+                            const min = Math.min(...stock.points);
+                            const max = Math.max(...stock.points);
+                            const y = 32 - ((val - min) / ((max - min) || 1)) * 24;
+                            const x = (i / (stock.points.length - 1)) * 100;
+                            return `${x},${y}`;
+                          })
+                          .join(' ')} 100,40`}
+                      />
+                      {/* Stroke line */}
                       <polyline
                         fill="none"
                         stroke={stock.isPos ? '#10b981' : '#f43f5e'}
-                        strokeWidth="2"
+                        strokeWidth="2.5"
+                        strokeLinecap="round"
+                        strokeLinejoin="round"
                         points={stock.points
                           .map((val, i) => {
                             const min = Math.min(...stock.points);
                             const max = Math.max(...stock.points);
-                            const y = 35 - ((val - min) / ((max - min) || 1)) * 30;
+                            const y = 32 - ((val - min) / ((max - min) || 1)) * 24;
                             const x = (i / (stock.points.length - 1)) * 100;
                             return `${x},${y}`;
                           })
@@ -217,12 +243,12 @@ export default function Landing() {
                   </div>
 
                   {/* Simulated Order Ticket */}
-                  <div className="pt-2 border-t border-(--color-border) space-y-2.5">
-                    <div className="grid grid-cols-2 gap-1.5 p-0.5 rounded bg-(--color-bg-raised) border border-(--color-border)">
+                  <div className="pt-2 border-t border-(--color-border) space-y-3">
+                    <div className="grid grid-cols-2 gap-1.5 p-1 rounded-lg bg-(--color-bg-raised) border border-(--color-border)">
                       <button
                         type="button"
                         onClick={() => setPreviewSide('BUY')}
-                        className={`py-1 text-xs font-bold font-mono rounded cursor-pointer ${
+                        className={`py-1.5 text-xs font-bold font-mono rounded-md cursor-pointer transition-all ${
                           previewSide === 'BUY'
                             ? 'bg-(--color-success) text-white shadow-xs'
                             : 'text-(--color-text-muted)'
@@ -233,7 +259,7 @@ export default function Landing() {
                       <button
                         type="button"
                         onClick={() => setPreviewSide('SELL')}
-                        className={`py-1 text-xs font-bold font-mono rounded cursor-pointer ${
+                        className={`py-1.5 text-xs font-bold font-mono rounded-md cursor-pointer transition-all ${
                           previewSide === 'SELL'
                             ? 'bg-(--color-error) text-white shadow-xs'
                             : 'text-(--color-text-muted)'
@@ -244,20 +270,20 @@ export default function Landing() {
                     </div>
 
                     <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="text-(--color-text-muted)">Quantity</span>
-                      <div className="flex items-center gap-1.5">
+                      <span className="text-(--color-text-muted)">Shares Consideration</span>
+                      <div className="flex items-center gap-2">
                         <button
                           type="button"
                           onClick={() => setPreviewShares((s) => Math.max(5, s - 5))}
-                          className="px-2 py-0.5 rounded bg-(--color-bg-raised) border border-(--color-border) text-xs font-bold"
+                          className="w-7 h-7 flex items-center justify-center rounded-md bg-(--color-bg-raised) border border-(--color-border) text-xs font-bold hover:bg-(--color-bg-subtle)"
                         >
                           -
                         </button>
-                        <span className="w-8 text-center font-bold">{previewShares}</span>
+                        <span className="w-10 text-center font-bold font-mono text-sm">{previewShares}</span>
                         <button
                           type="button"
                           onClick={() => setPreviewShares((s) => s + 5)}
-                          className="px-2 py-0.5 rounded bg-(--color-bg-raised) border border-(--color-border) text-xs font-bold"
+                          className="w-7 h-7 flex items-center justify-center rounded-md bg-(--color-bg-raised) border border-(--color-border) text-xs font-bold hover:bg-(--color-bg-subtle)"
                         >
                           +
                         </button>
@@ -266,13 +292,13 @@ export default function Landing() {
 
                     <div className="flex justify-between items-center text-xs font-mono pt-1">
                       <span className="text-(--color-text-muted)">Order Consideration</span>
-                      <span className="font-bold text-(--color-text-primary)">
+                      <span className="font-bold text-(--color-text-primary) text-sm tabular">
                         {formatCurrency(orderTotal)}
                       </span>
                     </div>
 
                     <Link to="/register" className="block pt-1">
-                      <Button size="md" className="w-full font-mono text-xs">
+                      <Button size="md" className="w-full font-mono text-xs font-bold">
                         Execute {previewSide} {previewShares} {activeTicker}
                       </Button>
                     </Link>
@@ -285,21 +311,21 @@ export default function Landing() {
       </section>
 
       {/* Platform Pillars */}
-      <section className="py-16 bg-(--color-bg-subtle)/50">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-10">
-          <div className="max-w-xl space-y-2">
-            <h2 className="text-xl sm:text-2xl font-bold tracking-tight">
+      <section className="py-20 bg-(--color-bg-subtle)/40 relative z-10 border-b border-(--color-border)">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
+          <div className="max-w-xl space-y-3">
+            <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
               Engineered for market mechanics, not guesswork.
             </h2>
-            <p className="text-xs sm:text-sm text-(--color-text-muted)">
+            <p className="text-xs sm:text-sm text-(--color-text-muted) leading-relaxed">
               TradeWise bridges the gap between static textbook finance and live exchange execution.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-5">
-            <div className="p-5 rounded-lg border border-(--color-border) bg-(--color-bg-base) space-y-3">
-              <div className="w-8 h-8 rounded bg-(--color-bg-raised) text-(--color-brand) border border-(--color-border) flex items-center justify-center font-mono">
-                <Cpu className="w-4 h-4" />
+          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+            <div className="card-worldclass p-6 rounded-2xl space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-(--color-brand-subtle) text-(--color-brand) border border-(--color-brand)/20 flex items-center justify-center font-mono shadow-xs">
+                <Cpu className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-bold font-mono">Order Routing Simulation</h3>
               <p className="text-xs text-(--color-text-muted) leading-relaxed">
@@ -307,9 +333,9 @@ export default function Landing() {
               </p>
             </div>
 
-            <div className="p-5 rounded-lg border border-(--color-border) bg-(--color-bg-base) space-y-3">
-              <div className="w-8 h-8 rounded bg-(--color-bg-raised) text-(--color-success) border border-(--color-border) flex items-center justify-center font-mono">
-                <History className="w-4 h-4" />
+            <div className="card-worldclass p-6 rounded-2xl space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-(--color-success-subtle) text-(--color-success) border border-(--color-success)/20 flex items-center justify-center font-mono shadow-xs">
+                <History className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-bold font-mono">Candle Replay Backtester</h3>
               <p className="text-xs text-(--color-text-muted) leading-relaxed">
@@ -317,9 +343,9 @@ export default function Landing() {
               </p>
             </div>
 
-            <div className="p-5 rounded-lg border border-(--color-border) bg-(--color-bg-base) space-y-3">
-              <div className="w-8 h-8 rounded bg-(--color-bg-raised) text-(--color-info) border border-(--color-border) flex items-center justify-center font-mono">
-                <BarChart2 className="w-4 h-4" />
+            <div className="card-worldclass p-6 rounded-2xl space-y-3">
+              <div className="w-10 h-10 rounded-xl bg-(--color-info-subtle) text-(--color-info) border border-(--color-info)/20 flex items-center justify-center font-mono shadow-xs">
+                <BarChart2 className="w-5 h-5" />
               </div>
               <h3 className="text-sm font-bold font-mono">Portfolio Performance Analytics</h3>
               <p className="text-xs text-(--color-text-muted) leading-relaxed">

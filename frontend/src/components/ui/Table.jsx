@@ -51,7 +51,7 @@ export function TableRow({ className, children, ...props }) {
 
 export function TableHead({ className, children, ...props }) {
   return (
-    <th className={cn('py-3 px-4 font-semibold text-[11px]', className)} {...props}>
+    <th className={cn('py-3 px-4 font-mono font-bold text-[10px] uppercase tracking-wider text-(--color-text-muted)', className)} {...props}>
       {children}
     </th>
   );
@@ -59,7 +59,7 @@ export function TableHead({ className, children, ...props }) {
 
 export function TableCell({ className, children, ...props }) {
   return (
-    <td className={cn('py-3 px-4 text-xs text-(--color-text-primary)', className)} {...props}>
+    <td className={cn('py-3.5 px-4 text-xs font-mono text-(--color-text-primary) tabular', className)} {...props}>
       {children}
     </td>
   );

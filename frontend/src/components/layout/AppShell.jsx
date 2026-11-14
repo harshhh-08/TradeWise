@@ -12,7 +12,10 @@ export function AppShell() {
   const location = useLocation();
 
   return (
-    <div className="flex h-svh w-full bg-(--color-bg-base) text-(--color-text-primary) overflow-hidden">
+    <div className="relative flex h-svh w-full bg-(--color-bg-base) text-(--color-text-primary) overflow-hidden bg-grid-pattern">
+      {/* Ambient Atmospheric Lighting */}
+      <div className="ambient-glow" />
+
       <Sidebar />
 
       {/* Mobile drawer backdrop */}
