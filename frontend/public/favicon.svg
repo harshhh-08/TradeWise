@@ -1,8 +1,24 @@
-<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
-  <rect width="32" height="32" rx="8" fill="#0A0C12" stroke="rgba(255,255,255,0.12)" stroke-width="1"/>
-  <line x1="6" y1="1" x2="26" y2="1" stroke="rgba(255,255,255,0.3)" stroke-width="1" stroke-linecap="round"/>
-  <path d="M7.5 10H24.5" stroke="#F1F3F9" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-  <path d="M16 10V15.5L11.5 22.5L16 18L20.5 22.5L24.5 15.5" stroke="#F1F3F9" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round"/>
-  <circle cx="24.5" cy="10" r="2" fill="#3B82F6"/>
-  <circle cx="24.5" cy="10" r="3.5" stroke="#3B82F6" stroke-width="0.8" opacity="0.45"/>
+<svg width="64" height="64" viewBox="0 0 76 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Hollow Outline 'T' -->
+  <path
+    d="M 5 6 H 42 V 14 H 28 V 56 H 19 V 14 H 5 Z"
+    fill="#08090D"
+    stroke="#FFFFFF"
+    stroke-width="2.4"
+    stroke-linejoin="miter"
+    stroke-miterlimit="10"
+  />
+
+  <!-- Hollow Outline 'W' Wireframe -->
+  <path
+    d="M 23 6 L 35 56 L 47 18 L 57 56 L 70 6 H 61.5 L 54 38 L 47 12 L 39 42 L 30 6 H 23 Z"
+    fill="#08090D"
+    stroke="#FFFFFF"
+    stroke-width="2.4"
+    stroke-linejoin="miter"
+    stroke-miterlimit="10"
+  />
+
+  <!-- Signature Electric Blue Period Dot -->
+  <circle cx="70" cy="54" r="3.6" fill="#2563EB" />
 </svg>

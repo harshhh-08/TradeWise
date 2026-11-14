@@ -1,87 +1,87 @@
 import { cn } from '@/lib/utils';
 
 /**
- * TradeWise "Linear TW" Official Brandmark
- * Minimalist, monoline Swiss geometry fusing 'T' and 'W' with precision blue focal dot.
+ * TradeWise Official "Linear TW." Brandmark
+ * Exact recreation of the wireframe hollow-stroke T and W geometric monogram
+ * with the signature electric blue period dot and tracked Swiss wordmark.
  */
 export function Logo({
-  size = 28,
+  size = 32,
+  layout = 'horizontal', // 'horizontal' | 'stacked' | 'icon-only'
   className = '',
-  showText = false,
   textClassName = '',
-  subtitle = 'TERMINAL // PRO',
 }) {
+  const icon = (
+    <svg
+      width={size}
+      height={(size * 64) / 76}
+      viewBox="0 0 76 64"
+      fill="none"
+      xmlns="http://www.w3.org/2000/svg"
+      className="shrink-0 transition-transform duration-200 group-hover:scale-105"
+    >
+      {/* Hollow Outline 'T' */}
+      <path
+        d="M 5 6 H 42 V 14 H 28 V 56 H 19 V 14 H 5 Z"
+        fill="transparent"
+        stroke="#FFFFFF"
+        strokeWidth="2.4"
+        strokeLinejoin="miter"
+        strokeMiterlimit="10"
+      />
+
+      {/* Hollow Outline Interlocking 'W' Wireframe */}
+      <path
+        d="M 23 6 L 35 56 L 47 18 L 57 56 L 70 6 H 61.5 L 54 38 L 47 12 L 39 42 L 30 6 H 23 Z"
+        fill="transparent"
+        stroke="#FFFFFF"
+        strokeWidth="2.4"
+        strokeLinejoin="miter"
+        strokeMiterlimit="10"
+      />
+
+      {/* Signature Precision Electric Blue Dot */}
+      <circle cx="70" cy="54" r="3.6" fill="#2563EB" />
+    </svg>
+  );
+
+  if (layout === 'icon-only') {
+    return <div className={cn('inline-flex items-center group', className)}>{icon}</div>;
+  }
+
+  if (layout === 'stacked') {
+    return (
+      <div className={cn('flex flex-col items-center gap-3 select-none group', className)}>
+        {icon}
+        <span
+          className={cn(
+            'font-black font-sans tracking-[0.28em] text-sm text-white leading-none uppercase pl-[0.28em]',
+            textClassName
+          )}
+        >
+          TRADEWISE
+        </span>
+      </div>
+    );
+  }
+
+  // Default: 'horizontal'
   return (
     <div className={cn('flex items-center gap-2.5 select-none group', className)}>
-      <svg
-        width={size}
-        height={size}
-        viewBox="0 0 32 32"
-        fill="none"
-        xmlns="http://www.w3.org/2000/svg"
-        className="shrink-0 transition-all duration-200 group-hover:scale-105"
-      >
-        {/* Obsidian Glass Foundation Tile */}
-        <rect
-          width="32"
-          height="32"
-          rx="8"
-          fill="#0A0C12"
-          stroke="rgba(255, 255, 255, 0.1)"
-          strokeWidth="1"
-        />
-        {/* Top-edge Specular Hairline */}
-        <line
-          x1="6"
-          y1="1"
-          x2="26"
-          y2="1"
-          stroke="rgba(255, 255, 255, 0.28)"
-          strokeWidth="1"
-          strokeLinecap="round"
-        />
-
-        {/* Linear TW Monoline Vector Paths */}
-        {/* Top T Crossbar */}
-        <path
-          d="M7.5 10H24.5"
-          stroke="#F1F3F9"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-        {/* Interlocking T-Stem transitioning seamlessly into W-Waveform */}
-        <path
-          d="M16 10V15.5L11.5 22.5L16 18L20.5 22.5L24.5 15.5"
-          stroke="#F1F3F9"
-          strokeWidth="2.2"
-          strokeLinecap="round"
-          strokeLinejoin="round"
-        />
-
-        {/* Signature Precision Blue Focal Dot */}
-        <circle cx="24.5" cy="10" r="2" fill="#3B82F6" />
-        <circle cx="24.5" cy="10" r="3.5" stroke="#3B82F6" strokeWidth="0.8" opacity="0.45" />
-      </svg>
-
-      {showText && (
-        <div className="flex flex-col">
-          <span
-            className={cn(
-              'font-bold font-mono tracking-wider text-xs text-(--color-text-primary) leading-none flex items-center gap-1.5',
-              textClassName
-            )}
-          >
-            TRADEWISE
-            <span className="w-1.5 h-1.5 rounded-full bg-(--color-success) beacon-live" />
-          </span>
-          {subtitle && (
-            <span className="text-[9px] font-mono text-(--color-text-muted) tracking-tight leading-none mt-1">
-              {subtitle}
-            </span>
+      {icon}
+      <div className="flex flex-col">
+        <span
+          className={cn(
+            'font-black font-sans tracking-[0.24em] text-xs text-white leading-none uppercase pl-[0.24em]',
+            textClassName
           )}
-        </div>
-      )}
+        >
+          TRADEWISE
+        </span>
+        <span className="text-[8px] font-mono tracking-[0.16em] text-(--color-text-muted) uppercase leading-none mt-1">
+          TERMINAL // PRO
+        </span>
+      </div>
     </div>
   );
 }
