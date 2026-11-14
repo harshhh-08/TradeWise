@@ -55,13 +55,20 @@ To prevent race conditions during high-frequency order placement, order executio
 All monetary attributes (`cash`, `price`, `avgCost`, `realizedPnl`, `totalReturn`) are persisted using exact SQL `DECIMAL(18, 2)` or `DECIMAL(18, 4)` types and handled in code via `Prisma.Decimal` to avoid IEEE 754 binary floating-point rounding errors.
 
 ### 3.4. Mathematical Models
-- **Volume-Weighted Average Cost (VWAC)**:
-  $$\text{AvgCost}_{\text{new}} = \frac{(Q_{\text{existing}} \times \text{AvgCost}_{\text{existing}}) + (Q_{\text{new}} \times P_{\text{executed}})}{Q_{\text{existing}} + Q_{\text{new}}}$$
-- **Realized P&L**:
-  $$\text{Realized PnL} = Q_{\text{sold}} \times (P_{\text{executed}} - \text{AvgCost})$$
-- **Unrealized P&L**:
-  $$\text{Unrealized PnL} = Q_{\text{held}} \times (P_{\text{market}} - \text{AvgCost})$$
-- **SMA Crossover Backtesting**: Signals are evaluated at bar $i$ close and filled on bar $i+1$ open to eliminate lookahead bias.
+
+**Volume-Weighted Average Cost (VWAC)**:
+
+$$\text{AvgCost}_{\text{new}} = \frac{(Q_{\text{existing}} \times \text{AvgCost}_{\text{existing}}) + (Q_{\text{new}} \times P_{\text{executed}})}{Q_{\text{existing}} + Q_{\text{new}}}$$
+
+**Realized P&L**:
+
+$$\text{Realized PnL} = Q_{\text{sold}} \times (P_{\text{executed}} - \text{AvgCost})$$
+
+**Unrealized P&L**:
+
+$$\text{Unrealized PnL} = Q_{\text{held}} \times (P_{\text{market}} - \text{AvgCost})$$
+
+**SMA Crossover Backtesting**: Signals are evaluated at bar $i$ close and filled on bar $i+1$ open to eliminate lookahead bias.
 
 ---
 
