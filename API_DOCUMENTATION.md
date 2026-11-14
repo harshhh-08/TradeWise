@@ -29,19 +29,13 @@ TWELVE_DATA_API_KEY=<optional_twelve_data_key>
 
 ### Database Migration & Seed
 ```bash
-# Run Prisma migrations
-npx prisma migrate dev
-
-# Seed lessons and quizzes
+npx prisma db push
 node prisma/seed_lessons.js
 ```
 
 ### Running the Server
 ```bash
-# Development mode
 npm run dev
-
-# Production mode
 npm start
 ```
 

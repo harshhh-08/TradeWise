@@ -4,108 +4,86 @@ An institutional-grade educational stock market simulator, market replay engine,
 
 ---
 
-## Key Modules & Features
+## 1. Project Overview & Features
 
-- **Institutional Financial Terminal**: High-density Obsidian Pro design (`#08090d`), tabular numerical alignment (`tabular-nums font-mono`), benchmark index ticker strip (S&P 500, NASDAQ, VIX), and real-time market status.
+TradeWise provides an authentic paper-trading and quantitative learning environment designed for students and algorithmic traders:
+
+- **Institutional Financial Terminal**: High-density Obsidian Pro design palette, tabular numerical alignment (`tabular-nums font-mono`), benchmark index ticker strip (NIFTY 50, SENSEX, S&P 500, NASDAQ), and real-time market status indicators.
 - **Market Discovery & Analytics**: Real-time price tracking via Yahoo Finance, interactive area and volume charts across multiple intervals (1D, 1W, 1M, 1Y, ALL), and 52-week high/low valuation bars.
-- **Paper Trading Engine**: Virtual cash allocation (\$100,000 / ₹1,000,000), order ticket execution (Market & Limit orders), live positions tracking, portfolio valuation, and transaction ledger with realized P&L.
-- **Interactive Learning Center**: 5 structured trading modules (Market Foundations, Exchange Mechanics, Order Types, Diversification, Risk Management) paired with interactive 5-question comprehension quizzes, immediate feedback, and progress tracking.
-- **Historical Market Replay Simulator**: Candle-by-candle playback of historical price action with configurable playback speeds (1x, 2x, 5x, 10x), step controls, dedicated replay order execution, and session-specific balance tracking.
-- **Algorithmic Strategy Backtesting**: Moving Average Crossover (SMA) backtesting engine evaluating historical performance, total returns, Sharpe ratio, win rate, maximum drawdown, and equity curves.
+- **Paper Trading Engine**: Virtual cash allocation (₹100,000 INR), market order execution (BUY and SELL), live positions tracking, portfolio valuation, and immutable transaction ledger with realized and unrealized P&L.
+- **Interactive Learning Center**: 5 structured trading modules (Market Foundations, Exchange Mechanics, Order Types, Diversification, Risk Management) paired with anti-cheat server-graded quizzes, immediate feedback, and progress tracking.
+- **Historical Market Replay Simulator**: Candle-by-candle playback of historical NSE market data from Yahoo Finance with step controls, timeline scrubbing, autoplay, virtual trade placement, and session-specific balance tracking.
+- **Algorithmic Strategy Backtesting**: Moving Average Crossover (SMA) backtesting engine evaluating historical performance, total returns, win rate, maximum drawdown, and daily equity curves against NSE historical candles.
 
 ---
 
-## Technology Stack
+## 2. Technology Stack
 
 ### Frontend
-| Component | Technology |
-|---|---|
-| Framework | React 19 + Vite 8 |
-| Styling | Tailwind CSS v4 (`@tailwindcss/vite`) + CSS Custom Properties |
-| Charts & Visualization | Recharts 3 |
-| Animations | Framer Motion 14 |
-| Icons | Lucide React |
-| Routing & Navigation | React Router 7 |
-| API Client | Axios (with bearer interceptors & credentials) |
-| Feedback & Notifications | React Hot Toast |
+- **Framework**: React 19, Vite 8
+- **Styling**: Tailwind CSS v4 (`@tailwindcss/vite`), CSS Custom Properties
+- **Data Visualization**: Recharts 3
+- **Animations**: Framer Motion 14
+- **Icons**: Lucide React
+- **Routing**: React Router 7
+- **HTTP Client**: Axios (configured with bearer token interceptors and 401 handling)
+- **Toasts**: React Hot Toast
 
 ### Backend
-| Component | Technology |
-|---|---|
-| Runtime & Server | Node.js (ES Modules) + Express.js 5 |
-| Database | PostgreSQL 14+ |
-| ORM & Schema Engine | Prisma 7 (`@prisma/client` + `@prisma/adapter-pg`) |
-| Market Data Integration | `yahoo-finance2` |
-| Authentication & Security | JSON Web Tokens (`jsonwebtoken`) + Password Hashing (`bcryptjs`) |
-| Cross-Origin Security | Dynamic CORS configuration supporting all localhost ports |
+- **Runtime**: Node.js 20+ (ES Modules), Express.js 5
+- **Database**: PostgreSQL 14+
+- **ORM**: Prisma 7 (`@prisma/client`, `@prisma/adapter-pg`)
+- **Market Data**: `yahoo-finance2`, Twelve Data API
+- **Authentication**: JSON Web Tokens (`jsonwebtoken`), Bcrypt password hashing (`bcryptjs`)
+- **Concurrency Control**: PostgreSQL pessimistic row-level locking (`SELECT ... FOR UPDATE`)
+- **Test Runner**: Native Node.js Test Runner (`node:test`), Strict Assertions (`node:assert/strict`)
 
 ---
 
-## Architecture & Directory Layout
+## 3. Architecture & Financial Engineering Principles
 
-```text
-TradeWise/
-├── frontend/
-│   ├── public/
-│   ├── src/
-│   │   ├── assets/
-│   │   ├── components/
-│   │   │   ├── features/       # Specialized domain components (TradeForm, ReplayChart, LessonCard, QuizWidget, etc.)
-│   │   │   ├── layout/         # Terminal layouts (AppShell, Sidebar, TopBar, BottomNav, AuthLayout)
-│   │   │   └── ui/             # Core design system primitives (Button, Input, Card, Badge, Modal, Table, Tabs, Skeleton)
-│   │   ├── context/            # AuthContext & global state providers
-│   │   ├── lib/                # Design tokens, formatters (currency, percent), and utility functions (cn)
-│   │   ├── pages/              # Primary routes (Dashboard, Markets, StockDetail, Portfolio, Trade, Learn, LessonDetail, Replay, Login, Register)
-│   │   ├── services/           # Axios API client instances and endpoints
-│   │   ├── App.jsx             # Route definitions & ProtectedRoute boundaries
-│   │   ├── main.jsx            # React root mount
-│   │   └── index.css           # Tailwind v4 imports, typography, and Obsidian Pro dark theme tokens
-│   ├── .env.example
-│   ├── package.json
-│   └── vite.config.js
-│
-├── backend/
-│   ├── prisma/
-│   │   ├── migrations/         # PostgreSQL schema migration history
-│   │   ├── schema.prisma       # Complete data models and relations
-│   │   └── seed_lessons.js     # Educational curriculum and quiz seeds
-│   ├── src/
-│   │   ├── config/             # Prisma client connection and database adapters
-│   │   ├── controllers/        # Request handlers (auth, stocks, orders, trades, portfolio, lessons, replay, backtest)
-│   │   ├── middleware/         # JWT authentication and request validation
-│   │   ├── routes/             # Express route declarations
-│   │   ├── services/           # Business logic, trading simulation, replay engine, and Yahoo Finance integration
-│   │   └── server.js           # Server bootstrap, CORS setup, and route mounting
-│   ├── API_DOCUMENTATION.md    # Detailed backend API reference
-│   ├── .env.example
-│   └── package.json
-│
-├── .gitignore
-└── README.md
-```
+### 3.1. Zero-Client Financial Mutation
+All financial calculations, wallet updates, position modifications, and P&L evaluations are computed strictly on the backend. Client components display server-verified numbers and cannot alter account balances via browser storage or client-side simulation.
+
+### 3.2. Concurrency & Double-Spend Prevention
+To prevent race conditions during high-frequency order placement, order execution runs inside atomic database transactions (`prisma.$transaction`) with PostgreSQL row-level locks:
+
+- Exclusive write lock on the user's `Wallet` row prevents double-spending across concurrent BUY orders.
+- Exclusive write lock on the corresponding `Position` row prevents overselling across concurrent SELL orders.
+
+### 3.3. Exact Decimal Precision
+All monetary attributes (`cash`, `price`, `avgCost`, `realizedPnl`, `totalReturn`) are persisted using exact SQL `DECIMAL(18, 2)` or `DECIMAL(18, 4)` types and handled in code via `Prisma.Decimal` to avoid IEEE 754 binary floating-point rounding errors.
+
+### 3.4. Mathematical Models
+- **Volume-Weighted Average Cost (VWAC)**:
+  $$\text{AvgCost}_{\text{new}} = \frac{(Q_{\text{existing}} \times \text{AvgCost}_{\text{existing}}) + (Q_{\text{new}} \times P_{\text{executed}})}{Q_{\text{existing}} + Q_{\text{new}}}$$
+- **Realized P&L**:
+  $$\text{Realized P&L} = Q_{\text{sold}} \times (P_{\text{executed}} - \text{AvgCost})$$
+- **Unrealized P&L**:
+  $$\text{Unrealized P&L} = Q_{\text{held}} \times (P_{\text{market}} - \text{AvgCost})$$
+- **SMA Crossover Backtesting**: Signals are evaluated at bar $i$ close and filled on bar $i+1$ open to eliminate lookahead bias.
 
 ---
 
-## Entity Relationship (ER) Model
+## 4. Entity Relationship (ER) Model
 
 ```mermaid
 erDiagram
-    User ||--o| Wallet : "owns"
-    User ||--o{ ReplaySession : "creates"
-    User ||--o{ Position : "holds"
-    User ||--o{ Order : "places"
-    User ||--o{ Trade : "executes"
-    User ||--o{ QuizResult : "submits"
-    User ||--o{ BacktestRun : "executes"
+    User ||--o| Wallet : "owns (1:1)"
+    User ||--o{ Position : "holds (1:N)"
+    User ||--o{ Order : "places (1:N)"
+    User ||--o{ Trade : "records (1:N)"
+    User ||--o{ QuizResult : "submits (1:N)"
+    User ||--o{ ReplaySession : "creates (1:N)"
+    User ||--o{ BacktestRun : "executes (1:N)"
 
-    ReplaySession ||--o{ Position : "tracks"
-    ReplaySession ||--o{ Order : "contains"
-    ReplaySession ||--o{ Trade : "contains"
+    Order ||--o| Trade : "fulfills (1:1)"
+    ReplaySession ||--o{ Order : "scopes (0:N)"
+    ReplaySession ||--o{ Trade : "scopes (0:N)"
+    ReplaySession ||--o{ Position : "scopes (0:N)"
 
-    Order ||--o| Trade : "executes"
-
-    Lesson ||--o{ Quiz : "contains"
-    Lesson ||--o{ QuizResult : "evaluates"
+    Lesson ||--o{ Quiz : "contains (1:N)"
+    Lesson ||--o{ QuizResult : "tracks (1:N)"
 
     User {
         Int id PK
@@ -119,33 +97,6 @@ erDiagram
         Int id PK
         Int userId FK,UK
         Decimal cash
-    }
-
-    Candle {
-        Int id PK
-        String symbol
-        String timeframe
-        DateTime date
-        Decimal open
-        Decimal high
-        Decimal low
-        Decimal close
-        BigInt volume
-    }
-
-    ReplaySession {
-        Int id PK
-        Int userId FK
-        String symbol
-        String timeframe
-        DateTime startDate
-        DateTime endDate
-        DateTime currentDate
-        Int currentIndex
-        Int totalCandles
-        String status
-        Decimal cash
-        DateTime createdAt
     }
 
     Position {
@@ -162,10 +113,10 @@ erDiagram
         Int userId FK
         Int replaySessionId FK
         String symbol
-        OrderSide side
-        OrderType type
+        String side
+        String type
         Int quantity
-        OrderStatus status
+        String status
         DateTime createdAt
     }
 
@@ -175,11 +126,23 @@ erDiagram
         Int orderId FK,UK
         Int replaySessionId FK
         String symbol
-        OrderSide side
+        String side
         Int quantity
         Decimal price
         Decimal realizedPnl
         DateTime executedAt
+    }
+
+    Candle {
+        Int id PK
+        String symbol
+        String timeframe
+        DateTime date
+        Decimal open
+        Decimal high
+        Decimal low
+        Decimal close
+        BigInt volume
     }
 
     Lesson {
@@ -208,6 +171,20 @@ erDiagram
         DateTime createdAt
     }
 
+    ReplaySession {
+        Int id PK
+        Int userId FK
+        String symbol
+        String timeframe
+        DateTime startDate
+        DateTime endDate
+        DateTime currentDate
+        Int currentIndex
+        Int totalCandles
+        String status
+        DateTime createdAt
+    }
+
     BacktestRun {
         Int id PK
         Int userId FK
@@ -230,71 +207,98 @@ erDiagram
 
 ---
 
-## Local Setup & Development
+## 5. Prerequisites & Environment Setup
 
-### 1. Prerequisites
-- **Node.js**: v20+ or v22+
-- **PostgreSQL**: v14+ running locally (default port `5432`)
-- **Package Manager**: npm or yarn
+### Prerequisites
+- Node.js v20+ or v22+
+- PostgreSQL v14+ running locally or in a container (port 5432)
+- npm v10+
 
-### 2. Backend Setup
-1. Open a terminal and navigate to `backend/`:
-   ```bash
-   cd backend
-   npm install
-   ```
-2. Configure `.env` in `backend/`:
-   ```env
-   PORT=5001
-   DATABASE_URL="postgresql://<username>:<password>@localhost:5432/tradewise?schema=public"
-   JWT_SECRET="your_super_secret_jwt_key_here"
-   JWT_EXPIRES_IN="7d"
-   ```
-3. Initialize the database schema and generate Prisma client:
-   ```bash
-   npx prisma generate
-   npx prisma migrate dev --name init
-   ```
-4. Seed the educational lessons and quizzes:
-   ```bash
-   node prisma/seed_lessons.js
-   ```
-5. Start the backend development server:
-   ```bash
-   npm run dev
-   # Server runs on http://localhost:5001
-   ```
+### Backend Environment (`backend/.env`)
+Create a `.env` file in the `backend/` directory:
+```env
+DATABASE_URL="postgresql://username:password@localhost:5432/tradewise"
+PORT=3000
+JWT_SECRET="your-secure-jwt-secret-key-min-32-chars"
+JWT_EXPIRES_IN=7d
+TWELVE_DATA_API_KEY="your-twelve-data-api-key"
+```
 
-### 3. Frontend Setup
-1. Open a second terminal and navigate to `frontend/`:
-   ```bash
-   cd frontend
-   npm install
-   ```
-2. Configure `.env` in `frontend/`:
-   ```env
-   VITE_API_URL=http://localhost:5001
-   ```
-3. Start the Vite development server:
-   ```bash
-   npm run dev
-   # Application opens on http://localhost:5173
-   ```
+### Frontend Environment (`frontend/.env`)
+Create a `.env` file in the `frontend/` directory:
+```env
+VITE_API_URL=http://localhost:3000
+```
 
 ---
 
-## API Endpoints Overview
+## 6. Local Installation & Development Commands
 
-Detailed payload specifications, query parameters, and response schemas are documented in [API_DOCUMENTATION.md](file:///Users/sohamdhande/Docs_Local/TradeWise/backend/API_DOCUMENTATION.md).
+### Backend
+```bash
+cd backend
+npm install
+npx prisma generate
+npx prisma db push
+node prisma/seed_lessons.js
+npm run dev
+```
 
-| Resource | Endpoints | Description |
-|---|---|---|
-| **Health** | `GET /api/health` | Service and database heartbeat check |
-| **Auth** | `POST /api/auth/register`<br>`POST /api/auth/login`<br>`GET /api/auth/me` | User registration, authentication, and session validation |
-| **Stocks** | `GET /api/stocks/search?q=:query`<br>`GET /api/stocks/:symbol/quote`<br>`GET /api/stocks/:symbol/chart?range=:range` | Symbol search, live quote, and historical chart intervals |
-| **Orders** | `POST /api/orders`<br>`GET /api/orders` | Place paper trading order and retrieve user order log |
-| **Trades** | `GET /api/trades` | Historical trade executions and transaction history |
-| **Portfolio** | `GET /api/portfolio` | Account summary, open holdings, unrealized and realized P&L |
-| **Lessons** | `GET /api/lessons`<br>`GET /api/lessons/:id`<br>`POST /api/lessons/:id/quiz` | Curriculum listing, detailed content, and quiz evaluation |
-| **Replay** | `POST /api/replay/sessions`<br>`GET /api/replay/sessions/:id`<br>`POST /api/replay/sessions/:id/step`<br>`POST /api/replay/sessions/:id/order` | Interactive historical market replay and virtual trading |
-| **Backtests** | `POST /api/backtests/run`<br>`GET /api/backtests` | Execute SMA crossover strategy and retrieve backtest history |
+The backend server runs on `http://localhost:3000`.
+
+### Frontend
+```bash
+cd frontend
+npm install
+npm run dev
+```
+
+The frontend application runs on `http://localhost:5173`.
+
+---
+
+## 7. Automated Testing
+
+The backend includes 33 integration tests using Node's native test runner (`node:test`) and strict assertions:
+
+```bash
+cd backend
+npm test
+```
+
+### Test Suites Covered
+- `tests/auth.test.js`: Registration, 100k wallet initialization, duplicate email rejection (409), password hashing, JWT login, session validation.
+- `tests/trading.test.js`: USD stock rejection, wallet cash enforcement, BUY order execution, short-selling rejection, partial SELL, trade ledger logging.
+- `tests/portfolio.test.js`: Baseline state, live equity synchronization, weighted average cost validation.
+- `tests/lessons.test.js`: Curriculum discovery, slug and ID lookup, answer key privacy, server-side grading, progress tracking.
+- `tests/backtest.test.js`: Parameter guardrails, SMA crossover simulation, performance metrics, run history, run deletion.
+
+---
+
+## 8. Production Build & Execution
+
+### Production Build
+Compile optimized frontend assets:
+```bash
+cd frontend
+npm run build
+```
+
+### Production Server Startup
+```bash
+cd backend
+npm ci
+npx prisma generate
+npx prisma db push
+pm2 start src/server.js --name tradewise-backend
+```
+
+---
+
+## 9. API Documentation
+
+Detailed endpoint schemas, request parameters, response structures, and error codes are maintained in:
+
+📄 **[API_DOCUMENTATION.md](API_DOCUMENTATION.md)**
+
+---
