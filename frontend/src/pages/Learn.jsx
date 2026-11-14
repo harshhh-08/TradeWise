@@ -1,4 +1,4 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { GraduationCap, AlertCircle, RefreshCw, BookOpen } from 'lucide-react';
 import api from '@/services/api';
@@ -66,31 +66,23 @@ const DEFAULT_LESSONS = [
   },
 ];
 
-function readSavedQuizResults() {
-  try {
-    const storedResults = localStorage.getItem('tradewise_quiz_results');
-    return storedResults ? JSON.parse(storedResults) : {};
-  } catch {
-    return {};
-  }
-}
-
 export default function Learn({ className }) {
   const navigate = useNavigate();
   const [lessons, setLessons] = useState(DEFAULT_LESSONS);
-  const [quizResults, setQuizResults] = useState(readSavedQuizResults);
-  const [isLoading, setIsLoading] = useState(false);
+  const [progressMap, setProgressMap] = useState({});
+  const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
 
-  const reloadLessons = async () => {
+  const isAuthenticated = Boolean(localStorage.getItem('tradewise_token'));
+
+  const loadData = useCallback(async () => {
     setIsLoading(true);
     setError(null);
-    setQuizResults(readSavedQuizResults());
 
     try {
-      const response = await api.get('/api/lessons');
-      if (response.data?.success && Array.isArray(response.data.lessons) && response.data.lessons.length > 0) {
-        const merged = response.data.lessons.map((item) => {
+      const lessonRes = await api.get('/api/lessons');
+      if (lessonRes.data?.success && Array.isArray(lessonRes.data.lessons) && lessonRes.data.lessons.length > 0) {
+        const merged = lessonRes.data.lessons.map((item) => {
           const match = DEFAULT_LESSONS.find((d) => d.slug === item.slug || d.id === item.id);
           return {
             ...match,
@@ -107,55 +99,46 @@ export default function Learn({ className }) {
       }
     } catch {
       setLessons(DEFAULT_LESSONS);
-    } finally {
-      setIsLoading(false);
     }
-  };
 
-  useEffect(() => {
-    let isCurrent = true;
-
-    async function loadData() {
+    if (isAuthenticated) {
       try {
-        const response = await api.get('/api/lessons');
-        if (isCurrent && response.data?.success && Array.isArray(response.data.lessons) && response.data.lessons.length > 0) {
-          const merged = response.data.lessons.map((item) => {
-            const match = DEFAULT_LESSONS.find((d) => d.slug === item.slug || d.id === item.id);
-            return {
-              ...match,
-              ...item,
-              icon: item.icon || match?.icon || 'BookOpen',
-              description: item.description || match?.description || '',
-              category: item.category || match?.category || 'Trading Foundations',
-              estimatedMinutes: item.estimatedMinutes || match?.estimatedMinutes || 10,
+        const progressRes = await api.get('/api/lessons/progress');
+        if (progressRes.data?.progress?.lessonProgress) {
+          const map = {};
+          for (const lp of progressRes.data.progress.lessonProgress) {
+            const key = lp.lessonSlug || lp.lessonId;
+            map[key] = {
+              completed: true,
+              score: lp.bestScore,
+              total: lp.bestTotal,
+              percentage: lp.bestPercentage,
+              attempts: lp.attempts,
             };
-          });
-          setLessons(merged);
+          }
+          setProgressMap(map);
         }
       } catch {
-        // Fall back gracefully to DEFAULT_LESSONS initialized in state
       }
     }
 
+    setIsLoading(false);
+  }, [isAuthenticated]);
+
+  useEffect(() => {
     loadData();
+  }, [loadData]);
 
-    return () => {
-      isCurrent = false;
-    };
-  }, []);
-
-  // Calculate overall progress
   const totalLessons = lessons.length;
   const completedLessons = lessons.filter((lesson) => {
-    const res = quizResults[lesson.slug] || quizResults[lesson.id];
-    return res?.completed || (res?.score !== undefined && res.score !== null);
+    const key = lesson.slug || lesson.id;
+    return progressMap[key]?.completed;
   }).length;
-
   const progressPercentage = totalLessons > 0 ? Math.round((completedLessons / totalLessons) * 100) : 0;
 
   return (
     <div className={cn('space-y-6', className)}>
-      {/* Header section */}
+      
       <div className="pb-4 border-b border-(--color-border) flex flex-col md:flex-row md:items-end justify-between gap-4">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -174,7 +157,7 @@ export default function Learn({ className }) {
           </p>
         </div>
 
-        {/* Progress tracker widget */}
+        
         {!isLoading && totalLessons > 0 && (
           <div className="bg-(--color-bg-subtle) border border-(--color-border) rounded-lg p-3.5 w-full md:w-80 space-y-2">
             <div className="flex items-center justify-between text-xs font-mono">
@@ -193,7 +176,7 @@ export default function Learn({ className }) {
         )}
       </div>
 
-      {/* Loading state with Skeletons */}
+      
       {isLoading && (
         <div className="space-y-4">
           <div className="h-4 w-48">
@@ -222,7 +205,7 @@ export default function Learn({ className }) {
         </div>
       )}
 
-      {/* Error state */}
+      
       {!isLoading && error && (
         <Card className="border-(--color-error)/30 bg-(--color-error-subtle) p-6">
           <CardContent className="p-0 flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
@@ -240,7 +223,7 @@ export default function Learn({ className }) {
             <Button
               variant="outline"
               size="sm"
-              onClick={reloadLessons}
+              onClick={loadData}
               leftIcon={<RefreshCw className="w-3.5 h-3.5" />}
             >
               Try Again
@@ -249,7 +232,7 @@ export default function Learn({ className }) {
         </Card>
       )}
 
-      {/* Empty state */}
+      
       {!isLoading && !error && lessons.length === 0 && (
         <div className="text-center py-16 px-4 rounded-xl border border-dashed border-(--color-border) bg-(--color-bg-subtle)/50 space-y-3">
           <div className="w-12 h-12 mx-auto rounded-full bg-(--color-bg-raised) flex items-center justify-center text-(--color-text-muted)">
@@ -264,14 +247,14 @@ export default function Learn({ className }) {
         </div>
       )}
 
-      {/* Responsive Lesson Grid: 1 col on mobile, 2 cols on md, 3 cols on lg */}
+      
       {!isLoading && !error && lessons.length > 0 && (
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           {lessons.map((lesson) => (
             <LessonCard
               key={lesson.slug || lesson.id}
               lesson={lesson}
-              quizResult={quizResults[lesson.slug] || quizResults[lesson.id]}
+              quizResult={progressMap[lesson.slug] || progressMap[lesson.id]}
               onClick={() => navigate(`/learn/${lesson.slug}`)}
             />
           ))}

@@ -37,13 +37,12 @@ export async function getAllLessons({ page = 1, limit = 10 }) {
 }
 
 export async function getLessonById(lessonId) {
-  const id = parseInt(lessonId, 10);
-  if (isNaN(id) || id <= 0) {
-    return null;
-  }
+  if (!lessonId) return null;
+  const numId = parseInt(lessonId, 10);
+  const isNumeric = !isNaN(numId) && String(numId) === String(lessonId).trim() && numId > 0;
 
   const lesson = await prisma.lesson.findUnique({
-    where: { id },
+    where: isNumeric ? { id: numId } : { slug: String(lessonId).trim() },
     include: {
       quizzes: {
         select: {
@@ -73,13 +72,12 @@ export async function getLessonById(lessonId) {
 }
 
 export async function getQuizForLesson(lessonId) {
-  const id = parseInt(lessonId, 10);
-  if (isNaN(id) || id <= 0) {
-    return null;
-  }
+  if (!lessonId) return null;
+  const numId = parseInt(lessonId, 10);
+  const isNumeric = !isNaN(numId) && String(numId) === String(lessonId).trim() && numId > 0;
 
   const lesson = await prisma.lesson.findUnique({
-    where: { id },
+    where: isNumeric ? { id: numId } : { slug: String(lessonId).trim() },
     include: {
       quizzes: {
         select: {
@@ -111,12 +109,13 @@ export async function getQuizForLesson(lessonId) {
 }
 
 export async function submitQuiz(userId, lessonId, answers) {
-  const id = parseInt(lessonId, 10);
-  if (isNaN(id) || id <= 0) {
-    const err = new Error('Invalid lesson ID');
+  if (!lessonId) {
+    const err = new Error('Invalid lesson identifier');
     err.statusCode = 400;
     throw err;
   }
+  const numId = parseInt(lessonId, 10);
+  const isNumeric = !isNaN(numId) && String(numId) === String(lessonId).trim() && numId > 0;
 
   if (!Array.isArray(answers) || answers.length === 0) {
     const err = new Error('Answers array is required and must not be empty');
@@ -125,14 +124,14 @@ export async function submitQuiz(userId, lessonId, answers) {
   }
 
   const lesson = await prisma.lesson.findUnique({
-    where: { id },
+    where: isNumeric ? { id: numId } : { slug: String(lessonId).trim() },
     include: {
       quizzes: true,
     },
   });
 
   if (!lesson) {
-    const err = new Error(`Lesson with ID ${id} not found`);
+    const err = new Error(`Lesson '${lessonId}' not found`);
     err.statusCode = 404;
     throw err;
   }
@@ -220,7 +219,7 @@ export async function submitQuiz(userId, lessonId, answers) {
   const quizResult = await prisma.quizResult.create({
     data: {
       userId,
-      lessonId: id,
+      lessonId: lesson.id,
       score: correctCount,
       total: totalQuestions,
     },
@@ -228,7 +227,7 @@ export async function submitQuiz(userId, lessonId, answers) {
 
   return {
     resultId: quizResult.id,
-    lessonId: id,
+    lessonId: lesson.id,
     lessonTitle: lesson.title,
     score: correctCount,
     total: totalQuestions,
