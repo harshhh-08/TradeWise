@@ -13,17 +13,15 @@ import {
 import { formatCurrency, formatCompact, cn } from '@/lib/utils';
 import { Card } from '@/components/ui/Card';
 
-export function ReplayChart({ candles = [], visibleCount = 0, className }) {
-  const [viewMode, setViewMode] = useState('candle'); // 'candle' | 'line'
+export function ReplayChart({ candles = [], visibleCount = 0, currency = 'INR', className }) {
+  const [viewMode, setViewMode] = useState('candle');
 
-  // Progressively revealed candles up to visibleCount
   const visibleCandles = useMemo(() => {
     if (!candles || candles.length === 0) return [];
     const count = visibleCount > 0 ? Math.min(visibleCount, candles.length) : candles.length;
     return candles.slice(0, count);
   }, [candles, visibleCount]);
 
-  // Price calculations for YAxis domain
   const { minPrice, maxPrice, latestCandle } = useMemo(() => {
     if (visibleCandles.length === 0) {
       return { minPrice: 0, maxPrice: 100, latestCandle: null };
@@ -50,7 +48,6 @@ export function ReplayChart({ candles = [], visibleCount = 0, className }) {
     );
   }
 
-  // Pre-calculate candle bar metrics for custom shape rendering
   const chartData = visibleCandles.map((c, index) => {
     const isUp = (c.close ?? 0) >= (c.open ?? 0);
     const bodyBottom = Math.min(c.open, c.close);
@@ -70,12 +67,12 @@ export function ReplayChart({ candles = [], visibleCount = 0, className }) {
 
   return (
     <div className={cn('space-y-3 font-mono', className)}>
-      {/* Top chart telemetry bar */}
+      
       <div className="flex flex-wrap items-center justify-between gap-3 pb-2 border-b border-(--color-border) text-xs">
         <div className="flex items-center gap-3">
           <div className="flex items-baseline gap-2">
             <span className="text-base font-bold tracking-tight text-(--color-text-primary)">
-              {latestCandle ? formatCurrency(latestCandle.close) : '--'}
+              {latestCandle ? formatCurrency(latestCandle.close, currency) : '--'}
             </span>
             {latestCandle && (
               <span className={cn('text-xs font-semibold', currentPriceColor)}>
@@ -90,7 +87,7 @@ export function ReplayChart({ candles = [], visibleCount = 0, className }) {
           </span>
         </div>
 
-        {/* View mode toggle */}
+        
         <div className="flex items-center gap-1 bg-(--color-bg-base) p-0.5 rounded border border-(--color-border) text-[10px]">
           <button
             type="button"
@@ -119,7 +116,7 @@ export function ReplayChart({ candles = [], visibleCount = 0, className }) {
         </div>
       </div>
 
-      {/* Recharts Display Surface */}
+      
       <div className="h-80 w-full pt-1">
         <ResponsiveContainer width="100%" height="100%">
           <ComposedChart
@@ -166,7 +163,7 @@ export function ReplayChart({ candles = [], visibleCount = 0, className }) {
                     <div className="flex items-baseline justify-between pt-0.5">
                       <span className="text-[11px] text-(--color-text-muted)">Close:</span>
                       <span className="text-sm font-bold text-(--color-text-primary)">
-                        {formatCurrency(d.close)}
+                        {formatCurrency(d.close, currency)}
                       </span>
                     </div>
 
@@ -189,7 +186,7 @@ export function ReplayChart({ candles = [], visibleCount = 0, className }) {
             />
 
             {viewMode === 'candle' ? (
-              /* Candlestick Bar representation with green for up, red for down */
+              
               <Bar
                 dataKey="close"
                 name="Price"
@@ -203,7 +200,6 @@ export function ReplayChart({ candles = [], visibleCount = 0, className }) {
                   const candleWidth = Math.max(Math.min(width * 0.75, 14), 3);
                   const centerX = x + width / 2;
 
-                  // Proportional wick estimation from high/low relative to close bar
                   const priceRange = maxPrice - minPrice || 1;
                   const highPx = ((maxPrice - payload.high) / priceRange) * 260 + 10;
                   const lowPx = ((maxPrice - payload.low) / priceRange) * 260 + 10;
@@ -215,7 +211,7 @@ export function ReplayChart({ candles = [], visibleCount = 0, className }) {
 
                   return (
                     <g key={`candle-${payload.index}`}>
-                      {/* Upper & lower wick line */}
+                      
                       <line
                         x1={centerX}
                         y1={highPx}
@@ -224,7 +220,7 @@ export function ReplayChart({ candles = [], visibleCount = 0, className }) {
                         stroke={color}
                         strokeWidth={1.5}
                       />
-                      {/* Real body */}
+                      
                       <rect
                         x={centerX - candleWidth / 2}
                         y={topBody}
@@ -243,7 +239,7 @@ export function ReplayChart({ candles = [], visibleCount = 0, className }) {
                 ))}
               </Bar>
             ) : (
-              /* Continuous Line representation */
+              
               <Line
                 type="monotone"
                 dataKey="close"

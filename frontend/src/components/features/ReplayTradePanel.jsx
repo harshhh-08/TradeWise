@@ -18,16 +18,16 @@ export function ReplayTradePanel({
   cash = 100000,
   positions = [],
   onTrade,
-  symbol = 'AAPL',
+  symbol = 'RELIANCE.NS',
   currentDate = '',
+  currency = 'INR',
   className,
 }) {
-  const [tradeType, setTradeType] = useState('BUY'); // 'BUY' | 'SELL'
+  const [tradeType, setTradeType] = useState('BUY');
   const [quantity, setQuantity] = useState('10');
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
 
-  // Find position for current symbol
   const currentPosition = positions.find((p) => p.symbol === symbol) || {
     symbol,
     quantity: 0,
@@ -38,13 +38,11 @@ export function ReplayTradePanel({
   const isPriceValid = typeof currentPrice === 'number' && currentPrice > 0;
   const estimatedAmount = isPriceValid && parsedQty > 0 ? parsedQty * currentPrice : 0;
 
-  // Position calculations
   const positionMarketValue = currentPosition.quantity * (currentPrice || currentPosition.avgPrice);
   const positionCostBasis = currentPosition.quantity * currentPosition.avgPrice;
   const positionUnrealizedPnl = positionMarketValue - positionCostBasis;
   const positionUnrealizedPct = positionCostBasis > 0 ? (positionUnrealizedPnl / positionCostBasis) * 100 : 0;
 
-  // Max quantities
   const maxBuyQty = isPriceValid ? Math.floor(cash / currentPrice) : 0;
   const maxSellQty = currentPosition.quantity;
 
@@ -66,29 +64,25 @@ export function ReplayTradePanel({
     setErrorMsg('');
     setSuccessMsg('');
 
-    // 1. Validate price
     if (!isPriceValid) {
       setErrorMsg('Cannot trade: current market quote is unavailable or invalid.');
       return;
     }
 
-    // 2. Validate quantity is a positive whole number
     if (!Number.isInteger(parsedQty) || parsedQty <= 0) {
       setErrorMsg('Quantity must be a positive whole number greater than 0.');
       return;
     }
 
-    // 3. Buy validation
     if (tradeType === 'BUY') {
       if (estimatedAmount > cash) {
         setErrorMsg(
-          `Insufficient virtual cash. Needed ${formatCurrency(estimatedAmount)}, but available cash is ${formatCurrency(cash)}.`
+          `Insufficient virtual cash. Needed ${formatCurrency(estimatedAmount, currency)}, but available cash is ${formatCurrency(cash, currency)}.`
         );
         return;
       }
     }
 
-    // 4. Sell validation
     if (tradeType === 'SELL') {
       if (parsedQty > currentPosition.quantity) {
         setErrorMsg(
@@ -98,7 +92,6 @@ export function ReplayTradePanel({
       }
     }
 
-    // 5. Execute trade callback
     if (onTrade) {
       const executed = onTrade({
         type: tradeType,
@@ -111,7 +104,7 @@ export function ReplayTradePanel({
       if (executed?.success) {
         const actionWord = tradeType === 'BUY' ? 'Bought' : 'Sold';
         setSuccessMsg(
-          `${actionWord} ${parsedQty} ${symbol} @ ${formatCurrency(currentPrice)} on ${currentDate}.`
+          `${actionWord} ${parsedQty} ${symbol} @ ${formatCurrency(currentPrice, currency)} on ${currentDate}.`
         );
       } else if (executed?.message) {
         setErrorMsg(executed.message);
@@ -121,7 +114,7 @@ export function ReplayTradePanel({
 
   return (
     <Card className={cn('p-4 space-y-4 bg-(--color-bg-subtle) border-(--color-border) font-mono', className)}>
-      {/* Header */}
+      
       <CardHeader className="p-0 pb-3 border-b border-(--color-border) flex flex-row items-center justify-between">
         <div className="flex items-center gap-2">
           <ArrowLeftRight className="w-4 h-4 text-(--color-brand)" />
@@ -134,7 +127,7 @@ export function ReplayTradePanel({
         </Badge>
       </CardHeader>
 
-      {/* Buy / Sell Toggle Switch */}
+      
       <div className="grid grid-cols-2 p-1 rounded-lg bg-(--color-bg-base) border border-(--color-border)">
         <button
           type="button"
@@ -170,7 +163,7 @@ export function ReplayTradePanel({
         </button>
       </div>
 
-      {/* Order Entry Form */}
+      
       <form onSubmit={handlePlaceOrder} className="space-y-3.5">
         <div className="space-y-1.5">
           <Input
@@ -188,7 +181,7 @@ export function ReplayTradePanel({
             className="font-mono text-xs"
           />
 
-          {/* Quick preset buttons */}
+          
           <div className="flex items-center gap-1.5 pt-1 text-[10px]">
             {[1, 5, 10, 25, 50, 100].map((q) => (
               <button
@@ -210,12 +203,12 @@ export function ReplayTradePanel({
           </div>
         </div>
 
-        {/* Pricing & Estimation Breakdown */}
+        
         <div className="p-3 rounded-lg bg-(--color-bg-base) border border-(--color-border) space-y-1.5 text-xs">
           <div className="flex justify-between text-(--color-text-muted)">
             <span>Execution Price</span>
             <span className="font-semibold text-(--color-text-primary)">
-              {isPriceValid ? formatCurrency(currentPrice) : 'Invalid'}
+              {isPriceValid ? formatCurrency(currentPrice, currency) : 'Invalid'}
             </span>
           </div>
 
@@ -238,20 +231,20 @@ export function ReplayTradePanel({
               {tradeType === 'BUY' ? 'Estimated Cost' : 'Estimated Proceeds'}
             </span>
             <span className={tradeType === 'BUY' ? 'text-(--color-text-primary)' : 'text-(--color-success)'}>
-              {formatCurrency(estimatedAmount)}
+              {formatCurrency(estimatedAmount, currency)}
             </span>
           </div>
         </div>
 
-        {/* Available Virtual Cash indicator */}
+        
         <div className="flex justify-between text-[11px] text-(--color-text-muted) px-0.5">
           <span>Available Cash</span>
           <span className="font-semibold text-(--color-brand)">
-            {formatCurrency(cash)}
+            {formatCurrency(cash, currency)}
           </span>
         </div>
 
-        {/* Validation Error Message */}
+        
         {errorMsg && (
           <div className="p-2.5 rounded-lg bg-(--color-error-subtle) border border-(--color-error)/30 text-(--color-error) text-xs flex items-start gap-2">
             <ShieldAlert className="w-4 h-4 shrink-0 mt-0.5" />
@@ -259,7 +252,7 @@ export function ReplayTradePanel({
           </div>
         )}
 
-        {/* Success Confirmation Message */}
+        
         {successMsg && (
           <div className="p-2.5 rounded-lg bg-(--color-success-subtle) border border-(--color-success)/30 text-(--color-success) text-xs flex items-center gap-2">
             <CheckCircle2 className="w-4 h-4 shrink-0" />
@@ -267,7 +260,7 @@ export function ReplayTradePanel({
           </div>
         )}
 
-        {/* Order Placement Button */}
+        
         <Button
           type="submit"
           variant={tradeType === 'BUY' ? 'success' : 'danger'}
@@ -277,7 +270,7 @@ export function ReplayTradePanel({
         </Button>
       </form>
 
-      {/* Position Status Widget */}
+      
       <CardContent className="p-0 pt-3 border-t border-(--color-border) space-y-2">
         <div className="flex items-center justify-between text-xs font-semibold text-(--color-text-secondary)">
           <div className="flex items-center gap-1.5">
@@ -294,13 +287,13 @@ export function ReplayTradePanel({
             <div className="flex justify-between text-(--color-text-muted)">
               <span>Avg Purchase Price</span>
               <span className="text-(--color-text-primary) font-semibold">
-                {formatCurrency(currentPosition.avgPrice)}
+                {formatCurrency(currentPosition.avgPrice, currency)}
               </span>
             </div>
             <div className="flex justify-between text-(--color-text-muted)">
               <span>Market Holding Value</span>
               <span className="text-(--color-text-primary) font-semibold">
-                {formatCurrency(positionMarketValue)}
+                {formatCurrency(positionMarketValue, currency)}
               </span>
             </div>
             <div className="flex justify-between pt-1 border-t border-(--color-border)">
@@ -312,7 +305,7 @@ export function ReplayTradePanel({
                 )}
               >
                 {positionUnrealizedPnl >= 0 ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
-                {formatCurrency(positionUnrealizedPnl)} ({formatPercent(positionUnrealizedPct).text})
+                {formatCurrency(positionUnrealizedPnl, currency)} ({formatPercent(positionUnrealizedPct).text})
               </span>
             </div>
           </div>
