@@ -8,10 +8,13 @@ import {
   Cpu,
   History,
   CheckCircle2,
+  Sun,
+  Moon,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Logo } from '@/components/ui/Logo';
 import { formatCurrency } from '@/lib/utils';
+import { useTheme } from '@/context/ThemeContext';
 
 const BENCHMARKS = [
   { name: 'S&P 500', value: '5,864.67', change: '+0.42%', isPos: true },
@@ -29,6 +32,7 @@ const PREVIEW_TICKERS = {
 };
 
 export default function Landing() {
+  const { theme, toggleTheme } = useTheme();
   const [activeTicker, setActiveTicker] = useState('NVDA');
   const [previewSide, setPreviewSide] = useState('BUY');
   const [previewShares, setPreviewShares] = useState(25);
@@ -82,6 +86,19 @@ export default function Landing() {
           </nav>
 
           <div className="flex items-center gap-2.5">
+            <button
+              type="button"
+              onClick={toggleTheme}
+              className="p-1.5 rounded border border-border-subtle bg-canvas text-ink-secondary hover:text-ink-primary hover:bg-elevated transition-colors cursor-pointer flex items-center justify-center"
+              title={theme === 'dark' ? 'Switch to Ivory Mist (Light Mode)' : 'Switch to Obsidian Pro (Dark Mode)'}
+              aria-label="Toggle color theme"
+            >
+              {theme === 'dark' ? (
+                <Sun className="w-4 h-4 text-amber-400" />
+              ) : (
+                <Moon className="w-4 h-4 text-ink-primary" />
+              )}
+            </button>
             <Link to="/login">
               <Button variant="ghost" size="sm">
                 Sign In

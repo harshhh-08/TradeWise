@@ -1,9 +1,11 @@
 import { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import { Search, User as UserIcon, LogOut, Menu, X, ArrowUpRight } from 'lucide-react';
+import { Search, User as UserIcon, LogOut, Menu, X, ArrowUpRight, Sun, Moon } from 'lucide-react';
 import { formatCurrency } from '@/lib/utils';
+import { useTheme } from '@/context/ThemeContext';
 
 export function TopBar({ onToggleMobileMenu, isMobileMenuOpen, user, walletBalance, onLogout }) {
+  const { theme, toggleTheme } = useTheme();
   const [searchQuery, setSearchQuery] = useState('');
   const [isUserMenuOpen, setIsUserMenuOpen] = useState(false);
   const [marketTime, setMarketTime] = useState('');
@@ -91,6 +93,21 @@ export function TopBar({ onToggleMobileMenu, isMobileMenuOpen, user, walletBalan
             <ArrowUpRight className="w-3.5 h-3.5" />
           </Link>
         </div>
+
+        {/* Theme Toggle (Ivory Mist / Obsidian Pro) */}
+        <button
+          type="button"
+          onClick={toggleTheme}
+          className="p-1.5 rounded border border-border-subtle bg-canvas text-ink-secondary hover:text-ink-primary hover:bg-elevated transition-colors cursor-pointer flex items-center justify-center"
+          title={theme === 'dark' ? 'Switch to Ivory Mist (Light Mode)' : 'Switch to Obsidian Pro (Dark Mode)'}
+          aria-label="Toggle color theme"
+        >
+          {theme === 'dark' ? (
+            <Sun className="w-4 h-4 text-amber-400" />
+          ) : (
+            <Moon className="w-4 h-4 text-ink-primary" />
+          )}
+        </button>
 
         {/* User Account Menu */}
         <div className="relative">

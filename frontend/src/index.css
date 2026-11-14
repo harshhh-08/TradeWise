@@ -6,10 +6,63 @@
 
 /* ─────────────────────────────────────────────────────────────
    TradeWise Terminal — Authentic Institutional Workstation
-   True Neutral Obsidian Palette · Zero Blue Wash · Crisp 4px Radius
+   Dual Mode: Ivory Mist (Light) · Obsidian Pro (Dark)
+   Zero Blue Wash · Crisp Architectural Hairlines · 4px Radius
    ───────────────────────────────────────────────────────────── */
 
 :root {
+  /* Surfaces - Ivory Mist (Light Mode) */
+  --bg-canvas: #F6F6F3;        /* Main app background: soothing warm ivory mist */
+  --bg-surface: #FFFFFF;       /* Panels, sidebar, tables, order ticket: crisp white */
+  --bg-elevated: #EEEEEC;      /* Hover rows, active inputs, dropdowns */
+
+  /* Borders - Crisp Architectural Hairlines */
+  --border-subtle: #E2E2DC;    /* Panel dividers & table gridlines */
+  --border-strong: #CBCBC4;    /* Input outlines & active tabs */
+
+  /* Typography */
+  --text-primary: #121214;     /* Pitch charcoal/black for numbers, headings, tickers */
+  --text-secondary: #585860;   /* Labels, column headers, descriptions */
+  --text-muted: #8C8C94;       /* Disabled states, timestamps, hints */
+
+  /* Functional Market Accents (Strictly for Data & Execution) */
+  --accent-primary: #121214;   /* Primary neutral CTA (Black button, ivory text) */
+  --market-up: #059669;        /* High-contrast crisp emerald for gains & buy */
+  --market-up-bg: rgba(5, 150, 105, 0.08);
+  --market-down: #DC2626;      /* High-contrast crisp crimson for losses & sell */
+  --market-down-bg: rgba(220, 38, 38, 0.08);
+
+  /* Canonical Aliases */
+  --color-bg-base-val: var(--bg-canvas);
+  --color-bg-subtle-val: var(--bg-surface);
+  --color-bg-raised-val: var(--bg-elevated);
+  --color-bg-overlay-val: var(--bg-elevated);
+
+  --color-text-primary-val: var(--text-primary);
+  --color-text-secondary-val: var(--text-secondary);
+  --color-text-muted-val: var(--text-muted);
+  --color-text-disabled-val: var(--text-muted);
+  --color-text-inverse-val: #FFFFFF;
+
+  --color-brand-val: var(--accent-primary);
+  --color-brand-hover-val: #27272A;
+  --color-brand-active-val: #3F3F46;
+  --color-brand-subtle-val: rgba(18, 18, 20, 0.06);
+
+  --color-success-val: var(--market-up);
+  --color-success-subtle-val: var(--market-up-bg);
+  --color-error-val: var(--market-down);
+  --color-error-subtle-val: var(--market-down-bg);
+  --color-warning-val: #D97706;
+  --color-warning-subtle-val: rgba(217, 119, 6, 0.1);
+
+  --color-border-val: var(--border-subtle);
+  --color-border-strong-val: var(--border-strong);
+}
+
+.dark {
+  color-scheme: dark;
+
   /* Surfaces - True Neutral Obsidian (Zero Blue Tint) */
   --bg-canvas: #09090B;        /* Main app background */
   --bg-surface: #111113;       /* Panels, sidebar, order ticket */
@@ -59,10 +112,6 @@
   --color-border-strong-val: var(--border-strong);
 }
 
-.dark {
-  color-scheme: dark;
-}
-
 /* ── Tailwind v4 @theme Registration ── */
 @theme {
   --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
@@ -94,9 +143,9 @@
   --color-text-muted: var(--text-muted);
 
   --color-brand: var(--accent-primary);
-  --color-brand-hover: #E4E4E7;
-  --color-brand-active: #D4D4D8;
-  --color-brand-subtle: rgba(250, 250, 250, 0.08);
+  --color-brand-hover: var(--color-brand-hover-val);
+  --color-brand-active: var(--color-brand-active-val);
+  --color-brand-subtle: var(--color-brand-subtle-val);
 
   --color-success: var(--market-up);
   --color-success-subtle: var(--market-up-bg);
@@ -105,7 +154,7 @@
 
   --color-border: var(--border-subtle);
 
-  /* Radius Rules: Kill rounded-xl. Standardize on 4px & 2px */
+  /* Radius Rules: Standardize on 4px & 2px */
   --radius: 4px;
   --radius-sm: 2px;
   --radius-md: 4px;
@@ -113,7 +162,7 @@
   --radius-xl: 6px;
   --radius-full: 9999px;
 
-  /* Kill drop shadows — use 1px #222226 borders instead */
+  /* Kill drop shadows — use 1px hairlines instead */
   --shadow-xs: none;
   --shadow-sm: none;
   --shadow-md: none;
@@ -169,23 +218,23 @@ table td,
   background: transparent;
 }
 ::-webkit-scrollbar-thumb {
-  background: #222226;
+  background: var(--border-strong);
   border-radius: 2px;
 }
 ::-webkit-scrollbar-thumb:hover {
-  background: #323238;
+  background: var(--text-secondary);
 }
 
 /* Selection */
 ::selection {
-  background-color: #FAFAFA;
-  color: #09090B;
+  background-color: var(--text-primary);
+  color: var(--bg-canvas);
 }
 
 /* Focus Ring */
 *:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 1px #09090B, 0 0 0 2px #323238;
+  box-shadow: 0 0 0 1px var(--bg-canvas), 0 0 0 2px var(--border-strong);
 }
 
 /* Hide scrollbar */
@@ -197,7 +246,7 @@ table td,
   scrollbar-width: none;
 }
 
-/* ─── Workstation Panel Utilities (No fuzzy glows) ─── */
+/* ─── Workstation Panel Utilities ─── */
 .card-workstation {
   background-color: var(--bg-surface);
   border: 1px solid var(--border-subtle);
@@ -213,7 +262,7 @@ table td,
   bottom: 4px;
   width: 2px;
   border-radius: 0 1px 1px 0;
-  background-color: #FAFAFA;
+  background-color: var(--text-primary);
 }
 
 /* Live Market Indicator Beacon */

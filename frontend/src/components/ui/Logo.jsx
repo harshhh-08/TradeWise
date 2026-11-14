@@ -4,6 +4,7 @@ import { cn } from '@/lib/utils';
  * TradeWise Official "Linear TW." Brandmark
  * Exact recreation of the wireframe hollow-stroke T and W geometric monogram
  * with the signature electric blue period dot and tracked Swiss wordmark.
+ * Adapts seamlessly to Ivory Mist (light) and Obsidian Pro (dark).
  */
 export function Logo({
   size = 32,
@@ -18,13 +19,13 @@ export function Logo({
       viewBox="0 0 76 64"
       fill="none"
       xmlns="http://www.w3.org/2000/svg"
-      className="shrink-0 transition-transform duration-200 group-hover:scale-105"
+      className="shrink-0 text-ink-primary transition-transform duration-200 group-hover:scale-105"
     >
       {/* Hollow Outline 'T' */}
       <path
         d="M 5 6 H 42 V 14 H 28 V 56 H 19 V 14 H 5 Z"
         fill="transparent"
-        stroke="#FFFFFF"
+        stroke="currentColor"
         strokeWidth="2.4"
         strokeLinejoin="miter"
         strokeMiterlimit="10"
@@ -34,7 +35,7 @@ export function Logo({
       <path
         d="M 23 6 L 35 56 L 47 18 L 57 56 L 70 6 H 61.5 L 54 38 L 47 12 L 39 42 L 30 6 H 23 Z"
         fill="transparent"
-        stroke="#FFFFFF"
+        stroke="currentColor"
         strokeWidth="2.4"
         strokeLinejoin="miter"
         strokeMiterlimit="10"
@@ -55,7 +56,7 @@ export function Logo({
         {icon}
         <span
           className={cn(
-            'font-black font-sans tracking-[0.28em] text-sm text-white leading-none uppercase pl-[0.28em]',
+            'font-black font-sans tracking-[0.28em] text-sm text-ink-primary leading-none uppercase pl-[0.28em]',
             textClassName
           )}
         >
@@ -72,7 +73,7 @@ export function Logo({
       <div className="flex flex-col">
         <span
           className={cn(
-            'font-black font-sans tracking-[0.24em] text-xs text-white leading-none uppercase pl-[0.24em]',
+            'font-black font-sans tracking-[0.24em] text-xs text-ink-primary leading-none uppercase pl-[0.24em]',
             textClassName
           )}
         >
