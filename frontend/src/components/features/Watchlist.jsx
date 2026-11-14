@@ -45,33 +45,33 @@ export function Watchlist() {
   }, []);
 
   return (
-    <div className="space-y-2.5">
+    <div className="space-y-3">
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-2">
-          <span className="text-xs font-mono font-bold uppercase tracking-wider text-(--color-text-primary)">
+          <h2 className="text-[13px] font-medium text-ink-primary font-sans">
             Market Watch
-          </span>
-          <span className="text-[10px] font-mono text-(--color-text-muted)">
+          </h2>
+          <span className="text-xs text-ink-secondary font-sans">
             Mega-Cap Equities
           </span>
         </div>
         <Link
           to="/markets"
-          className="text-xs font-mono text-(--color-brand) hover:underline inline-flex items-center gap-1 font-medium"
+          className="text-xs font-sans text-ink-secondary hover:text-ink-primary inline-flex items-center gap-1 transition-colors"
         >
-          <span>Full Scanner</span>
+          <span>Full screener</span>
           <ArrowUpRight className="w-3.5 h-3.5" />
         </Link>
       </div>
 
       {isLoading ? (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           {[...Array(6)].map((_, i) => (
-            <Skeleton key={i} className="h-16 w-full rounded-md" />
+            <Skeleton key={i} className="h-16 w-full rounded" />
           ))}
         </div>
       ) : (
-        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2.5">
+        <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-2">
           {stocks.map((stock) => (
             <StockCard key={stock.symbol} stock={stock} />
           ))}

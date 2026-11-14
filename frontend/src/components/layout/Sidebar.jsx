@@ -24,23 +24,23 @@ export function Sidebar({ className }) {
   return (
     <aside
       className={cn(
-        'hidden md:flex flex-col w-60 border-r border-(--color-border) bg-(--color-bg-base)/95 backdrop-blur-md shrink-0 select-none z-10',
+        'hidden md:flex flex-col w-60 border-r border-border-subtle bg-surface shrink-0 select-none z-10',
         className
       )}
     >
-      {/* Brand */}
-      <div className="h-14 flex items-center justify-between px-4 border-b border-(--color-border)">
-        <Logo size={28} showText={true} />
-        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-md bg-(--color-bg-raised) text-(--color-brand) font-semibold border border-(--color-border)">
+      {/* Brand Header */}
+      <div className="h-14 flex items-center justify-between px-4 border-b border-border-subtle">
+        <Logo size={26} layout="horizontal" />
+        <span className="text-[10px] font-mono px-1.5 py-0.5 rounded-sm bg-elevated text-ink-secondary border border-border-subtle">
           v2.4
         </span>
       </div>
 
-      {/* Nav */}
-      <nav className="flex-1 p-2.5 space-y-1 overflow-y-auto">
-        <div className="px-3 py-1.5 text-[10px] font-mono uppercase tracking-wider text-(--color-text-muted) flex items-center justify-between">
+      {/* Nav Items */}
+      <nav className="flex-1 p-2 space-y-1 overflow-y-auto">
+        <div className="px-3 py-1.5 text-[11px] font-sans uppercase tracking-wider text-ink-muted flex items-center justify-between">
           <span>Navigation</span>
-          <span className="text-[9px] opacity-60">SHORTCUTS</span>
+          <span className="text-[9px] font-mono">⌘ 1-6</span>
         </div>
         {navItems.map((item, idx) => {
           const Icon = item.icon;
@@ -50,18 +50,18 @@ export function Sidebar({ className }) {
               to={item.path}
               className={({ isActive }) =>
                 cn(
-                  'flex items-center justify-between px-3 py-2 rounded-lg text-xs font-medium transition-all relative group',
+                  'flex items-center justify-between px-3 py-2 rounded text-xs font-sans font-medium transition-colors',
                   isActive
-                    ? 'accent-bar bg-(--color-bg-raised) text-(--color-text-primary) font-semibold shadow-xs'
-                    : 'text-(--color-text-muted) hover:text-(--color-text-primary) hover:bg-(--color-bg-raised)/60'
+                    ? 'bg-elevated text-ink-primary border border-border-strong'
+                    : 'text-ink-secondary hover:text-ink-primary hover:bg-elevated/50'
                 )
               }
             >
               <div className="flex items-center gap-2.5">
-                <Icon className="w-4 h-4 shrink-0 transition-transform group-hover:scale-110" />
+                <Icon className="w-4 h-4 shrink-0 text-ink-secondary" />
                 <span>{item.label}</span>
               </div>
-              <kbd className="hidden group-hover:inline-block text-[9px] font-mono px-1 rounded bg-(--color-bg-subtle) text-(--color-text-muted) border border-(--color-border)">
+              <kbd className="hidden group-hover:inline-block text-[9px] font-mono px-1 rounded-sm bg-elevated text-ink-muted border border-border-subtle">
                 ⌘{idx + 1}
               </kbd>
             </NavLink>
@@ -69,29 +69,29 @@ export function Sidebar({ className }) {
         })}
       </nav>
 
-      {/* Terminal Telemetry / Benchmark */}
-      <div className="p-3 m-2.5 rounded-xl bg-(--color-bg-subtle) border border-(--color-border) shadow-xs space-y-2 card-worldclass">
-        <div className="flex items-center justify-between text-[10px] font-mono">
-          <span className="text-(--color-text-muted) flex items-center gap-1">
-            <Activity className="w-3 h-3 text-(--color-brand)" />
-            MARKET PULSE
+      {/* Market Telemetry Footer */}
+      <div className="p-3 m-2 rounded bg-canvas border border-border-subtle space-y-2">
+        <div className="flex items-center justify-between text-xs font-sans">
+          <span className="text-ink-secondary flex items-center gap-1.5">
+            <Activity className="w-3.5 h-3.5 text-ink-muted" />
+            Market Pulse
           </span>
-          <span className="inline-flex items-center gap-1.5 text-(--color-success) font-medium text-[10px]">
-            <span className="w-1.5 h-1.5 rounded-full bg-(--color-success) beacon-live" />
+          <span className="inline-flex items-center gap-1.5 text-trade-up text-[11px] font-mono">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
             LIVE
           </span>
         </div>
-        <div className="flex items-center justify-between text-[11px] font-mono pt-1.5 border-t border-(--color-border)">
-          <span className="text-(--color-text-secondary)">S&amp;P 500</span>
-          <span className="font-semibold text-(--color-success)">5,864.67 (+0.42%)</span>
+        <div className="flex items-center justify-between text-xs font-mono pt-1.5 border-t border-border-subtle">
+          <span className="text-ink-secondary">S&amp;P 500</span>
+          <span className="font-medium text-trade-up tabular-nums">5,864.67 (+0.42%)</span>
         </div>
-        <div className="flex items-center justify-between text-[11px] font-mono">
-          <span className="text-(--color-text-secondary)">NASDAQ</span>
-          <span className="font-semibold text-(--color-success)">18,290.10 (+0.81%)</span>
+        <div className="flex items-center justify-between text-xs font-mono">
+          <span className="text-ink-secondary">NASDAQ</span>
+          <span className="font-medium text-trade-up tabular-nums">18,290.10 (+0.81%)</span>
         </div>
-        <div className="flex items-center justify-between text-[11px] font-mono">
-          <span className="text-(--color-text-secondary)">CBOE VIX</span>
-          <span className="font-semibold text-(--color-error)">14.85 (-1.45%)</span>
+        <div className="flex items-center justify-between text-xs font-mono">
+          <span className="text-ink-secondary">CBOE VIX</span>
+          <span className="font-medium text-trade-down tabular-nums">14.85 (-1.45%)</span>
         </div>
       </div>
     </aside>

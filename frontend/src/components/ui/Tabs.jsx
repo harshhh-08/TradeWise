@@ -4,7 +4,7 @@ export function Tabs({ tabs, activeTab, onChange, className }) {
   return (
     <div
       className={cn(
-        'flex items-center gap-1 border-b border-(--color-border) overflow-x-auto no-scrollbar',
+        'flex items-center gap-1 border-b border-border-subtle overflow-x-auto no-scrollbar font-sans',
         className
       )}
     >
@@ -16,10 +16,10 @@ export function Tabs({ tabs, activeTab, onChange, className }) {
             type="button"
             onClick={() => onChange(tab.id)}
             className={cn(
-              'px-3.5 py-2 text-xs font-semibold whitespace-nowrap border-b-2 transition-colors -mb-px flex items-center gap-1.5',
+              'px-3 py-2 text-xs font-medium whitespace-nowrap border-b-2 transition-colors -mb-px flex items-center gap-1.5 cursor-pointer',
               isActive
-                ? 'border-(--color-brand) text-(--color-brand)'
-                : 'border-transparent text-(--color-text-muted) hover:text-(--color-text-primary) hover:border-(--color-border-strong)'
+                ? 'border-ink-primary text-ink-primary'
+                : 'border-transparent text-ink-secondary hover:text-ink-primary hover:border-border-strong'
             )}
           >
             {tab.icon && <span>{tab.icon}</span>}
@@ -27,10 +27,10 @@ export function Tabs({ tabs, activeTab, onChange, className }) {
             {tab.badge !== undefined && (
               <span
                 className={cn(
-                  'px-1.5 py-0.2 rounded-full text-[10px]',
+                  'px-1.5 py-0.2 rounded-sm text-[10px] font-mono',
                   isActive
-                    ? 'bg-(--color-brand-subtle) text-(--color-brand)'
-                    : 'bg-(--color-bg-raised) text-(--color-text-muted)'
+                    ? 'bg-elevated text-ink-primary border border-border-subtle'
+                    : 'bg-elevated text-ink-muted'
                 )}
               >
                 {tab.badge}
@@ -42,4 +42,3 @@ export function Tabs({ tabs, activeTab, onChange, className }) {
     </div>
   );
 }
-

@@ -78,8 +78,8 @@ export function Logo({
         >
           TRADEWISE
         </span>
-        <span className="text-[8px] font-mono tracking-[0.16em] text-(--color-text-muted) uppercase leading-none mt-1">
-          TERMINAL // PRO
+        <span className="text-[8px] font-mono tracking-[0.16em] text-ink-muted uppercase leading-none mt-1">
+          INSTITUTIONAL DESK
         </span>
       </div>
     </div>

@@ -14,7 +14,7 @@ export function TableHeader({ className, children, ...props }) {
   return (
     <thead
       className={cn(
-        'border-b border-(--color-border) text-(--color-text-muted) font-semibold uppercase tracking-wider',
+        'border-b border-border-subtle bg-surface/50',
         className
       )}
       {...props}
@@ -27,7 +27,7 @@ export function TableHeader({ className, children, ...props }) {
 export function TableBody({ className, children, ...props }) {
   return (
     <tbody
-      className={cn('divide-y divide-(--color-border)', className)}
+      className={cn('divide-y divide-border-subtle bg-surface', className)}
       {...props}
     >
       {children}
@@ -39,7 +39,7 @@ export function TableRow({ className, children, ...props }) {
   return (
     <tr
       className={cn(
-        'hover:bg-(--color-bg-raised)/60 transition-colors',
+        'hover:bg-elevated transition-colors',
         className
       )}
       {...props}
@@ -51,7 +51,13 @@ export function TableRow({ className, children, ...props }) {
 
 export function TableHead({ className, children, ...props }) {
   return (
-    <th className={cn('py-3 px-4 font-mono font-bold text-[10px] uppercase tracking-wider text-(--color-text-muted)', className)} {...props}>
+    <th
+      className={cn(
+        'py-2.5 px-4 font-sans font-medium text-[11px] uppercase tracking-[0.05em] text-zinc-500 select-none',
+        className
+      )}
+      {...props}
+    >
       {children}
     </th>
   );
@@ -59,9 +65,14 @@ export function TableHead({ className, children, ...props }) {
 
 export function TableCell({ className, children, ...props }) {
   return (
-    <td className={cn('py-3.5 px-4 text-xs font-mono text-(--color-text-primary) tabular', className)} {...props}>
+    <td
+      className={cn(
+        'py-3 px-4 text-[13px] text-ink-primary',
+        className
+      )}
+      {...props}
+    >
       {children}
     </td>
   );
 }
-

@@ -5,175 +5,127 @@
 @import "@fontsource/inter/700.css";
 
 /* ─────────────────────────────────────────────────────────────
-   TradeWise · Obsidian Pro — Design Token System v3
-   Tailwind CSS v4 @theme block + :root/:dark CSS custom props
+   TradeWise Terminal — Authentic Institutional Workstation
+   True Neutral Obsidian Palette · Zero Blue Wash · Crisp 4px Radius
    ───────────────────────────────────────────────────────────── */
 
-/* ── Tailwind v4 @theme — registers tokens as first-class utilities ── */
-@theme {
-  /* Fonts */
-  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto,
-    sans-serif;
-  --font-mono: "JetBrains Mono", "Cascadia Code", "Fira Code", ui-monospace,
-    Menlo, Consolas, monospace;
-
-  /* Color palette — wired to CSS custom properties */
-  --color-bg-base: var(--color-bg-base-val);
-  --color-bg-subtle: var(--color-bg-subtle-val);
-  --color-bg-raised: var(--color-bg-raised-val);
-  --color-bg-overlay: var(--color-bg-overlay-val);
-
-  --color-text-primary: var(--color-text-primary-val);
-  --color-text-secondary: var(--color-text-secondary-val);
-  --color-text-muted: var(--color-text-muted-val);
-  --color-text-disabled: var(--color-text-disabled-val);
-  --color-text-inverse: var(--color-text-inverse-val);
-
-  --color-brand: var(--color-brand-val);
-  --color-brand-hover: var(--color-brand-hover-val);
-  --color-brand-active: var(--color-brand-active-val);
-  --color-brand-subtle: var(--color-brand-subtle-val);
-  --color-brand-text: #ffffff;
-
-  --color-success: var(--color-success-val);
-  --color-success-subtle: var(--color-success-subtle-val);
-  --color-warning: var(--color-warning-val);
-  --color-warning-subtle: var(--color-warning-subtle-val);
-  --color-error: var(--color-error-val);
-  --color-error-subtle: var(--color-error-subtle-val);
-  --color-info: var(--color-info-val);
-  --color-info-subtle: var(--color-info-subtle-val);
-
-  --color-border: var(--color-border-val);
-  --color-border-strong: var(--color-border-strong-val);
-
-  /* Radius scale */
-  --radius-sm: 4px;
-  --radius-md: 6px;
-  --radius-lg: 8px;
-  --radius-xl: 12px;
-  --radius-full: 9999px;
-
-  /* Shadow scale */
-  --shadow-xs: var(--shadow-xs-val);
-  --shadow-sm: var(--shadow-sm-val);
-  --shadow-md: var(--shadow-md-val);
-  --shadow-lg: var(--shadow-lg-val);
-
-  /* Typography scale */
-  --text-2xs: 0.6875rem; /* 11px */
-  --text-xs: 0.75rem; /* 12px */
-  --text-sm: 0.875rem; /* 14px */
-  --text-base: 1rem; /* 16px */
-  --text-lg: 1.125rem; /* 18px */
-  --text-xl: 1.25rem; /* 20px */
-  --text-2xl: 1.5rem; /* 24px */
-  --text-3xl: 1.875rem; /* 30px */
-  --text-4xl: 2.25rem; /* 36px */
-
-  /* Spacing extras */
-  --spacing-18: 4.5rem;
-  --spacing-22: 5.5rem;
-
-  /* Transition durations */
-  --duration-fast: 100ms;
-  --duration-ui: 200ms;
-  --duration-page: 400ms;
-}
-
-/* ─── Light Mode ─── */
 :root {
-  color-scheme: light;
+  /* Surfaces - True Neutral Obsidian (Zero Blue Tint) */
+  --bg-canvas: #09090B;        /* Main app background */
+  --bg-surface: #111113;       /* Panels, sidebar, order ticket */
+  --bg-elevated: #18181B;      /* Hover rows, active inputs, dropdowns */
 
-  /* Backgrounds */
-  --color-bg-base-val: #f8f9fb;
-  --color-bg-subtle-val: #ffffff;
-  --color-bg-raised-val: #f1f3f7;
-  --color-bg-overlay-val: rgba(0, 0, 0, 0.05);
+  /* Borders - Crisp Architectural Hairlines */
+  --border-subtle: #222226;    /* Panel dividers & table gridlines */
+  --border-strong: #323238;    /* Input outlines & active tabs */
 
-  /* Foreground */
-  --color-text-primary-val: #0f141e;
-  --color-text-secondary-val: #333d4e;
-  --color-text-muted-val: #6b778c;
-  --color-text-disabled-val: #a0aec0;
-  --color-text-inverse-val: #ffffff;
+  /* Typography */
+  --text-primary: #FAFAFA;     /* Main numbers, headings, tickers */
+  --text-secondary: #A1A1AA;   /* Labels, column headers, descriptions */
+  --text-muted: #52525B;       /* Disabled states, timestamps, hints */
 
-  /* Brand — electric blue */
-  --color-brand-val: #2563eb;
-  --color-brand-hover-val: #1d4ed8;
-  --color-brand-active-val: #1e40af;
-  --color-brand-subtle-val: rgba(37, 99, 235, 0.08);
+  /* Functional Market Accents (Strictly for Data & Execution) */
+  --accent-primary: #FAFAFA;   /* Primary neutral CTA (White button, black text) */
+  --market-up: #10B981;        /* Crisp Emerald for gains & Buy execution */
+  --market-up-bg: rgba(16, 185, 129, 0.12);
+  --market-down: #EF4444;      /* Crisp Crimson for losses & Sell execution */
+  --market-down-bg: rgba(239, 68, 68, 0.12);
 
-  /* Semantic */
-  --color-success-val: #059669;
-  --color-success-subtle-val: rgba(5, 150, 105, 0.08);
-  --color-warning-val: #d97706;
-  --color-warning-subtle-val: rgba(217, 119, 6, 0.08);
-  --color-error-val: #e11d48;
-  --color-error-subtle-val: rgba(225, 29, 72, 0.08);
-  --color-info-val: #0284c7;
-  --color-info-subtle-val: rgba(2, 132, 199, 0.08);
+  /* Canonical Aliases */
+  --color-bg-base-val: var(--bg-canvas);
+  --color-bg-subtle-val: var(--bg-surface);
+  --color-bg-raised-val: var(--bg-elevated);
+  --color-bg-overlay-val: var(--bg-elevated);
 
-  /* Borders */
-  --color-border-val: rgba(0, 0, 0, 0.08);
-  --color-border-strong-val: rgba(0, 0, 0, 0.16);
+  --color-text-primary-val: var(--text-primary);
+  --color-text-secondary-val: var(--text-secondary);
+  --color-text-muted-val: var(--text-muted);
+  --color-text-disabled-val: var(--text-muted);
+  --color-text-inverse-val: #09090B;
 
-  /* Shadows — crisp, light-mode appropriate */
-  --shadow-xs-val: 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-sm-val: 0 1px 3px rgba(0, 0, 0, 0.08), 0 1px 2px rgba(0, 0, 0, 0.04);
-  --shadow-md-val: 0 4px 6px rgba(0, 0, 0, 0.06), 0 2px 4px rgba(0, 0, 0, 0.04);
-  --shadow-lg-val: 0 10px 15px rgba(0, 0, 0, 0.08),
-    0 4px 6px rgba(0, 0, 0, 0.04);
+  --color-brand-val: var(--accent-primary);
+  --color-brand-hover-val: #E4E4E7;
+  --color-brand-active-val: #D4D4D8;
+  --color-brand-subtle-val: rgba(250, 250, 250, 0.08);
+
+  --color-success-val: var(--market-up);
+  --color-success-subtle-val: var(--market-up-bg);
+  --color-error-val: var(--market-down);
+  --color-error-subtle-val: var(--market-down-bg);
+  --color-warning-val: #F59E0B;
+  --color-warning-subtle-val: rgba(245, 158, 11, 0.12);
+
+  --color-border-val: var(--border-subtle);
+  --color-border-strong-val: var(--border-strong);
 }
 
-/* ─── Dark Mode — Obsidian Pro Financial Terminal ─── */
 .dark {
   color-scheme: dark;
-
-  /* Deep obsidian/slate canvas layers */
-  --color-bg-base-val: #08090d;
-  --color-bg-subtle-val: #0e1017;
-  --color-bg-raised-val: #141722;
-  --color-bg-overlay-val: #1c202d;
-
-  /* Foreground hierarchy */
-  --color-text-primary-val: #f1f3f9;
-  --color-text-secondary-val: #c3c7d3;
-  --color-text-muted-val: #757d91;
-  --color-text-disabled-val: #444b5b;
-  --color-text-inverse-val: #08090d;
-
-  /* Brand — Crisp Financial Electric Blue */
-  --color-brand-val: #3b82f6;
-  --color-brand-hover-val: #60a5fa;
-  --color-brand-active-val: #2563eb;
-  --color-brand-subtle-val: rgba(59, 130, 246, 0.12);
-
-  /* Semantic — Vivid High-Legibility Financial Tickers */
-  --color-success-val: #10b981;
-  --color-success-subtle-val: rgba(16, 185, 129, 0.12);
-  --color-warning-val: #f59e0b;
-  --color-warning-subtle-val: rgba(245, 158, 11, 0.12);
-  --color-error-val: #f43f5e;
-  --color-error-subtle-val: rgba(244, 63, 94, 0.12);
-  --color-info-val: #38bdf8;
-  --color-info-subtle-val: rgba(56, 189, 248, 0.12);
-
-  /* Hairline precision borders */
-  --color-border-val: rgba(255, 255, 255, 0.07);
-  --color-border-strong-val: rgba(255, 255, 255, 0.14);
-
-  /* Inset hairline highlight — terminal panel feel */
-  --shadow-xs-val: 0 1px 2px rgba(0, 0, 0, 0.5);
-  --shadow-sm-val: 0 1px 3px rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-  --shadow-md-val: 0 4px 8px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
-  --shadow-lg-val: 0 12px 24px rgba(0, 0, 0, 0.6),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.05);
 }
 
-/* ─── Base Styles ─── */
+/* ── Tailwind v4 @theme Registration ── */
+@theme {
+  --font-sans: "Inter", -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif;
+  --font-mono: "JetBrains Mono", "Cascadia Code", "Fira Code", ui-monospace, Menlo, monospace;
+
+  /* Prompt semantic tokens */
+  --color-canvas: var(--bg-canvas);
+  --color-surface: var(--bg-surface);
+  --color-elevated: var(--bg-elevated);
+
+  --color-border-subtle: var(--border-subtle);
+  --color-border-strong: var(--border-strong);
+
+  --color-ink-primary: var(--text-primary);
+  --color-ink-secondary: var(--text-secondary);
+  --color-ink-muted: var(--text-muted);
+
+  --color-trade-up: var(--market-up);
+  --color-trade-down: var(--market-down);
+
+  /* Aliased theme tokens */
+  --color-bg-base: var(--bg-canvas);
+  --color-bg-subtle: var(--bg-surface);
+  --color-bg-raised: var(--bg-elevated);
+  --color-bg-overlay: var(--bg-elevated);
+
+  --color-text-primary: var(--text-primary);
+  --color-text-secondary: var(--text-secondary);
+  --color-text-muted: var(--text-muted);
+
+  --color-brand: var(--accent-primary);
+  --color-brand-hover: #E4E4E7;
+  --color-brand-active: #D4D4D8;
+  --color-brand-subtle: rgba(250, 250, 250, 0.08);
+
+  --color-success: var(--market-up);
+  --color-success-subtle: var(--market-up-bg);
+  --color-error: var(--market-down);
+  --color-error-subtle: var(--market-down-bg);
+
+  --color-border: var(--border-subtle);
+
+  /* Radius Rules: Kill rounded-xl. Standardize on 4px & 2px */
+  --radius: 4px;
+  --radius-sm: 2px;
+  --radius-md: 4px;
+  --radius-lg: 4px;
+  --radius-xl: 6px;
+  --radius-full: 9999px;
+
+  /* Kill drop shadows — use 1px #222226 borders instead */
+  --shadow-xs: none;
+  --shadow-sm: none;
+  --shadow-md: none;
+  --shadow-lg: none;
+  --shadow-xl: none;
+
+  /* Durations */
+  --duration-fast: 100ms;
+  --duration-ui: 150ms;
+}
+
+/* ─── Global Reset & Typography ─── */
 *,
 *::before,
 *::after {
@@ -183,11 +135,10 @@
 body {
   margin: 0;
   font-family: var(--font-sans);
-  background-color: var(--color-bg-base-val);
-  color: var(--color-text-primary-val);
+  background-color: var(--bg-canvas);
+  color: var(--text-primary);
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   line-height: 1.5;
 }
 
@@ -195,7 +146,12 @@ body {
   min-height: 100svh;
 }
 
-/* ─── Financial Tabular Numbers ─── */
+/* Headings: Tight -0.02em letter-spacing */
+h1, h2, h3, h4, h5, h6 {
+  letter-spacing: -0.02em;
+}
+
+/* Numbers & Tickers: Strict tabular-nums */
 .font-mono,
 [data-num],
 table td,
@@ -204,35 +160,35 @@ table td,
   letter-spacing: -0.01em;
 }
 
-/* ─── Precision Scrollbar (Obsidian Pro) ─── */
-.dark ::-webkit-scrollbar {
+/* Precision Scrollbar */
+::-webkit-scrollbar {
   width: 5px;
   height: 5px;
 }
-.dark ::-webkit-scrollbar-track {
+::-webkit-scrollbar-track {
   background: transparent;
 }
-.dark ::-webkit-scrollbar-thumb {
-  background: rgba(255, 255, 255, 0.1);
-  border-radius: 3px;
+::-webkit-scrollbar-thumb {
+  background: #222226;
+  border-radius: 2px;
 }
-.dark ::-webkit-scrollbar-thumb:hover {
-  background: rgba(255, 255, 255, 0.22);
+::-webkit-scrollbar-thumb:hover {
+  background: #323238;
 }
 
-/* ─── Selection ─── */
+/* Selection */
 ::selection {
-  background-color: var(--color-brand-val);
-  color: #ffffff;
+  background-color: #FAFAFA;
+  color: #09090B;
 }
 
-/* ─── Focus Ring — consistent across all interactive elements ─── */
+/* Focus Ring */
 *:focus-visible {
   outline: none;
-  box-shadow: 0 0 0 2px var(--color-bg-base-val), 0 0 0 4px var(--color-brand-val);
+  box-shadow: 0 0 0 1px #09090B, 0 0 0 2px #323238;
 }
 
-/* ─── Hide scrollbar utility ─── */
+/* Hide scrollbar */
 .no-scrollbar::-webkit-scrollbar {
   display: none;
 }
@@ -241,178 +197,31 @@ table td,
   scrollbar-width: none;
 }
 
-/* ─── Reduced Motion Guard ─── */
-@media (prefers-reduced-motion: reduce) {
-  *,
-  *::before,
-  *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
-  }
+/* ─── Workstation Panel Utilities (No fuzzy glows) ─── */
+.card-workstation {
+  background-color: var(--bg-surface);
+  border: 1px solid var(--border-subtle);
+  border-radius: 4px;
 }
 
-/* ─── Terminal Panel Utilities & World-Class Visual FX ─── */
-
-/* Architectural micro-grid background */
-.bg-grid-pattern {
-  background-image: radial-gradient(rgba(255, 255, 255, 0.08) 1px, transparent 1px);
-  background-size: 24px 24px;
-}
-
-/* Ambient Radial Glow Lighting */
-.ambient-glow {
-  position: absolute;
-  top: -120px;
-  left: 50%;
-  transform: translateX(-50%);
-  width: 900px;
-  height: 420px;
-  background: radial-gradient(ellipse at center, var(--color-brand-val) 0%, transparent 70%);
-  opacity: 0.12;
-  filter: blur(80px);
-  pointer-events: none;
-  z-index: 0;
-}
-
-/* World-class machined card depth (Linear / Apple Pro style) */
-.card-worldclass {
-  position: relative;
-  background-color: var(--color-bg-subtle-val);
-  border: 1px solid var(--color-border-val);
-  border-radius: var(--radius-lg);
-  box-shadow: 
-    0 0 0 1px rgba(255, 255, 255, 0.05),
-    0 2px 4px rgba(0, 0, 0, 0.4),
-    0 12px 24px -4px rgba(0, 0, 0, 0.5),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.08);
-  transition: all 220ms cubic-bezier(0.16, 1, 0.3, 1);
-}
-.card-worldclass:hover {
-  border-color: var(--color-border-strong-val);
-  box-shadow: 
-    0 0 0 1px rgba(255, 255, 255, 0.14),
-    0 4px 12px rgba(0, 0, 0, 0.6),
-    0 24px 40px -8px rgba(0, 0, 0, 0.7),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.14);
-}
-
-/* Hairline top-edge highlight — gives depth to dark panels */
-.panel-highlight {
-  box-shadow: inset 0 1px 0 0 rgba(255, 255, 255, 0.08),
-    0 4px 12px rgba(0, 0, 0, 0.35);
-}
-
-/* Inset brand accent bar on left edge (active nav states) */
+/* Active navigation accent bar */
 .accent-bar::before {
   content: "";
   position: absolute;
   left: 0;
-  top: 0.375rem;
-  bottom: 0.375rem;
-  width: 2.5px;
-  border-radius: 0 3px 3px 0;
-  background-color: var(--color-brand-val);
-  box-shadow: 0 0 8px var(--color-brand-val);
+  top: 4px;
+  bottom: 4px;
+  width: 2px;
+  border-radius: 0 1px 1px 0;
+  background-color: #FAFAFA;
 }
 
-/* World-class tactile buttons */
-.btn-tactile {
-  position: relative;
-  transition: all 180ms cubic-bezier(0.16, 1, 0.3, 1);
-  box-shadow: 
-    0 1px 2px rgba(0, 0, 0, 0.1),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.2);
-}
-.btn-tactile:hover {
-  transform: translateY(-1px);
-  box-shadow: 
-    0 4px 12px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 0 rgba(255, 255, 255, 0.28);
-}
-.btn-tactile:active {
-  transform: translateY(0.5px) scale(0.985);
-  box-shadow: 
-    0 1px 1px rgba(0, 0, 0, 0.15),
-    inset 0 1px 0 0 rgba(0, 0, 0, 0.1);
-}
-
-/* Subtle Shimmer for primary actions */
-@keyframes shimmer-sweep {
-  0% { transform: translateX(-150%) skewX(-15deg); }
-  100% { transform: translateX(250%) skewX(-15deg); }
-}
-.shimmer-active::after {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  bottom: 0;
-  background: linear-gradient(
-    90deg,
-    transparent 0%,
-    rgba(255, 255, 255, 0.18) 50%,
-    transparent 100%
-  );
-  animation: shimmer-sweep 3.5s infinite ease-in-out;
-  pointer-events: none;
-  border-radius: inherit;
-}
-
-/* Pulsing Status Beacon */
+/* Live Market Indicator Beacon */
 @keyframes beacon-pulse {
-  0% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0.7); }
-  70% { transform: scale(1); box-shadow: 0 0 0 6px rgba(16, 185, 129, 0); }
-  100% { transform: scale(0.95); box-shadow: 0 0 0 0 rgba(16, 185, 129, 0); }
+  0% { transform: scale(0.95); opacity: 1; }
+  50% { transform: scale(1.15); opacity: 0.6; }
+  100% { transform: scale(0.95); opacity: 1; }
 }
 .beacon-live {
-  animation: beacon-pulse 2s infinite cubic-bezier(0.4, 0, 0.6, 1);
-}
-
-/* High-Impact Metallic Typography Gradients */
-.text-gradient-silver {
-  background: linear-gradient(180deg, #FFFFFF 0%, #A0A5B5 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-.text-gradient-brand {
-  background: linear-gradient(135deg, var(--color-brand-val) 0%, #60A5FA 100%);
-  -webkit-background-clip: text;
-  -webkit-text-fill-color: transparent;
-}
-
-/* Ticker flash animations */
-@keyframes tick-up {
-  0%,
-  100% {
-    color: var(--color-success-val);
-  }
-  50% {
-    color: color-mix(in oklch, var(--color-success-val) 60%, white);
-  }
-}
-@keyframes tick-down {
-  0%,
-  100% {
-    color: var(--color-error-val);
-  }
-  50% {
-    color: color-mix(in oklch, var(--color-error-val) 60%, white);
-  }
-}
-
-.tick-flash-up {
-  animation: tick-up 300ms ease-out;
-}
-.tick-flash-down {
-  animation: tick-down 300ms ease-out;
-}
-
-/* ─── Glass surface ─── */
-.glass {
-  background: rgba(255, 255, 255, 0.04);
-  backdrop-filter: blur(16px) saturate(180%);
-  -webkit-backdrop-filter: blur(16px) saturate(180%);
-  border: 1px solid rgba(255, 255, 255, 0.08);
+  animation: beacon-pulse 2s infinite ease-in-out;
 }

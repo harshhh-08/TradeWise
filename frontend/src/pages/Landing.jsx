@@ -4,12 +4,10 @@ import {
   TrendingUp,
   TrendingDown,
   ArrowRight,
-  Shield,
   BarChart2,
   Cpu,
   History,
   CheckCircle2,
-  Lock,
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Logo } from '@/components/ui/Logo';
@@ -39,49 +37,46 @@ export default function Landing() {
   const orderTotal = previewShares * stock.price;
 
   return (
-    <div className="min-h-svh bg-(--color-bg-base) text-(--color-text-primary) flex flex-col selection:bg-(--color-brand) selection:text-white relative overflow-hidden bg-grid-pattern">
-      {/* Ambient Lighting Beam */}
-      <div className="ambient-glow" />
-
+    <div className="min-h-svh bg-canvas text-ink-primary flex flex-col font-sans selection:bg-zinc-800 selection:text-white">
       {/* Benchmark Ticker Strip */}
-      <div className="border-b border-(--color-border) bg-(--color-bg-subtle)/80 backdrop-blur-sm py-1.5 px-4 overflow-x-auto no-scrollbar relative z-10">
-        <div className="max-w-7xl mx-auto flex items-center justify-between min-w-[700px] text-[11px] font-mono">
+      <div className="border-b border-border-subtle bg-surface py-2 px-4 overflow-x-auto no-scrollbar">
+        <div className="max-w-7xl mx-auto flex items-center justify-between min-w-[700px] text-xs">
           <div className="flex items-center gap-6">
             {BENCHMARKS.map((b) => (
               <div key={b.name} className="flex items-center gap-2">
-                <span className="text-(--color-text-muted)">{b.name}</span>
-                <span className="font-semibold text-(--color-text-primary) tabular">{b.value}</span>
-                <span className={b.isPos ? 'text-(--color-success) font-semibold' : 'text-(--color-error) font-semibold'}>
+                <span className="text-ink-secondary font-sans">{b.name}</span>
+                <span className="font-medium text-ink-primary font-mono tabular-nums">{b.value}</span>
+                <span className={`font-mono text-xs tabular-nums ${b.isPos ? 'text-trade-up' : 'text-trade-down'}`}>
                   {b.change}
                 </span>
               </div>
             ))}
           </div>
-          <div className="flex items-center gap-2 text-[10px] text-(--color-text-muted) border-l border-(--color-border) pl-4">
-            <span className="w-2 h-2 rounded-full bg-(--color-success) beacon-live" />
-            <span className="font-bold text-(--color-text-primary)">US MARKETS OPEN</span>
+          <div className="flex items-center gap-2 text-xs text-ink-secondary border-l border-border-subtle pl-4 font-sans">
+            <span className="w-1.5 h-1.5 rounded-full bg-emerald-500 animate-pulse" />
+            <span className="font-medium text-ink-primary">US Markets Open</span>
           </div>
         </div>
       </div>
 
       {/* Primary Header */}
-      <header className="h-14 border-b border-(--color-border) sticky top-0 z-30 bg-(--color-bg-base)/90 backdrop-blur-md">
+      <header className="h-14 border-b border-border-subtle sticky top-0 z-30 bg-surface">
         <div className="max-w-7xl mx-auto h-full px-4 sm:px-6 lg:px-8 flex items-center justify-between">
           <Link to="/" className="flex items-center">
-            <Logo size={28} showText={true} />
+            <Logo size={26} layout="horizontal" />
           </Link>
 
-          <nav className="hidden md:flex items-center gap-6 text-xs text-(--color-text-secondary) font-medium">
-            <Link to="/markets" className="hover:text-(--color-text-primary) transition-colors">
+          <nav className="hidden md:flex items-center gap-6 text-xs text-ink-secondary font-medium">
+            <Link to="/markets" className="hover:text-ink-primary transition-colors">
               Market Quotes
             </Link>
-            <Link to="/trade" className="hover:text-(--color-text-primary) transition-colors">
+            <Link to="/trade" className="hover:text-ink-primary transition-colors">
               Execution Engine
             </Link>
-            <Link to="/replay" className="hover:text-(--color-text-primary) transition-colors">
+            <Link to="/replay" className="hover:text-ink-primary transition-colors">
               Candle Replay
             </Link>
-            <Link to="/learn" className="hover:text-(--color-text-primary) transition-colors">
+            <Link to="/learn" className="hover:text-ink-primary transition-colors">
               Curriculum
             </Link>
           </nav>
@@ -102,72 +97,74 @@ export default function Landing() {
       </header>
 
       {/* Hero Section */}
-      <section className="pt-14 pb-16 sm:pt-20 sm:pb-24 border-b border-(--color-border) relative z-10">
+      <section className="pt-16 pb-20 sm:pt-24 sm:pb-28 border-b border-border-subtle">
         <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-1 lg:grid-cols-12 gap-12 items-center">
-            {/* Left copy (7 cols) */}
-            <div className="lg:col-span-7 space-y-5">
-              <div className="inline-flex items-center gap-2 px-3 py-1 rounded-full bg-(--color-brand-subtle) border border-(--color-brand)/20 text-[11px] font-mono text-(--color-brand) font-bold shadow-xs">
-                <span className="w-1.5 h-1.5 rounded-full bg-(--color-brand) animate-ping" />
-                <span>INSTITUTIONAL BROKERAGE SIMULATOR</span>
+            {/* Left copy */}
+            <div className="lg:col-span-7 space-y-6">
+              <div className="text-xs font-mono uppercase tracking-widest text-ink-muted">
+                INSTITUTIONAL BROKERAGE SIMULATOR
               </div>
 
-              <h1 className="text-4xl sm:text-6xl font-black tracking-tight leading-[1.08] text-(--color-text-primary)">
-                The terminal for <span className="text-gradient-silver">elite market execution.</span>
+              <h1 className="text-4xl sm:text-5xl font-semibold tracking-tight leading-[1.1] text-ink-primary font-sans">
+                The terminal for elite market execution.
               </h1>
 
-              <p className="text-sm sm:text-base text-(--color-text-muted) leading-relaxed max-w-xl">
+              <p className="text-sm sm:text-base text-ink-secondary leading-relaxed max-w-xl font-sans">
                 Test equity strategies against real-time NASDAQ and NYSE market feeds. Practice order execution, risk sizing, and historical market regimes with $100,000 in virtual capital.
               </p>
 
               <div className="flex flex-wrap items-center gap-3 pt-2">
                 <Link to="/register">
-                  <Button size="lg" className="px-6 font-semibold" rightIcon={<ArrowRight className="w-4 h-4" />}>
-                    Open $100k Paper Account
-                  </Button>
+                  <button className="px-4 py-2 text-xs font-medium text-canvas bg-ink-primary rounded hover:bg-zinc-200 transition-colors inline-flex items-center gap-2 cursor-pointer">
+                    <span>Open $100k Paper Account</span>
+                    <ArrowRight className="w-3.5 h-3.5" />
+                  </button>
                 </Link>
                 <Link to="/markets">
-                  <Button variant="secondary" size="lg" className="px-5 font-mono">
+                  <button className="px-4 py-2 text-xs font-medium text-ink-primary bg-surface border border-border-strong rounded hover:bg-elevated transition-colors cursor-pointer">
                     Explore Screener
-                  </Button>
+                  </button>
                 </Link>
               </div>
 
-              <div className="pt-4 flex items-center gap-6 text-xs text-(--color-text-muted) font-mono">
+              <div className="pt-2 flex items-center gap-6 text-xs text-ink-secondary font-sans">
                 <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-(--color-success)" />
-                  <span>Real Yahoo &amp; Twelve Data Feeds</span>
+                  <CheckCircle2 className="w-4 h-4 text-trade-up" />
+                  <span>Real market feeds</span>
                 </div>
                 <div className="flex items-center gap-1.5">
-                  <CheckCircle2 className="w-4 h-4 text-(--color-success)" />
-                  <span>Zero Capital Risk</span>
+                  <CheckCircle2 className="w-4 h-4 text-trade-up" />
+                  <span>Zero capital risk</span>
                 </div>
               </div>
             </div>
 
-            {/* Right Interactive Preview (5 cols) */}
+            {/* Right Interactive Preview */}
             <div className="lg:col-span-5">
-              <div className="card-worldclass rounded-2xl border border-(--color-border) bg-(--color-bg-subtle) shadow-2xl overflow-hidden relative">
+              <div className="rounded border border-border-subtle bg-surface overflow-hidden">
                 {/* Terminal top chrome */}
-                <div className="h-10 px-4 bg-(--color-bg-raised) border-b border-(--color-border) flex items-center justify-between text-[11px] font-mono">
+                <div className="h-10 px-4 bg-surface border-b border-border-subtle flex items-center justify-between text-xs font-sans">
                   <div className="flex items-center gap-2">
-                    <span className="w-2 h-2 rounded-full bg-(--color-success) beacon-live" />
-                    <span className="font-bold text-(--color-text-primary)">TICKER SIMULATOR</span>
+                    <span className="w-2 h-2 rounded-full bg-emerald-500 animate-pulse" />
+                    <span className="font-medium text-ink-primary">Live Simulator</span>
                   </div>
-                  <span className="text-(--color-brand) font-semibold">BUYING POWER: $100,000.00</span>
+                  <span className="font-mono text-xs text-ink-secondary tabular-nums">
+                    Buying Power: $100,000.00
+                  </span>
                 </div>
 
-                {/* Ticker switch pills */}
-                <div className="p-3 border-b border-(--color-border) flex items-center gap-1.5 bg-(--color-bg-base)">
+                {/* Ticker switch tabs */}
+                <div className="flex items-center border-b border-border-subtle bg-canvas">
                   {Object.keys(PREVIEW_TICKERS).map((sym) => (
                     <button
                       key={sym}
                       type="button"
                       onClick={() => setActiveTicker(sym)}
-                      className={`px-3 py-1 rounded-md text-xs font-mono font-bold transition-all cursor-pointer ${
+                      className={`flex-1 py-2 text-xs font-mono tabular-nums transition-colors cursor-pointer border-r last:border-r-0 border-border-subtle ${
                         activeTicker === sym
-                          ? 'bg-(--color-brand) text-white shadow-xs'
-                          : 'text-(--color-text-muted) hover:text-(--color-text-primary) hover:bg-(--color-bg-raised)'
+                          ? 'bg-surface text-ink-primary font-medium'
+                          : 'text-ink-muted hover:text-ink-primary hover:bg-elevated'
                       }`}
                     >
                       {sym}
@@ -179,18 +176,20 @@ export default function Landing() {
                 <div className="p-5 space-y-4">
                   <div className="flex items-baseline justify-between">
                     <div>
-                      <div className="text-xl font-black font-mono tracking-tight">{activeTicker}</div>
-                      <div className="text-[11px] text-(--color-text-muted) truncate max-w-[160px]">
+                      <div className="text-xl font-medium font-mono tracking-tight text-ink-primary tabular-nums">
+                        {activeTicker}
+                      </div>
+                      <div className="text-xs text-ink-secondary truncate max-w-[160px] font-sans">
                         {stock.name}
                       </div>
                     </div>
                     <div className="text-right">
-                      <div className="text-2xl font-black font-mono text-(--color-text-primary) tabular">
+                      <div className="text-xl font-semibold font-mono text-ink-primary tabular-nums">
                         {formatCurrency(stock.price)}
                       </div>
                       <div
-                        className={`text-xs font-mono font-bold inline-block px-1.5 py-0.5 rounded ${
-                          stock.isPos ? 'bg-(--color-success-subtle) text-(--color-success)' : 'bg-(--color-error-subtle) text-(--color-error)'
+                        className={`text-xs font-mono tabular-nums ${
+                          stock.isPos ? 'text-trade-up' : 'text-trade-down'
                         }`}
                       >
                         {stock.change}
@@ -198,33 +197,13 @@ export default function Landing() {
                     </div>
                   </div>
 
-                  {/* SVG Line Preview with Glowing Area Fill */}
-                  <div className="h-28 w-full bg-(--color-bg-base) rounded-xl border border-(--color-border) p-3 flex items-center overflow-hidden relative">
+                  {/* SVG Line Preview */}
+                  <div className="h-28 w-full bg-canvas rounded-sm border border-border-subtle p-3 flex items-center overflow-hidden relative">
                     <svg className="w-full h-full overflow-visible" viewBox="0 0 100 40" preserveAspectRatio="none">
-                      <defs>
-                        <linearGradient id={`grad-${activeTicker}`} x1="0" y1="0" x2="0" y2="1">
-                          <stop offset="0%" stopColor={stock.isPos ? '#10b981' : '#f43f5e'} stopOpacity="0.35" />
-                          <stop offset="100%" stopColor={stock.isPos ? '#10b981' : '#f43f5e'} stopOpacity="0" />
-                        </linearGradient>
-                      </defs>
-                      {/* Polygon fill */}
-                      <polygon
-                        fill={`url(#grad-${activeTicker})`}
-                        points={`0,40 ${stock.points
-                          .map((val, i) => {
-                            const min = Math.min(...stock.points);
-                            const max = Math.max(...stock.points);
-                            const y = 32 - ((val - min) / ((max - min) || 1)) * 24;
-                            const x = (i / (stock.points.length - 1)) * 100;
-                            return `${x},${y}`;
-                          })
-                          .join(' ')} 100,40`}
-                      />
-                      {/* Stroke line */}
                       <polyline
                         fill="none"
-                        stroke={stock.isPos ? '#10b981' : '#f43f5e'}
-                        strokeWidth="2.5"
+                        stroke={stock.isPos ? '#10B981' : '#EF4444'}
+                        strokeWidth="1.8"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         points={stock.points
@@ -241,64 +220,66 @@ export default function Landing() {
                   </div>
 
                   {/* Simulated Order Ticket */}
-                  <div className="pt-2 border-t border-(--color-border) space-y-3">
-                    <div className="grid grid-cols-2 gap-1.5 p-1 rounded-lg bg-(--color-bg-raised) border border-(--color-border)">
+                  <div className="pt-2 border-t border-border-subtle space-y-3">
+                    <div className="grid grid-cols-2 gap-2">
                       <button
                         type="button"
                         onClick={() => setPreviewSide('BUY')}
-                        className={`py-1.5 text-xs font-bold font-mono rounded-md cursor-pointer transition-all ${
+                        className={`py-1.5 text-xs font-medium font-mono rounded cursor-pointer transition-colors ${
                           previewSide === 'BUY'
-                            ? 'bg-(--color-success) text-white shadow-xs'
-                            : 'text-(--color-text-muted)'
+                            ? 'bg-trade-up text-white'
+                            : 'bg-elevated text-ink-secondary border border-border-subtle'
                         }`}
                       >
-                        BUY (LONG)
+                        Buy
                       </button>
                       <button
                         type="button"
                         onClick={() => setPreviewSide('SELL')}
-                        className={`py-1.5 text-xs font-bold font-mono rounded-md cursor-pointer transition-all ${
+                        className={`py-1.5 text-xs font-medium font-mono rounded cursor-pointer transition-colors ${
                           previewSide === 'SELL'
-                            ? 'bg-(--color-error) text-white shadow-xs'
-                            : 'text-(--color-text-muted)'
+                            ? 'bg-trade-down text-white'
+                            : 'bg-elevated text-ink-secondary border border-border-subtle'
                         }`}
                       >
-                        SELL (CLOSE)
+                        Sell
                       </button>
                     </div>
 
-                    <div className="flex items-center justify-between text-xs font-mono">
-                      <span className="text-(--color-text-muted)">Shares Consideration</span>
+                    <div className="flex items-center justify-between text-xs font-sans">
+                      <span className="text-ink-secondary">Shares</span>
                       <div className="flex items-center gap-2">
                         <button
                           type="button"
                           onClick={() => setPreviewShares((s) => Math.max(5, s - 5))}
-                          className="w-7 h-7 flex items-center justify-center rounded-md bg-(--color-bg-raised) border border-(--color-border) text-xs font-bold hover:bg-(--color-bg-subtle)"
+                          className="w-6 h-6 flex items-center justify-center rounded bg-elevated border border-border-subtle text-xs text-ink-primary hover:bg-zinc-800"
                         >
                           -
                         </button>
-                        <span className="w-10 text-center font-bold font-mono text-sm">{previewShares}</span>
+                        <span className="w-10 text-center font-mono text-xs tabular-nums text-ink-primary">
+                          {previewShares}
+                        </span>
                         <button
                           type="button"
                           onClick={() => setPreviewShares((s) => s + 5)}
-                          className="w-7 h-7 flex items-center justify-center rounded-md bg-(--color-bg-raised) border border-(--color-border) text-xs font-bold hover:bg-(--color-bg-subtle)"
+                          className="w-6 h-6 flex items-center justify-center rounded bg-elevated border border-border-subtle text-xs text-ink-primary hover:bg-zinc-800"
                         >
                           +
                         </button>
                       </div>
                     </div>
 
-                    <div className="flex justify-between items-center text-xs font-mono pt-1">
-                      <span className="text-(--color-text-muted)">Order Consideration</span>
-                      <span className="font-bold text-(--color-text-primary) text-sm tabular">
+                    <div className="flex justify-between items-center text-xs pt-1">
+                      <span className="text-ink-secondary font-sans">Order Consideration</span>
+                      <span className="font-medium font-mono text-ink-primary tabular-nums">
                         {formatCurrency(orderTotal)}
                       </span>
                     </div>
 
                     <Link to="/register" className="block pt-1">
-                      <Button size="md" className="w-full font-mono text-xs font-bold">
-                        Execute {previewSide} {previewShares} {activeTicker}
-                      </Button>
+                      <button className="w-full py-2 text-xs font-medium text-canvas bg-ink-primary rounded hover:bg-zinc-200 transition-colors cursor-pointer">
+                        Transmit {previewSide === 'BUY' ? 'Buy' : 'Sell'} Order
+                      </button>
                     </Link>
                   </div>
                 </div>
@@ -308,45 +289,45 @@ export default function Landing() {
         </div>
       </section>
 
-      {/* Platform Pillars */}
-      <section className="py-20 bg-(--color-bg-subtle)/40 relative z-10 border-b border-(--color-border)">
-        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 space-y-12">
-          <div className="max-w-xl space-y-3">
-            <h2 className="text-2xl sm:text-3xl font-black tracking-tight">
-              Engineered for market mechanics, not guesswork.
+      {/* Platform Pillars - Docked Grid */}
+      <section className="border-b border-border-subtle bg-surface">
+        <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8 py-16">
+          <div className="max-w-xl space-y-2 mb-10">
+            <h2 className="text-xl sm:text-2xl font-semibold tracking-tight text-ink-primary font-sans">
+              Engineered for market mechanics.
             </h2>
-            <p className="text-xs sm:text-sm text-(--color-text-muted) leading-relaxed">
-              TradeWise bridges the gap between static textbook finance and live exchange execution.
+            <p className="text-xs sm:text-sm text-ink-secondary leading-relaxed font-sans">
+              Built for traders who value speed, data accuracy, and realistic execution constraints.
             </p>
           </div>
 
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-            <div className="card-worldclass p-6 rounded-2xl space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-(--color-brand-subtle) text-(--color-brand) border border-(--color-brand)/20 flex items-center justify-center font-mono shadow-xs">
-                <Cpu className="w-5 h-5" />
+          <div className="grid grid-cols-1 md:grid-cols-3 divide-y md:divide-y-0 md:divide-x divide-border-subtle border border-border-subtle rounded overflow-hidden bg-canvas">
+            <div className="p-6 space-y-3 bg-surface">
+              <div className="w-8 h-8 rounded bg-elevated border border-border-subtle text-ink-primary flex items-center justify-center">
+                <Cpu className="w-4 h-4" />
               </div>
-              <h3 className="text-sm font-bold font-mono">Order Routing Simulation</h3>
-              <p className="text-xs text-(--color-text-muted) leading-relaxed">
+              <h3 className="text-sm font-semibold text-ink-primary font-sans">Order Routing Simulation</h3>
+              <p className="text-xs text-ink-secondary leading-relaxed font-sans">
                 Execute Market and Limit orders with instant fill validation against real bid/ask prices and available buying power.
               </p>
             </div>
 
-            <div className="card-worldclass p-6 rounded-2xl space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-(--color-success-subtle) text-(--color-success) border border-(--color-success)/20 flex items-center justify-center font-mono shadow-xs">
-                <History className="w-5 h-5" />
+            <div className="p-6 space-y-3 bg-surface">
+              <div className="w-8 h-8 rounded bg-elevated border border-border-subtle text-ink-primary flex items-center justify-center">
+                <History className="w-4 h-4" />
               </div>
-              <h3 className="text-sm font-bold font-mono">Candle Replay Backtester</h3>
-              <p className="text-xs text-(--color-text-muted) leading-relaxed">
+              <h3 className="text-sm font-semibold text-ink-primary font-sans">Candle Replay Backtester</h3>
+              <p className="text-xs text-ink-secondary leading-relaxed font-sans">
                 Step through historical price action candle-by-candle with blind future data to test pattern recognition and risk-reward discipline.
               </p>
             </div>
 
-            <div className="card-worldclass p-6 rounded-2xl space-y-3">
-              <div className="w-10 h-10 rounded-xl bg-(--color-info-subtle) text-(--color-info) border border-(--color-info)/20 flex items-center justify-center font-mono shadow-xs">
-                <BarChart2 className="w-5 h-5" />
+            <div className="p-6 space-y-3 bg-surface">
+              <div className="w-8 h-8 rounded bg-elevated border border-border-subtle text-ink-primary flex items-center justify-center">
+                <BarChart2 className="w-4 h-4" />
               </div>
-              <h3 className="text-sm font-bold font-mono">Portfolio Performance Analytics</h3>
-              <p className="text-xs text-(--color-text-muted) leading-relaxed">
+              <h3 className="text-sm font-semibold text-ink-primary font-sans">Portfolio Performance Analytics</h3>
+              <p className="text-xs text-ink-secondary leading-relaxed font-sans">
                 Track cost basis, unrealized P&amp;L, asset allocation, and fill history in real time as market quotes fluctuate.
               </p>
             </div>
@@ -355,24 +336,24 @@ export default function Landing() {
       </section>
 
       {/* Footer */}
-      <footer className="mt-auto border-t border-(--color-border) bg-(--color-bg-base) py-8">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs font-mono text-(--color-text-muted)">
+      <footer className="mt-auto border-t border-border-subtle bg-canvas py-8">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row items-center justify-between gap-4 text-xs text-ink-secondary font-sans">
           <div className="flex items-center gap-2">
-            <span className="font-bold text-(--color-text-primary)">TRADEWISE</span>
-            <span>&bull; Simulated Brokerage Platform</span>
+            <span className="font-semibold text-ink-primary font-mono">TradeWise</span>
+            <span>• Simulated Brokerage Platform</span>
           </div>
 
           <div className="flex items-center gap-5">
-            <Link to="/markets" className="hover:text-(--color-text-primary)">
+            <Link to="/markets" className="hover:text-ink-primary transition-colors">
               Markets
             </Link>
-            <Link to="/trade" className="hover:text-(--color-text-primary)">
+            <Link to="/trade" className="hover:text-ink-primary transition-colors">
               Terminal
             </Link>
-            <Link to="/learn" className="hover:text-(--color-text-primary)">
+            <Link to="/learn" className="hover:text-ink-primary transition-colors">
               Curriculum
             </Link>
-            <Link to="/register" className="text-(--color-brand) font-semibold hover:underline">
+            <Link to="/register" className="text-ink-primary font-medium hover:underline">
               Launch Account
             </Link>
           </div>

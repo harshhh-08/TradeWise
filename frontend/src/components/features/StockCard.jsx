@@ -16,18 +16,18 @@ export function StockCard({ stock }) {
 
   return (
     <Link to={`/stocks/${symbol}`} className="block group">
-      <Card className="p-3.5 hover:border-(--color-brand)/40 hover:bg-(--color-bg-raised)/80 transition-all hover:-translate-y-0.5 shadow-sm hover:shadow-md">
+      <Card className="p-3 hover:border-border-strong hover:bg-elevated transition-colors rounded">
         <div className="flex items-start justify-between gap-3">
           <div className="space-y-0.5 min-w-0">
             <div className="flex items-center gap-1.5">
-              <span className="font-bold font-mono text-xs text-(--color-text-primary) group-hover:text-(--color-brand) transition-colors">
+              <span className="font-medium font-mono text-[13px] text-ink-primary tabular-nums">
                 {symbol}
               </span>
-              <span className="text-[9px] font-mono text-(--color-text-muted) px-1 py-0.2 rounded bg-(--color-bg-raised)">
+              <span className="text-[10px] font-mono text-ink-muted px-1 py-0.2 rounded-sm bg-elevated border border-border-subtle">
                 NASDAQ
               </span>
             </div>
-            <p className="text-[11px] text-(--color-text-muted) truncate max-w-[110px]">
+            <p className="text-xs text-ink-secondary truncate max-w-[120px] font-sans">
               {name || symbol}
             </p>
           </div>
@@ -37,8 +37,8 @@ export function StockCard({ stock }) {
             <svg className="w-full h-full overflow-visible" viewBox="0 0 50 24">
               <polyline
                 fill="none"
-                stroke={isPositive ? '#10b981' : '#f43f5e'}
-                strokeWidth="1.8"
+                stroke={isPositive ? '#10B981' : '#EF4444'}
+                strokeWidth="1.6"
                 strokeLinecap="round"
                 strokeLinejoin="round"
                 points={points
@@ -55,15 +55,15 @@ export function StockCard({ stock }) {
           </div>
 
           <div className="text-right shrink-0">
-            <div className="text-xs font-bold font-mono text-(--color-text-primary) tabular">
+            <div className="text-[13px] font-medium font-mono text-ink-primary tabular-nums">
               {formatCurrency(price || 0)}
             </div>
             <div
-              className={`inline-flex items-center gap-0.5 text-[10px] font-mono font-bold ${
-                isPositive ? 'text-(--color-success)' : 'text-(--color-error)'
+              className={`inline-flex items-center gap-0.5 text-xs font-mono tabular-nums ${
+                isPositive ? 'text-trade-up' : 'text-trade-down'
               }`}
             >
-              {isPositive ? <TrendingUp className="w-2.5 h-2.5" /> : <TrendingDown className="w-2.5 h-2.5" />}
+              {isPositive ? <TrendingUp className="w-3 h-3" /> : <TrendingDown className="w-3 h-3" />}
               <span>{formatPercent(changePercent).text}</span>
             </div>
           </div>

@@ -150,14 +150,14 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
 
   return (
     <Card className="p-5">
-      <CardHeader className="p-0 pb-3 border-b border-(--color-border) mb-4">
+      <CardHeader className="p-0 pb-3 border-b border-border-subtle mb-4">
         <div className="flex items-center justify-between">
-          <CardTitle className="text-xs font-mono uppercase tracking-wider flex items-center gap-2">
-            <ArrowLeftRight className="w-3.5 h-3.5 text-(--color-brand)" />
+          <CardTitle className="text-[13px] font-medium text-ink-primary font-sans flex items-center gap-2">
+            <ArrowLeftRight className="w-3.5 h-3.5 text-ink-secondary" />
             <span>Order Ticket</span>
           </CardTitle>
-          <span className="text-[10px] font-mono text-(--color-text-muted)">
-            ACCOUNT // CASH SIM
+          <span className="text-[11px] font-sans text-ink-muted">
+            Cash account
           </span>
         </div>
       </CardHeader>
@@ -199,20 +199,20 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
           </div>
 
           {/* Buy / Sell Tab Segment */}
-          <div className="grid grid-cols-2 p-0.5 rounded bg-(--color-bg-base) border border-(--color-border)">
+          <div className="grid grid-cols-2 p-0.5 rounded bg-canvas border border-border-subtle">
             <button
               type="button"
               onClick={() => {
                 setSide('BUY');
                 setMessage(null);
               }}
-              className={`py-1.5 text-xs font-bold font-mono rounded cursor-pointer transition-colors ${
+              className={`py-1.5 text-xs font-medium font-sans rounded cursor-pointer transition-colors ${
                 side === 'BUY'
-                  ? 'bg-(--color-success) text-white shadow-xs'
-                  : 'text-(--color-text-muted) hover:text-(--color-text-primary)'
+                  ? 'bg-trade-up text-white'
+                  : 'text-ink-secondary hover:text-ink-primary'
               }`}
             >
-              BUY (LONG)
+              Buy
             </button>
             <button
               type="button"
@@ -220,13 +220,13 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
                 setSide('SELL');
                 setMessage(null);
               }}
-              className={`py-1.5 text-xs font-bold font-mono rounded cursor-pointer transition-colors ${
+              className={`py-1.5 text-xs font-medium font-sans rounded cursor-pointer transition-colors ${
                 side === 'SELL'
-                  ? 'bg-(--color-error) text-white shadow-xs'
-                  : 'text-(--color-text-muted) hover:text-(--color-text-primary)'
+                  ? 'bg-trade-down text-white'
+                  : 'text-ink-secondary hover:text-ink-primary'
               }`}
             >
-              SELL (CLOSE)
+              Sell
             </button>
           </div>
 
@@ -315,22 +315,22 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
           )}
 
           {/* Institutional Cost Breakdown */}
-          <div className="rounded bg-(--color-bg-base) border border-(--color-border) p-3 space-y-1.5 text-xs font-mono">
-            <div className="flex justify-between text-(--color-text-muted)">
+          <div className="rounded bg-canvas border border-border-subtle p-3 space-y-1.5 text-xs font-sans">
+            <div className="flex justify-between text-ink-secondary">
               <span>Unit Fill Quote</span>
-              <span className="text-(--color-text-primary)">{formatCurrency(executionPrice)}</span>
+              <span className="font-mono tabular-nums text-ink-primary">{formatCurrency(executionPrice)}</span>
             </div>
-            <div className="flex justify-between text-(--color-text-muted)">
+            <div className="flex justify-between text-ink-secondary">
               <span>Exchange Fee / Routing</span>
-              <span className="text-(--color-success)">$0.00</span>
+              <span className="font-mono tabular-nums text-trade-up">$0.00</span>
             </div>
-            <div className="flex justify-between pt-1.5 border-t border-(--color-border) font-bold text-(--color-text-primary)">
+            <div className="flex justify-between pt-1.5 border-t border-border-subtle font-medium text-ink-primary">
               <span>Order Value</span>
-              <span>{formatCurrency(totalCost)}</span>
+              <span className="font-mono tabular-nums">{formatCurrency(totalCost)}</span>
             </div>
-            <div className="flex justify-between text-[11px] text-(--color-text-muted) pt-0.5">
+            <div className="flex justify-between text-[11px] text-ink-secondary pt-0.5">
               <span>Est. Cash Remaining</span>
-              <span className={remainingCash < 0 ? 'text-(--color-error)' : 'text-(--color-brand)'}>
+              <span className={`font-mono tabular-nums ${remainingCash < 0 ? 'text-trade-down' : 'text-ink-primary'}`}>
                 {formatCurrency(remainingCash)}
               </span>
             </div>
@@ -339,9 +339,9 @@ export function TradeForm({ initialSymbol, onTradeExecuted }) {
           <Button
             type="submit"
             variant={side === 'BUY' ? 'success' : 'danger'}
-            className="w-full font-mono text-xs h-9 font-bold"
+            className="w-full text-xs h-9 font-medium"
           >
-            TRANSMIT {side} ORDER &bull; {quantity || 0} {symbol}
+            Transmit {side === 'BUY' ? 'Buy' : 'Sell'} Order • {quantity || 0} {symbol}
           </Button>
         </form>
       </CardContent>
