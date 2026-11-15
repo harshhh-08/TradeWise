@@ -15,6 +15,18 @@ An institutional-grade educational stock market simulator, market replay engine,
 
 ---
 
+### 🚀 Live Deployment
+
+| Component | Link |
+|---|---|
+| Frontend | https://tradewise-frontend-0wiq.onrender.com/ |
+| Backend API | https://tradewise-backend-tudu.onrender.com/ |
+| Backend Health Check | https://tradewise-backend-tudu.onrender.com/api/health |
+
+**Note:** The backend is an API service. Visiting its root URL may display `Cannot GET /`, which is expected if no root route is configured.
+
+---
+
 ## Technology Stack
 
 ### Frontend
