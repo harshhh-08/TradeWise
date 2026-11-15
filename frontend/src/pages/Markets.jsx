@@ -58,7 +58,27 @@ export default function Markets() {
         const res = await api.get(`/api/stocks?${queryParam}limit=20`);
         if (isMounted) {
           if (res.data?.stocks && Array.isArray(res.data.stocks) && res.data.stocks.length > 0) {
-            setStocks(res.data.stocks);
+            const sanitized = res.data.stocks.map((stock) => {
+              const defaultStock = DEFAULT_MARKET_STOCKS.find((d) => d.symbol === stock.symbol);
+              return {
+                ...stock,
+                price: (stock.price !== undefined && stock.price !== null && Number(stock.price) > 0)
+                  ? Number(stock.price)
+                  : (defaultStock?.price ?? 0),
+                changePercent: (stock.changePercent !== undefined && stock.changePercent !== null)
+                  ? Number(stock.changePercent)
+                  : (defaultStock?.changePercent ?? 0),
+                change: (stock.change !== undefined && stock.change !== null)
+                  ? Number(stock.change)
+                  : (defaultStock?.change ?? 0),
+                volume: (stock.volume && Number(stock.volume) > 0)
+                  ? Number(stock.volume)
+                  : (defaultStock?.volume ?? 10000000),
+                low52: stock.low52 || defaultStock?.low52,
+                high52: stock.high52 || defaultStock?.high52,
+              };
+            });
+            setStocks(sanitized);
           } else {
             setStocks(DEFAULT_MARKET_STOCKS);
           }

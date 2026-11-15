@@ -7,6 +7,7 @@ import {
   isYahooSymbol,
   resolveYahooSymbol,
   POPULAR_NSE_STOCKS,
+  getBaselineQuote,
 } from './providers/yahoo_finance_provider.js';
 import {
   fetchTwelveDataQuote,
@@ -14,6 +15,7 @@ import {
   fetchTwelveDataStocksList,
   hasTwelveDataKey,
   POPULAR_US_STOCKS,
+  getBaselineUSQuote,
 } from './providers/twelve_data_provider.js';
 
 const cache = new Map();
@@ -56,14 +58,38 @@ export async function getStockList({ search, page = 1, limit = 20 } = {}) {
       exchange: s.exchange,
       currency: s.currency,
       type: s.type,
+      price: s.price,
+      change: s.change,
+      changePercent: s.changePercent,
+      volume: s.volume,
+      low52: s.low52,
+      high52: s.high52,
+      sector: 'NSE Equity',
     }));
 
-    let usList = [...POPULAR_US_STOCKS];
+    let usList = POPULAR_US_STOCKS.map(s => ({
+      symbol: s.symbol,
+      name: s.name,
+      exchange: s.exchange,
+      currency: s.currency,
+      type: s.type,
+      price: s.price,
+      change: s.change,
+      changePercent: s.changePercent,
+      volume: s.volume,
+      low52: s.low52,
+      high52: s.high52,
+      sector: 'US Equity',
+    }));
+
     if (hasTwelveDataKey()) {
       try {
         const liveTwelve = await fetchTwelveDataStocksList();
         if (liveTwelve.length > 0) {
-          usList = liveTwelve.slice(0, 50);
+          usList = liveTwelve.slice(0, 50).map(s => ({
+            ...s,
+            sector: 'US Equity',
+          }));
         }
       } catch (err) {
         console.warn('Could not fetch dynamic Twelve Data stocks list, using standard list:', err.message);
@@ -113,22 +139,22 @@ export async function getStockList({ search, page = 1, limit = 20 } = {}) {
 
     enriched = paginated.map(stock => {
       const q = quoteMap.get(stock.symbol.toUpperCase());
-      if (q) {
-        return {
-          ...stock,
-          name: q.name || stock.name,
-          price: q.price,
-          change: q.change,
-          changePercent: q.changePercent,
-          volume: q.volume,
-          low52: q.low52,
-          high52: q.high52,
-          currency: q.currency || stock.currency || (stock.symbol.endsWith('.NS') ? 'INR' : 'USD'),
-          exchange: q.exchange || stock.exchange || (stock.symbol.endsWith('.NS') ? 'NSE' : 'US'),
-          sector: stock.sector || (stock.exchange === 'NSE' || stock.symbol.endsWith('.NS') ? 'NSE Equity' : 'US Equity'),
-        };
-      }
-      return stock;
+      const fallback = getBaselineQuote(stock.symbol) || getBaselineUSQuote(stock.symbol) || stock;
+      const target = q || fallback;
+
+      return {
+        ...stock,
+        name: target.name || stock.name,
+        price: target.price !== undefined && target.price !== null ? target.price : stock.price,
+        change: target.change !== undefined && target.change !== null ? target.change : (stock.change ?? 0),
+        changePercent: target.changePercent !== undefined && target.changePercent !== null ? target.changePercent : (stock.changePercent ?? 0),
+        volume: target.volume !== undefined && target.volume !== null ? target.volume : (stock.volume ?? 0),
+        low52: target.low52 ?? stock.low52,
+        high52: target.high52 ?? stock.high52,
+        currency: target.currency || stock.currency || (stock.symbol.endsWith('.NS') ? 'INR' : 'USD'),
+        exchange: target.exchange || stock.exchange || (stock.symbol.endsWith('.NS') ? 'NSE' : 'US'),
+        sector: stock.sector || (stock.exchange === 'NSE' || stock.symbol.endsWith('.NS') ? 'NSE Equity' : 'US Equity'),
+      };
     });
   } catch (err) {
     console.warn('Batch quote enrichment warning:', err.message);
@@ -156,13 +182,24 @@ export async function getStockQuote(symbol) {
   let quote = null;
 
   if (provider === 'yahoo-finance') {
-    quote = await fetchYahooQuote(upper);
+    try {
+      quote = await fetchYahooQuote(upper);
+    } catch (err) {
+      console.warn(`Yahoo Finance quote failed for ${upper} (${err.message}), falling back to baseline quote`);
+      quote = getBaselineQuote(upper) || getBaselineUSQuote(upper);
+      if (!quote) throw err;
+    }
   } else {
     try {
       quote = await fetchTwelveDataQuote(upper);
     } catch (err) {
       console.warn(`Twelve Data failed for ${upper} (${err.message}), falling back to Yahoo Finance`);
-      quote = await fetchYahooQuote(upper);
+      try {
+        quote = await fetchYahooQuote(upper);
+      } catch (yErr) {
+        quote = getBaselineUSQuote(upper) || getBaselineQuote(upper);
+        if (!quote) throw yErr;
+      }
     }
   }
 

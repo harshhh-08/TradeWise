@@ -2,17 +2,43 @@ const API_BASE = 'https://api.twelvedata.com';
 const DEFAULT_EXCHANGE = process.env.STOCK_EXCHANGE || 'NASDAQ';
 
 export const POPULAR_US_STOCKS = [
-  { symbol: 'AAPL', name: 'Apple Inc', exchange: 'NASDAQ', currency: 'USD', type: 'Common Stock' },
-  { symbol: 'MSFT', name: 'Microsoft Corporation', exchange: 'NASDAQ', currency: 'USD', type: 'Common Stock' },
-  { symbol: 'GOOGL', name: 'Alphabet Inc', exchange: 'NASDAQ', currency: 'USD', type: 'Common Stock' },
-  { symbol: 'AMZN', name: 'Amazon.com Inc', exchange: 'NASDAQ', currency: 'USD', type: 'Common Stock' },
-  { symbol: 'TSLA', name: 'Tesla Inc', exchange: 'NASDAQ', currency: 'USD', type: 'Common Stock' },
-  { symbol: 'META', name: 'Meta Platforms Inc', exchange: 'NASDAQ', currency: 'USD', type: 'Common Stock' },
-  { symbol: 'NVDA', name: 'NVIDIA Corporation', exchange: 'NASDAQ', currency: 'USD', type: 'Common Stock' },
-  { symbol: 'NFLX', name: 'Netflix Inc', exchange: 'NASDAQ', currency: 'USD', type: 'Common Stock' },
-  { symbol: 'JPM', name: 'JPMorgan Chase & Co', exchange: 'NYSE', currency: 'USD', type: 'Common Stock' },
-  { symbol: 'V', name: 'Visa Inc', exchange: 'NYSE', currency: 'USD', type: 'Common Stock' },
+  { symbol: 'AAPL', name: 'Apple Inc', exchange: 'NASDAQ', currency: 'USD', type: 'Common Stock', price: 242.50, change: 1.20, changePercent: 0.50, volume: 48920100, low52: 164.08, high52: 245.50, previousClose: 241.30 },
+  { symbol: 'MSFT', name: 'Microsoft Corporation', exchange: 'NASDAQ', currency: 'USD', type: 'Common Stock', price: 428.15, change: 2.64, changePercent: 0.62, volume: 19800000, low52: 366.50, high52: 468.35, previousClose: 425.51 },
+  { symbol: 'GOOGL', name: 'Alphabet Inc', exchange: 'NASDAQ', currency: 'USD', type: 'Common Stock', price: 178.30, change: 1.15, changePercent: 0.65, volume: 22100000, low52: 129.40, high52: 191.75, previousClose: 177.15 },
+  { symbol: 'AMZN', name: 'Amazon.com Inc', exchange: 'NASDAQ', currency: 'USD', type: 'Common Stock', price: 210.20, change: 2.12, changePercent: 1.02, volume: 34100000, low52: 138.80, high52: 215.90, previousClose: 208.08 },
+  { symbol: 'TSLA', name: 'Tesla Inc', exchange: 'NASDAQ', currency: 'USD', type: 'Common Stock', price: 338.00, change: -4.20, changePercent: -1.23, volume: 62400000, low52: 138.80, high52: 360.00, previousClose: 342.20 },
+  { symbol: 'META', name: 'Meta Platforms Inc', exchange: 'NASDAQ', currency: 'USD', type: 'Common Stock', price: 585.50, change: 3.40, changePercent: 0.58, volume: 12500000, low52: 279.40, high52: 602.95, previousClose: 582.10 },
+  { symbol: 'NVDA', name: 'NVIDIA Corporation', exchange: 'NASDAQ', currency: 'USD', type: 'Common Stock', price: 148.50, change: -1.13, changePercent: -0.76, volume: 82190000, low52: 45.00, high52: 153.10, previousClose: 149.63 },
+  { symbol: 'NFLX', name: 'Netflix Inc', exchange: 'NASDAQ', currency: 'USD', type: 'Common Stock', price: 890.00, change: 5.60, changePercent: 0.63, volume: 3800000, low52: 445.00, high52: 915.00, previousClose: 884.40 },
+  { symbol: 'JPM', name: 'JPMorgan Chase & Co', exchange: 'NYSE', currency: 'USD', type: 'Common Stock', price: 245.00, change: 1.80, changePercent: 0.74, volume: 8500000, low52: 145.00, high52: 248.50, previousClose: 243.20 },
+  { symbol: 'V', name: 'Visa Inc', exchange: 'NYSE', currency: 'USD', type: 'Common Stock', price: 312.00, change: 2.10, changePercent: 0.68, volume: 5400000, low52: 240.00, high52: 316.00, previousClose: 309.90 },
 ];
+
+export function getBaselineUSQuote(symbol) {
+  if (!symbol) return null;
+  const upper = symbol.trim().toUpperCase();
+  const match = POPULAR_US_STOCKS.find(s => s.symbol.toUpperCase() === upper);
+  if (!match) return null;
+
+  return {
+    source: 'baseline-reference',
+    symbol: match.symbol,
+    name: match.name,
+    exchange: match.exchange,
+    currency: match.currency,
+    price: match.price,
+    open: match.price,
+    high: match.high52 ? Math.min(Number((match.price * 1.01).toFixed(2)), match.high52) : match.price,
+    low: match.low52 ? Math.max(Number((match.price * 0.99).toFixed(2)), match.low52) : match.price,
+    low52: match.low52,
+    high52: match.high52,
+    previousClose: match.previousClose || match.price,
+    change: match.change || 0,
+    changePercent: match.changePercent || 0,
+    volume: match.volume || 20000000,
+    timestamp: new Date().toISOString(),
+  };
+}
 
 export function hasTwelveDataKey() {
   return !!process.env.TWELVE_DATA_API_KEY;

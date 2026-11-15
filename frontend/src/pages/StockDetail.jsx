@@ -68,19 +68,22 @@ export default function StockDetail() {
         }
       } catch (_) {
         if (isMounted) {
+          const isNSE = upperSymbol.endsWith('.NS');
           setQuote({
             symbol: upperSymbol,
-            name: `${upperSymbol} Inc.`,
-            price: 224.23,
-            change: 4.05,
-            changePercent: 1.84,
-            open: 221.10,
-            high: 225.40,
-            low: 220.80,
-            previousClose: 220.18,
-            volume: 48920100,
-            fiftyTwoWeekHigh: 237.23,
-            fiftyTwoWeekLow: 164.08,
+            name: isNSE ? `${upperSymbol.replace('.NS', '')} Ltd` : `${upperSymbol} Inc.`,
+            exchange: isNSE ? 'NSE' : 'US',
+            currency: isNSE ? 'INR' : 'USD',
+            price: isNSE ? 1350.00 : 224.23,
+            change: isNSE ? 5.50 : 4.05,
+            changePercent: isNSE ? 0.41 : 1.84,
+            open: isNSE ? 1345.00 : 221.10,
+            high: isNSE ? 1365.00 : 225.40,
+            low: isNSE ? 1340.00 : 220.80,
+            previousClose: isNSE ? 1344.50 : 220.18,
+            volume: isNSE ? 12000000 : 48920100,
+            fiftyTwoWeekHigh: isNSE ? 1600.00 : 237.23,
+            fiftyTwoWeekLow: isNSE ? 1150.00 : 164.08,
             marketCap: 3450000000000,
           });
         }
