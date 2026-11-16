@@ -17,6 +17,7 @@ import Trade from '@/pages/Trade';
 import Learn from '@/pages/Learn';
 import LessonDetail from '@/pages/LessonDetail';
 import Replay from '@/pages/Replay';
+import Backtest from '@/pages/Backtest';
 
 export default function App() {
   return (
@@ -77,6 +78,7 @@ export default function App() {
             <Route path="/learn" element={<Learn />} />
             <Route path="/learn/:slug" element={<LessonDetail />} />
             <Route path="/replay" element={<Replay />} />
+            <Route path="/backtest" element={<Backtest />} />
           </Route>
 
           {/* Fallback */}

@@ -4,9 +4,10 @@ import { Logo } from './Logo';
 
 export function AuthLayout() {
   return (
-    <div className="min-h-svh flex bg-(--color-bg-base) text-(--color-text-primary) selection:bg-(--color-brand) selection:text-white">
+    <div className="min-h-svh flex bg-(--color-bg-base) text-(--color-text-primary) selection:bg-(--color-brand) selection:text-white bg-grid-pattern relative">
+      <div className="ambient-glow" />
       {/* Brand panel (hidden on mobile) */}
-      <div className="hidden lg:flex flex-col justify-between w-1/2 p-12 bg-(--color-bg-subtle) border-r border-(--color-border) relative overflow-hidden">
+      <div className="hidden lg:flex flex-col justify-between w-1/2 p-12 bg-(--color-bg-subtle)/90 backdrop-blur-md border-r border-(--color-border) relative overflow-hidden z-10">
         <div className="flex items-center justify-between">
           <Logo to="/" size="md" showSubtitle />
           <div className="flex items-center gap-1.5 text-[10px] font-mono text-(--color-success) px-2 py-0.5 rounded bg-(--color-bg-raised) border border-(--color-border)">

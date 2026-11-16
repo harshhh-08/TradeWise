@@ -1,9 +1,10 @@
 import { useState } from 'react';
-import { CheckCircle2, XCircle, HelpCircle, RotateCcw, Award, Check } from 'lucide-react';
+import { CheckCircle2, XCircle, HelpCircle, RotateCcw, Award, Check, Loader2 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { cn } from '@/lib/utils';
+
 
 export function QuizWidget({
   questions = [],
@@ -11,9 +12,20 @@ export function QuizWidget({
   initialResult = null,
   className,
 }) {
-  const [selectedAnswers, setSelectedAnswers] = useState(() => initialResult?.userAnswers || {});
-  const [isSubmitted, setIsSubmitted] = useState(() => Boolean(initialResult?.completed));
-  const [score, setScore] = useState(() => initialResult?.score ?? 0);
+  const [selectedAnswers, setSelectedAnswers] = useState(() => {
+    if (!initialResult?.details) return {};
+    const restored = {};
+    initialResult.details.forEach((d, idx) => {
+      if (d.selectedOption !== undefined && d.selectedOption >= 0) {
+        restored[idx] = d.selectedOption;
+      }
+    });
+    return restored;
+  });
+  const [isSubmitted, setIsSubmitted] = useState(() => Boolean(initialResult?.score !== undefined && initialResult?.score !== null));
+  const [isSubmitting, setIsSubmitting] = useState(false);
+  const [submitError, setSubmitError] = useState(null);
+  const [result, setResult] = useState(() => initialResult || null);
 
   if (!questions || questions.length === 0) {
     return (
@@ -23,52 +35,56 @@ export function QuizWidget({
     );
   }
 
-  const allAnswered = questions.length > 0 && questions.every((_, idx) => selectedAnswers[idx] !== undefined);
   const totalQuestions = questions.length;
-  const percentage = totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0;
+  const allAnswered = totalQuestions > 0 && questions.every((_, idx) => selectedAnswers[idx] !== undefined);
+  const score = result?.score ?? 0;
+  const percentage = result?.percentage ?? (totalQuestions > 0 ? Math.round((score / totalQuestions) * 100) : 0);
   const isPassed = percentage >= 60;
 
+  const detailMap = new Map();
+  if (result?.details) {
+    result.details.forEach((d) => {
+      detailMap.set(d.questionId, d);
+    });
+  }
+
   const handleSelectOption = (questionIndex, optionIndex) => {
-    if (isSubmitted) return;
+    if (isSubmitted || isSubmitting) return;
     setSelectedAnswers((prev) => ({
       ...prev,
       [questionIndex]: optionIndex,
     }));
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e?.preventDefault();
-    if (!allAnswered || isSubmitted) return;
+    if (!allAnswered || isSubmitted || isSubmitting) return;
 
-    let calculatedScore = 0;
-    questions.forEach((q, idx) => {
-      if (selectedAnswers[idx] === q.correctAnswer) {
-        calculatedScore += 1;
-      }
-    });
+    setSubmitError(null);
+    setIsSubmitting(true);
 
-    setScore(calculatedScore);
-    setIsSubmitted(true);
+    try {
+      const answers = questions.map((q, idx) => ({
+        questionId: q.id,
+        selectedOption: selectedAnswers[idx],
+      }));
 
-    const resultPayload = {
-      score: calculatedScore,
-      total: totalQuestions,
-      percentage: Math.round((calculatedScore / totalQuestions) * 100),
-      passed: (calculatedScore / totalQuestions) >= 0.6,
-      completed: true,
-      userAnswers: selectedAnswers,
-      submittedAt: new Date().toISOString(),
-    };
-
-    if (onSubmit) {
-      onSubmit(resultPayload);
+      const serverResult = await onSubmit(answers);
+      setResult(serverResult);
+      setIsSubmitted(true);
+    } catch (err) {
+      const msg = err?.response?.data?.message || err?.message || 'Failed to submit quiz. Please try again.';
+      setSubmitError(msg);
+    } finally {
+      setIsSubmitting(false);
     }
   };
 
   const handleRetake = () => {
     setSelectedAnswers({});
     setIsSubmitted(false);
-    setScore(0);
+    setResult(null);
+    setSubmitError(null);
   };
 
   return (
@@ -108,7 +124,7 @@ export function QuizWidget({
         )}
       </CardHeader>
 
-      {/* Score overview banner when submitted */}
+      
       {isSubmitted && (
         <div
           className={cn(
@@ -127,14 +143,14 @@ export function QuizWidget({
                 {isPassed ? 'Great Job! Assessment Complete.' : 'Quiz Completed — Review Concepts'}
               </h4>
               <p className="text-xs text-(--color-text-muted)">
-                You correctly answered {score} out of {totalQuestions} questions ({percentage}%).
+                You correctly answered {score} out of {result?.total ?? totalQuestions} questions ({percentage}%).
               </p>
             </div>
           </div>
 
           <div className="text-right">
             <span className="text-2xl font-mono font-bold tracking-tight text-(--color-text-primary)">
-              {score}/{totalQuestions}
+              {score}/{result?.total ?? totalQuestions}
             </span>
             <span className="block text-[10px] font-mono uppercase text-(--color-text-muted)">
               Final Score
@@ -143,18 +159,27 @@ export function QuizWidget({
         </div>
       )}
 
-      {/* Question list */}
+      
+      {submitError && (
+        <div className="p-3 rounded-lg border border-(--color-error)/30 bg-(--color-error-subtle) text-xs text-(--color-error) flex items-center gap-2">
+          <XCircle className="w-4 h-4 shrink-0" />
+          <span>{submitError}</span>
+        </div>
+      )}
+
+      
       <CardContent className="p-0 space-y-6">
         {questions.map((questionItem, qIndex) => {
           const selectedOption = selectedAnswers[qIndex];
-          const isCorrectChoice = selectedOption === questionItem.correctAnswer;
+          const detail = detailMap.get(questionItem.id);
+          const isCorrectChoice = detail?.isCorrect ?? false;
 
           return (
             <div
               key={questionItem.id || qIndex}
               className="p-4 rounded-xl border border-(--color-border) bg-(--color-bg-base)/50 space-y-3"
             >
-              {/* Question header */}
+              
               <div className="flex items-start justify-between gap-3">
                 <span className="text-xs font-mono text-(--color-brand) font-semibold shrink-0 mt-0.5">
                   Q{qIndex + 1}.
@@ -173,11 +198,11 @@ export function QuizWidget({
                 )}
               </div>
 
-              {/* Options list */}
+              
               <div className="space-y-2 pt-1">
-                {questionItem.options.map((optionText, optIndex) => {
+                {(questionItem.options || []).map((optionText, optIndex) => {
                   const isSelected = selectedOption === optIndex;
-                  const isCorrectAnswer = optIndex === questionItem.correctAnswer;
+                  const isCorrectAnswer = isSubmitted && detail?.correctAnswer === optIndex;
 
                   let optionStyle = 'border-(--color-border) hover:bg-(--color-bg-raised) text-(--color-text-secondary)';
 
@@ -200,7 +225,7 @@ export function QuizWidget({
                       className={cn(
                         'flex items-center gap-3 p-3 rounded-lg border text-xs cursor-pointer transition-colors',
                         optionStyle,
-                        isSubmitted && 'cursor-default'
+                        (isSubmitted || isSubmitting) && 'cursor-default'
                       )}
                     >
                       <input
@@ -208,7 +233,7 @@ export function QuizWidget({
                         name={`question-${qIndex}`}
                         checked={isSelected}
                         onChange={() => handleSelectOption(qIndex, optIndex)}
-                        disabled={isSubmitted}
+                        disabled={isSubmitted || isSubmitting}
                         className="sr-only"
                       />
                       <div
@@ -232,11 +257,11 @@ export function QuizWidget({
                 })}
               </div>
 
-              {/* Explanation after submission */}
-              {isSubmitted && questionItem.explanation && (
+              
+              {isSubmitted && detail?.explanation && (
                 <div className="mt-3 p-3 rounded-lg bg-(--color-bg-raised) border border-(--color-border) text-xs text-(--color-text-secondary) leading-relaxed">
                   <span className="font-semibold text-(--color-text-primary)">Explanation: </span>
-                  {questionItem.explanation}
+                  {detail.explanation}
                 </div>
               )}
             </div>
@@ -244,7 +269,7 @@ export function QuizWidget({
         })}
       </CardContent>
 
-      {/* Action footer */}
+      
       {!isSubmitted ? (
         <div className="pt-4 border-t border-(--color-border) flex flex-col sm:flex-row sm:items-center justify-between gap-3">
           <span className="text-xs font-mono text-(--color-text-muted)">
@@ -252,10 +277,17 @@ export function QuizWidget({
           </span>
           <Button
             onClick={handleSubmit}
-            disabled={!allAnswered}
+            disabled={!allAnswered || isSubmitting}
             className="w-full sm:w-auto"
           >
-            Submit Quiz
+            {isSubmitting ? (
+              <>
+                <Loader2 className="w-4 h-4 animate-spin mr-2" />
+                Submitting…
+              </>
+            ) : (
+              'Submit Quiz'
+            )}
           </Button>
         </div>
       ) : (

@@ -51,15 +51,18 @@ export function PortfolioTable({ positions = [], marketPrices = {} }) {
         </TableHeader>
         <TableBody>
           {positions.map((pos) => {
-            const currentPrice = marketPrices[pos.symbol] || pos.avgCost * 1.025;
-            const marketValue = pos.quantity * currentPrice;
-            const totalCost = pos.quantity * pos.avgCost;
-            const pnl = marketValue - totalCost;
-            const pnlPercent = totalCost ? (pnl / totalCost) * 100 : 0;
+            const currency = pos.currency || 'INR';
+            const currentPrice = pos.currentPrice !== undefined && pos.currentPrice !== null 
+              ? pos.currentPrice 
+              : (marketPrices[pos.symbol] || pos.avgCost);
+            const marketValue = pos.currentMarketValue !== undefined ? pos.currentMarketValue : pos.quantity * currentPrice;
+            const totalCost = pos.investedValue !== undefined ? pos.investedValue : pos.quantity * pos.avgCost;
+            const pnl = pos.unrealizedPnl !== undefined ? pos.unrealizedPnl : (marketValue - totalCost);
+            const pnlPercent = pos.unrealizedPnlPercent !== undefined ? pos.unrealizedPnlPercent : (totalCost ? (pnl / totalCost) * 100 : 0);
             const isPos = pnl >= 0;
 
             return (
-              <TableRow key={pos.symbol}>
+              <TableRow key={pos.id || pos.symbol}>
                 <TableCell>
                   <Link
                     to={`/stocks/${pos.symbol}`}
@@ -67,6 +70,7 @@ export function PortfolioTable({ positions = [], marketPrices = {} }) {
                   >
                     {pos.symbol}
                   </Link>
+                  {pos.name && <div className="text-[10px] text-ink-muted truncate max-w-[140px]">{pos.name}</div>}
                 </TableCell>
 
                 <TableCell className="text-right font-mono font-medium">
@@ -74,15 +78,15 @@ export function PortfolioTable({ positions = [], marketPrices = {} }) {
                 </TableCell>
 
                 <TableCell className="text-right font-mono text-(--color-text-muted)">
-                  {formatCurrency(pos.avgCost)}
+                  {formatCurrency(pos.avgCost, currency)}
                 </TableCell>
 
                 <TableCell className="text-right font-mono font-semibold">
-                  {formatCurrency(currentPrice)}
+                  {formatCurrency(currentPrice, currency)}
                 </TableCell>
 
                 <TableCell className="text-right font-mono font-bold">
-                  {formatCurrency(marketValue)}
+                  {formatCurrency(marketValue, currency)}
                 </TableCell>
 
                 <TableCell className="text-right">

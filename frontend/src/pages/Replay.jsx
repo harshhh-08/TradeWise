@@ -1,4 +1,4 @@
-import { useState, useCallback, useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo, useRef } from 'react';
 import {
   RotateCcw,
   Calendar,
@@ -9,12 +9,16 @@ import {
   TrendingDown,
   DollarSign,
   History,
+  RefreshCw,
+  Loader2,
 } from 'lucide-react';
+import api from '@/services/api';
 import { ReplayChart } from '@/components/features/ReplayChart';
 import { ReplayControls } from '@/components/features/ReplayControls';
 import { ReplayTradePanel } from '@/components/features/ReplayTradePanel';
 import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { Button } from '@/components/ui/Button';
 import { Skeleton } from '@/components/ui/Skeleton';
 import {
   Table,
@@ -26,148 +30,197 @@ import {
 } from '@/components/ui/Table';
 import { formatCurrency, formatPercent, cn } from '@/lib/utils';
 
-const AVAILABLE_STOCKS = [
-  { symbol: 'AAPL', name: 'Apple Inc.', basePrice: 185.0 },
-  { symbol: 'NVDA', name: 'NVIDIA Corporation', basePrice: 130.0 },
-  { symbol: 'MSFT', name: 'Microsoft Corporation', basePrice: 410.0 },
-  { symbol: 'AMZN', name: 'Amazon.com Inc.', basePrice: 175.0 },
-  { symbol: 'TSLA', name: 'Tesla Inc.', basePrice: 210.0 },
-  { symbol: 'GOOGL', name: 'Alphabet Inc.', basePrice: 165.0 },
+export const AVAILABLE_STOCKS = [
+  { symbol: 'RELIANCE.NS', name: 'Reliance Industries Ltd' },
+  { symbol: 'TCS.NS', name: 'Tata Consultancy Services Ltd' },
+  { symbol: 'INFY.NS', name: 'Infosys Ltd' },
+  { symbol: 'HDFCBANK.NS', name: 'HDFC Bank Ltd' },
+  { symbol: 'ICICIBANK.NS', name: 'ICICI Bank Ltd' },
+  { symbol: 'SBIN.NS', name: 'State Bank of India' },
+  { symbol: 'BHARTIARTL.NS', name: 'Bharti Airtel Ltd' },
+  { symbol: 'ITC.NS', name: 'ITC Ltd' },
 ];
 
-/**
- * Generates synthetic simulated candles for historical market replay.
- * Note: These candles are simulated mock data, not real historical market data.
- */
-function generateMockCandles(symbol = 'AAPL', startDateStr = '2024-01-02', count = 60) {
-  const stockInfo = AVAILABLE_STOCKS.find((s) => s.symbol === symbol) || AVAILABLE_STOCKS[0];
-  const basePrice = stockInfo.basePrice;
-  const candles = [];
-  let currentPrice = basePrice;
-  const startDate = new Date(startDateStr);
+function transformCandle(c) {
+  if (!c) return null;
+  const rawDate = c.timestamp || c.date;
+  const d = new Date(rawDate);
+  const dateStr = !isNaN(d.getTime()) ? d.toISOString().split('T')[0] : String(rawDate);
+  const displayDateStr = !isNaN(d.getTime())
+    ? d.toLocaleDateString('en-IN', { month: 'short', day: 'numeric', year: 'numeric' })
+    : dateStr;
 
-  let dayOffset = 0;
-  while (candles.length < count) {
-    const d = new Date(startDate.getTime() + dayOffset * 86400000);
-    dayOffset++;
-    // Skip weekends (0 = Sunday, 6 = Saturday)
-    const dayOfWeek = d.getDay();
-    if (dayOfWeek === 0 || dayOfWeek === 6) continue;
+  const open = Number(c.open) || 0;
+  const high = Number(c.high) || open;
+  const low = Number(c.low) || open;
+  const close = Number(c.close) || open;
+  const volume = Number(c.volume) || 0;
 
-    // Daily deterministic + pseudo-random volatility simulation
-    const cycle = Math.sin(dayOffset * 0.35) * 0.012;
-    const noise = ((Math.sin(dayOffset * 7.9) + Math.cos(dayOffset * 3.7)) / 2) * 0.018;
-    const changePercent = cycle + noise;
-
-    const open = +currentPrice.toFixed(2);
-    const close = Math.max(1, +(open * (1 + changePercent)).toFixed(2));
-    const spread = Math.abs(close - open);
-    const high = +(Math.max(open, close) + spread * 0.5 + 0.4).toFixed(2);
-    const low = +(Math.max(1, Math.min(open, close) - spread * 0.5 - 0.3)).toFixed(2);
-    const volume = Math.floor(Math.abs(Math.sin(dayOffset * 2.1)) * 35000000) + 12000000;
-
-    candles.push({
-      date: d.toISOString().split('T')[0],
-      displayDate: d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' }),
-      open,
-      high,
-      low,
-      close,
-      volume,
-      isUp: close >= open,
-    });
-
-    currentPrice = close;
-  }
-
-  return candles;
+  return {
+    date: dateStr,
+    displayDate: displayDateStr,
+    open,
+    high,
+    low,
+    close,
+    volume,
+    isUp: close >= open,
+  };
 }
 
 export default function Replay({ className }) {
-  const [selectedSymbol, setSelectedSymbol] = useState('AAPL');
-  const [startDate, setStartDate] = useState('2024-01-02');
-  const [isLoading] = useState(false);
-  const [error] = useState(null);
+  const [selectedSymbol, setSelectedSymbol] = useState('RELIANCE.NS');
+  const [startDate, setStartDate] = useState('2024-01-01');
+  const [endDate, setEndDate] = useState('2024-03-31');
+  const [backendSessionId, setBackendSessionId] = useState(null);
 
-  // Core session structure initialized per requirements
-  const [session, setSession] = useState(() => ({
-    symbol: 'AAPL',
-    candles: generateMockCandles('AAPL', '2024-01-02', 60),
-    currentIndex: 1, // Start with first candle revealed
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+
+  const [session, setSession] = useState({
+    symbol: 'RELIANCE.NS',
+    candles: [],
+    currentIndex: 1,
     isPlaying: false,
     cash: 100000,
     positions: [],
     trades: [],
-  }));
+  });
 
-  // Handle symbol change
+  const abortControllerRef = useRef(null);
+
+  const loadReplaySession = useCallback(async () => {
+    setIsLoading(true);
+    setError(null);
+
+    if (abortControllerRef.current) {
+      abortControllerRef.current.abort();
+    }
+    const controller = new AbortController();
+    abortControllerRef.current = controller;
+
+    try {
+      const createRes = await api.post('/api/replay/sessions', {
+        symbol: selectedSymbol,
+        startDate,
+        endDate,
+        timeframe: '1d',
+      }, { signal: controller.signal });
+
+      const newSession = createRes.data?.session;
+      if (!newSession?.id) {
+        throw new Error('Failed to create replay session on server.');
+      }
+      const sId = newSession.id;
+      setBackendSessionId(sId);
+
+      await api.post(`/api/replay/sessions/${sId}/start`, {}, { signal: controller.signal });
+
+      const candlesRes = await api.get(`/api/replay/sessions/${sId}/candles?limit=500`, {
+        signal: controller.signal,
+      });
+
+      const rawCandles = candlesRes.data?.candles || [];
+      if (rawCandles.length === 0) {
+        throw new Error(`No historical candles found for ${selectedSymbol} between ${startDate} and ${endDate}.`);
+      }
+
+      const formattedCandles = rawCandles.map(transformCandle).filter(Boolean);
+
+      setSession((prev) => ({
+        ...prev,
+        symbol: selectedSymbol,
+        candles: formattedCandles,
+        currentIndex: 1,
+        isPlaying: false,
+      }));
+    } catch (err) {
+      if (err.name === 'CanceledError' || err.code === 'ERR_CANCELED') {
+        return;
+      }
+      const msg = err.response?.data?.message || err.message || 'Failed to initialize historical market replay.';
+      setError(msg);
+      setSession((prev) => ({
+        ...prev,
+        candles: [],
+        currentIndex: 0,
+        isPlaying: false,
+      }));
+    } finally {
+      setIsLoading(false);
+    }
+  }, [selectedSymbol, startDate, endDate]);
+
+  useEffect(() => {
+    loadReplaySession();
+    return () => {
+      if (abortControllerRef.current) {
+        abortControllerRef.current.abort();
+      }
+    };
+  }, [loadReplaySession]);
+
   const handleSymbolChange = (newSymbol) => {
     setSelectedSymbol(newSymbol);
-    const newCandles = generateMockCandles(newSymbol, startDate, 60);
-    setSession((prev) => ({
-      ...prev,
-      symbol: newSymbol,
-      candles: newCandles,
-      currentIndex: 1,
-      isPlaying: false,
-    }));
   };
 
-  // Handle start date change
-  const handleStartDateChange = (newDate) => {
-    setStartDate(newDate);
-    const newCandles = generateMockCandles(selectedSymbol, newDate, 60);
+  const handleStep = useCallback(async (newIndex) => {
+    setSession((prev) => {
+      const clamped = Math.max(1, Math.min(prev.candles.length, newIndex));
+      return {
+        ...prev,
+        currentIndex: clamped,
+      };
+    });
+
+    if (backendSessionId) {
+      try {
+        await api.post(`/api/replay/sessions/${backendSessionId}/next`);
+      } catch {
+      }
+    }
+  }, [backendSessionId]);
+
+  const handlePlay = useCallback(async (playing) => {
+    const nextState = typeof playing === 'boolean' ? playing : !session.isPlaying;
     setSession((prev) => ({
       ...prev,
-      candles: newCandles,
-      currentIndex: 1,
-      isPlaying: false,
+      isPlaying: nextState,
     }));
-  };
 
-  // Step handler for controls
-  const handleStep = useCallback((newIndex) => {
-    setSession((prev) => ({
-      ...prev,
-      currentIndex: Math.max(1, Math.min(prev.candles.length, newIndex)),
-    }));
-  }, []);
+    if (backendSessionId) {
+      try {
+        if (!nextState) {
+          await api.post(`/api/replay/sessions/${backendSessionId}/pause`);
+        } else {
+          await api.post(`/api/replay/sessions/${backendSessionId}/start`);
+        }
+      } catch {
+      }
+    }
+  }, [backendSessionId, session.isPlaying]);
 
-  // Play/pause handler
-  const handlePlay = useCallback((playing) => {
-    setSession((prev) => ({
-      ...prev,
-      isPlaying: typeof playing === 'boolean' ? playing : !prev.isPlaying,
-    }));
-  }, []);
-
-  // Current revealed candle
   const currentCandle = useMemo(() => {
     if (!session.candles.length || session.currentIndex <= 0) return null;
     return session.candles[session.currentIndex - 1];
   }, [session.candles, session.currentIndex]);
 
-  // Execute a virtual trade
   const handleExecuteTrade = useCallback((tradeOrder) => {
     const { type, symbol, quantity, price, date } = tradeOrder;
 
-    // Validate current candle is active
     if (!currentCandle) {
       return { success: false, message: 'Trading disabled: no active replay candle revealed.' };
     }
 
-    // Prevent trading beyond the currently revealed replay day
     if (date !== currentCandle.date) {
       return { success: false, message: 'Cannot place trades beyond the currently revealed replay candle.' };
     }
 
-    // Validate quantity is a positive whole number
     const qty = parseInt(quantity, 10);
     if (!Number.isInteger(qty) || qty <= 0) {
       return { success: false, message: 'Quantity must be a positive whole number.' };
     }
 
-    // Validate price
     const executionPrice = Number(price);
     if (isNaN(executionPrice) || executionPrice <= 0) {
       return { success: false, message: 'Invalid execution price for order routing.' };
@@ -184,7 +237,7 @@ export default function Replay({ className }) {
       if (type === 'BUY') {
         const totalCost = qty * executionPrice;
         if (totalCost > prev.cash) {
-          failReason = `Insufficient virtual cash. Needed ${formatCurrency(totalCost)}, available ${formatCurrency(prev.cash)}.`;
+          failReason = `Insufficient virtual cash. Needed ${formatCurrency(totalCost, 'INR')}, available ${formatCurrency(prev.cash, 'INR')}.`;
           return prev;
         }
 
@@ -278,7 +331,6 @@ export default function Replay({ className }) {
     return { success: false, message: failReason || 'Failed to execute trade.' };
   }, [currentCandle]);
 
-  // P&L and Portfolio calculations
   const { totalPositionValue, unrealizedPnl, realizedPnl, totalPortfolioValue, sessionPnl, sessionPnlPct } = useMemo(() => {
     const curPrice = currentCandle ? currentCandle.close : 0;
 
@@ -310,7 +362,7 @@ export default function Replay({ className }) {
 
   return (
     <div className={cn('space-y-5', className)}>
-      {/* Header section */}
+      
       <div className="pb-3 border-b border-(--color-border) flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
           <div className="flex items-center gap-2 mb-1">
@@ -322,41 +374,41 @@ export default function Replay({ className }) {
             </span>
           </div>
           <h1 className="text-xl sm:text-2xl font-bold tracking-tight text-(--color-text-primary) font-mono">
-            Market Replay
+            Historical Market Replay
           </h1>
           <p className="text-xs text-(--color-text-muted) mt-0.5">
-            Step through simulated historical candles day-by-day and execute virtual paper trades against replay data.
+            Step through real historical candles day-by-day and execute virtual paper trades against verified market data.
           </p>
         </div>
 
-        {/* Top-Right Badges */}
+        
         <div className="flex flex-wrap items-center gap-2.5">
-          <Badge variant="warning" size="sm" className="font-mono text-[10px]">
-            Simulated Mock Data &bull; Virtual Trading
+          <Badge variant="brand" size="sm" className="font-mono text-[10px]">
+            Real NSE Historical Data &bull; Virtual Engine
           </Badge>
           <div className="flex items-center gap-2 px-3 py-1.5 rounded-lg bg-(--color-bg-subtle) border border-(--color-border) font-mono text-xs">
             <Wallet className="w-3.5 h-3.5 text-(--color-brand)" />
             <span className="text-(--color-text-muted)">Cash:</span>
             <span className="font-bold text-(--color-text-primary)">
-              {formatCurrency(session.cash)}
+              {formatCurrency(session.cash, 'INR')}
             </span>
           </div>
         </div>
       </div>
 
-      {/* Financial Portfolio Telemetry Bar */}
+      
       <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-5 gap-3 font-mono text-xs">
         <div className="p-3 rounded-lg bg-(--color-bg-subtle) border border-(--color-border)">
           <span className="text-[10px] text-(--color-text-muted) uppercase block">Net Portfolio Value</span>
           <span className="text-sm font-bold text-(--color-text-primary)">
-            {formatCurrency(totalPortfolioValue)}
+            {formatCurrency(totalPortfolioValue, 'INR')}
           </span>
         </div>
 
         <div className="p-3 rounded-lg bg-(--color-bg-subtle) border border-(--color-border)">
           <span className="text-[10px] text-(--color-text-muted) uppercase block">Stock Holdings Value</span>
           <span className="text-sm font-bold text-(--color-text-primary)">
-            {formatCurrency(totalPositionValue)}
+            {formatCurrency(totalPositionValue, 'INR')}
           </span>
         </div>
 
@@ -368,7 +420,7 @@ export default function Replay({ className }) {
               realizedPnl >= 0 ? 'text-(--color-success)' : 'text-(--color-error)'
             )}
           >
-            {realizedPnl >= 0 ? '+' : ''}{formatCurrency(realizedPnl)}
+            {realizedPnl >= 0 ? '+' : ''}{formatCurrency(realizedPnl, 'INR')}
           </span>
         </div>
 
@@ -380,7 +432,7 @@ export default function Replay({ className }) {
               unrealizedPnl >= 0 ? 'text-(--color-success)' : 'text-(--color-error)'
             )}
           >
-            {unrealizedPnl >= 0 ? '+' : ''}{formatCurrency(unrealizedPnl)}
+            {unrealizedPnl >= 0 ? '+' : ''}{formatCurrency(unrealizedPnl, 'INR')}
           </span>
         </div>
 
@@ -393,22 +445,23 @@ export default function Replay({ className }) {
             )}
           >
             {sessionPnl >= 0 ? <TrendingUp className="w-3.5 h-3.5" /> : <TrendingDown className="w-3.5 h-3.5" />}
-            {sessionPnl >= 0 ? '+' : ''}{formatCurrency(sessionPnl)} ({formatPercent(sessionPnlPct).text})
+            {sessionPnl >= 0 ? '+' : ''}{formatCurrency(sessionPnl, 'INR')} ({formatPercent(sessionPnlPct).text})
           </span>
         </div>
       </div>
 
-      {/* Session Configuration Bar */}
+      
       <Card className="p-3.5 bg-(--color-bg-subtle) border-(--color-border)">
-        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-3 items-end font-mono text-xs">
-          {/* Stock Selector */}
+        <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-5 gap-3 items-end font-mono text-xs">
+          
           <div>
             <label className="block text-[11px] font-semibold text-(--color-text-secondary) mb-1">
-              Select Ticker
+              Select NSE Ticker
             </label>
             <select
               value={selectedSymbol}
               onChange={(e) => handleSymbolChange(e.target.value)}
+              disabled={isLoading}
               className="w-full h-8 px-2.5 rounded-md border border-(--color-border) bg-(--color-bg-raised) text-(--color-text-primary) text-xs focus:outline-none focus:border-(--color-brand)"
             >
               {AVAILABLE_STOCKS.map((stock) => (
@@ -419,41 +472,48 @@ export default function Replay({ className }) {
             </select>
           </div>
 
-          {/* Starting Date */}
+          
           <div>
             <label className="block text-[11px] font-semibold text-(--color-text-secondary) mb-1">
-              Replay Start Date
+              Start Date
             </label>
             <div className="relative flex items-center">
               <input
                 type="date"
                 value={startDate}
-                onChange={(e) => handleStartDateChange(e.target.value)}
+                onChange={(e) => setStartDate(e.target.value)}
+                disabled={isLoading}
                 className="w-full h-8 px-2.5 rounded-md border border-(--color-border) bg-(--color-bg-raised) text-(--color-text-primary) text-xs focus:outline-none focus:border-(--color-brand)"
               />
               <Calendar className="w-3.5 h-3.5 absolute right-2.5 text-(--color-text-muted) pointer-events-none" />
             </div>
           </div>
 
-          {/* Active Ticker Details */}
+          
           <div>
-            <span className="block text-[11px] font-semibold text-(--color-text-secondary) mb-1">
-              Simulation Scope
-            </span>
-            <div className="h-8 px-2.5 rounded-md border border-(--color-border) bg-(--color-bg-base) flex items-center justify-between text-[11px] text-(--color-text-muted)">
-              <span>60 Trading Days</span>
-              <span className="text-(--color-brand) font-bold">1D Candles</span>
+            <label className="block text-[11px] font-semibold text-(--color-text-secondary) mb-1">
+              End Date
+            </label>
+            <div className="relative flex items-center">
+              <input
+                type="date"
+                value={endDate}
+                onChange={(e) => setEndDate(e.target.value)}
+                disabled={isLoading}
+                className="w-full h-8 px-2.5 rounded-md border border-(--color-border) bg-(--color-bg-raised) text-(--color-text-primary) text-xs focus:outline-none focus:border-(--color-brand)"
+              />
+              <Calendar className="w-3.5 h-3.5 absolute right-2.5 text-(--color-text-muted) pointer-events-none" />
             </div>
           </div>
 
-          {/* Current Revealed Price Card */}
+          
           <div>
             <span className="block text-[11px] font-semibold text-(--color-text-secondary) mb-1">
               Current Replay Quote
             </span>
             <div className="h-8 px-2.5 rounded-md border border-(--color-border) bg-(--color-bg-base) flex items-center justify-between">
               <span className="font-bold text-(--color-text-primary)">
-                {currentCandle ? formatCurrency(currentCandle.close) : '--'}
+                {currentCandle ? formatCurrency(currentCandle.close, 'INR') : '--'}
               </span>
               {currentCandle && (
                 <span
@@ -470,10 +530,24 @@ export default function Replay({ className }) {
               )}
             </div>
           </div>
+
+          
+          <div>
+            <Button
+              variant="secondary"
+              size="sm"
+              onClick={loadReplaySession}
+              disabled={isLoading}
+              className="w-full h-8"
+              leftIcon={isLoading ? <Loader2 className="w-3.5 h-3.5 animate-spin" /> : <RefreshCw className="w-3.5 h-3.5" />}
+            >
+              {isLoading ? 'Loading...' : 'Load Session'}
+            </Button>
+          </div>
         </div>
       </Card>
 
-      {/* Loading state */}
+      
       {isLoading && (
         <div className="space-y-4">
           <Skeleton className="h-80 w-full rounded-xl" />
@@ -481,15 +555,25 @@ export default function Replay({ className }) {
         </div>
       )}
 
-      {/* Error state */}
+      
       {!isLoading && error && (
-        <Card className="p-6 bg-(--color-error-subtle) border-(--color-error)/30 text-xs text-(--color-error) flex items-center gap-3">
-          <AlertCircle className="w-5 h-5 shrink-0" />
-          <span>{error}</span>
+        <Card className="p-6 bg-(--color-error-subtle) border-(--color-error)/30 text-xs text-(--color-error) flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+          <div className="flex items-center gap-3">
+            <AlertCircle className="w-5 h-5 shrink-0" />
+            <span>{error}</span>
+          </div>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={loadReplaySession}
+            leftIcon={<RefreshCw className="w-3.5 h-3.5" />}
+          >
+            Retry
+          </Button>
         </Card>
       )}
 
-      {/* Empty state */}
+      
       {!isLoading && !error && session.candles.length === 0 && (
         <Card className="p-12 text-center text-xs text-(--color-text-muted) space-y-2">
           <HelpCircle className="w-8 h-8 mx-auto text-(--color-text-muted)" />
@@ -497,20 +581,21 @@ export default function Replay({ className }) {
         </Card>
       )}
 
-      {/* Main Replay Surface: 2-Column Responsive Layout */}
+      
       {!isLoading && !error && session.candles.length > 0 && (
         <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
-          {/* Left Column (2 cols on lg): Chart & Timeline Controls */}
+          
           <div className="lg:col-span-2 space-y-4">
-            {/* Market Replay Chart */}
+            
             <Card className="p-4 sm:p-5 bg-(--color-bg-subtle) border-(--color-border) shadow-xs">
               <ReplayChart
                 candles={session.candles}
                 visibleCount={session.currentIndex}
+                currency="INR"
               />
             </Card>
 
-            {/* Replay Controls & Timeline */}
+            
             <ReplayControls
               current={session.currentIndex}
               total={session.candles.length}
@@ -519,7 +604,7 @@ export default function Replay({ className }) {
               isPlaying={session.isPlaying}
             />
 
-            {/* Trade Execution History Section */}
+            
             <Card className="p-4 bg-(--color-bg-subtle) border-(--color-border) space-y-3 font-mono">
               <div className="flex items-center justify-between pb-2 border-b border-(--color-border)">
                 <div className="flex items-center gap-2">
@@ -565,15 +650,15 @@ export default function Replay({ className }) {
                             {trade.quantity}
                           </TableCell>
                           <TableCell className="text-right text-(--color-text-muted)">
-                            {formatCurrency(trade.price)}
+                            {formatCurrency(trade.price, 'INR')}
                           </TableCell>
                           <TableCell className="text-right font-semibold text-(--color-text-primary)">
-                            {formatCurrency(trade.total)}
+                            {formatCurrency(trade.total, 'INR')}
                           </TableCell>
                           <TableCell className="text-right font-semibold">
                             {trade.type === 'SELL' ? (
                               <span className={trade.realizedPnl >= 0 ? 'text-(--color-success)' : 'text-(--color-error)'}>
-                                {trade.realizedPnl >= 0 ? '+' : ''}{formatCurrency(trade.realizedPnl)}
+                                {trade.realizedPnl >= 0 ? '+' : ''}{formatCurrency(trade.realizedPnl, 'INR')}
                               </span>
                             ) : (
                               <span className="text-(--color-text-muted)">&mdash;</span>
@@ -592,7 +677,7 @@ export default function Replay({ className }) {
             </Card>
           </div>
 
-          {/* Right Column (1 col on lg): Virtual Order Entry Ticket & Position Panel */}
+          
           <div className="space-y-4">
             <ReplayTradePanel
               symbol={selectedSymbol}
@@ -600,16 +685,18 @@ export default function Replay({ className }) {
               cash={session.cash}
               positions={session.positions}
               currentDate={currentCandle ? currentCandle.date : ''}
+              currency="INR"
               onTrade={handleExecuteTrade}
             />
 
-            {/* Execution Disclaimers & Rules Card */}
+            
             <Card className="p-3.5 bg-(--color-bg-base) border-(--color-border) font-mono text-[11px] text-(--color-text-muted) space-y-2">
               <div className="flex items-center gap-1.5 text-(--color-brand) font-semibold uppercase text-[10px]">
                 <DollarSign className="w-3.5 h-3.5" />
                 <span>Simulation Rules</span>
               </div>
               <ul className="space-y-1 list-disc list-inside leading-relaxed text-[10px]">
+                <li>Real historical candle quotes powered by Yahoo Finance / Twelve Data.</li>
                 <li>Zero brokerage fees &amp; zero exchange transaction tax.</li>
                 <li>Instant fills against currently revealed candle close quote.</li>
                 <li>Selling requires pre-existing holdings in the current session.</li>

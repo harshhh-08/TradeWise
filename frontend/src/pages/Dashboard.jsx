@@ -1,120 +1,136 @@
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { Link } from 'react-router-dom';
+import api from '@/services/api';
 import { useAuth } from '@/context/AuthContext';
-import { WalletBanner } from '@/components/features/WalletBanner';
+import { AccountHeader } from '@/components/features/WalletBanner';
 import { Watchlist } from '@/components/features/Watchlist';
 import { RecentTrades } from '@/components/features/RecentTrades';
 import { Card, CardHeader, CardTitle, CardContent } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
-import { BookOpen, RotateCcw, ArrowRight, Activity } from 'lucide-react';
+import { RotateCcw, BookOpen, ArrowUpRight, LineChart } from 'lucide-react';
 
 export default function Dashboard() {
-  const { user, walletBalance } = useAuth();
+  const { walletBalance, updateWalletCash } = useAuth();
   const [trades, setTrades] = useState([]);
-  const [investedValue, setInvestedValue] = useState(0);
+  const [portfolio, setPortfolio] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+
+  const loadDashboardData = useCallback(async () => {
+    setIsLoading(true);
+    try {
+      const [portRes, tradeRes] = await Promise.all([
+        api.get('/api/portfolio'),
+        api.get('/api/trades?limit=5'),
+      ]);
+
+      if (portRes.data?.success && portRes.data.portfolio) {
+        setPortfolio(portRes.data.portfolio);
+        if (portRes.data.portfolio.availableCash !== undefined) {
+          updateWalletCash(portRes.data.portfolio.availableCash);
+        }
+      }
+
+      if (tradeRes.data?.success && Array.isArray(tradeRes.data.trades)) {
+        setTrades(tradeRes.data.trades);
+      }
+    } catch (err) {
+      console.warn('Dashboard data fetch error:', err.message);
+    } finally {
+      setIsLoading(false);
+    }
+  }, [updateWalletCash]);
 
   useEffect(() => {
-    try {
-      const savedTrades = localStorage.getItem('tradewise_trades');
-      if (savedTrades) {
-        setTrades(JSON.parse(savedTrades));
-      }
+    loadDashboardData();
+  }, [loadDashboardData]);
 
-      const savedPositions = localStorage.getItem('tradewise_positions');
-      if (savedPositions) {
-        const parsedPos = JSON.parse(savedPositions);
-        const totalInvested = parsedPos.reduce(
-          (sum, pos) => sum + (pos.quantity * pos.avgCost || 0),
-          0
-        );
-        setInvestedValue(totalInvested);
-      }
-    } catch (_) {}
-  }, []);
+  const cash = portfolio?.availableCash ?? (walletBalance ?? 100000);
+  const invested = portfolio?.totalStockValue ?? 0;
+  const unrealizedPnl = portfolio?.totalUnrealizedPnl ?? 0;
 
   return (
-    <div className="space-y-5">
-      {/* Dashboard Top bar */}
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 pb-3 border-b border-(--color-border)">
-        <div>
-          <h1 className="text-lg font-bold font-mono tracking-tight text-(--color-text-primary)">
-            ACCOUNT OVERVIEW // {user?.name?.toUpperCase() || 'TRADER'}
-          </h1>
-          <p className="text-[11px] font-mono text-(--color-text-muted)">
-            Simulated NASDAQ / NYSE Brokerage Account &bull; USD Cash
-          </p>
-        </div>
-
-        <div className="flex items-center gap-2">
-          <Link to="/trade">
-            <Button size="sm">
-              Execute Order
-            </Button>
-          </Link>
-          <Link to="/replay">
-            <Button variant="secondary" size="sm" leftIcon={<RotateCcw className="w-3.5 h-3.5" />}>
-              Replay Backtest
-            </Button>
-          </Link>
-        </div>
-      </div>
-
-      {/* Wallet Banner */}
-      <WalletBanner
-        cash={walletBalance}
-        invested={investedValue}
-        dayPnl={investedValue > 0 ? investedValue * 0.0142 : 0}
+    <div className="space-y-4">
+      
+      <AccountHeader
+        cash={cash}
+        invested={invested}
+        dayPnl={unrealizedPnl}
       />
 
-      {/* Watchlist */}
+      
       <Watchlist />
 
-      {/* Two Column Layout */}
-      <div className="grid grid-cols-1 lg:grid-cols-3 gap-5">
+      
+      <div className="grid grid-cols-1 lg:grid-cols-3 gap-4">
         <div className="lg:col-span-2">
-          <RecentTrades trades={trades} />
+          <RecentTrades trades={trades} isLoading={isLoading} />
         </div>
 
-        <div className="space-y-5">
-          {/* Candle Replay Backtester card */}
-          <Card className="p-4 space-y-3">
-            <div className="flex items-center justify-between text-xs font-mono">
-              <span className="font-bold text-(--color-text-primary) flex items-center gap-1.5">
-                <RotateCcw className="w-3.5 h-3.5 text-(--color-brand)" />
-                <span>Candle Replay Mode</span>
-              </span>
-              <span className="text-[10px] text-(--color-success)">READY</span>
-            </div>
-            <p className="text-xs text-(--color-text-muted) leading-relaxed">
-              Step forward candle-by-candle through historical market regimes with zero future bias to test your entries.
-            </p>
-            <Link to="/replay" className="block pt-1">
-              <Button size="sm" variant="secondary" className="w-full font-mono">
-                Launch Replay Engine
-              </Button>
-            </Link>
+        <div className="space-y-4">
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-[13px] font-medium text-ink-primary font-sans flex items-center gap-1.5">
+                <LineChart className="w-3.5 h-3.5 text-ink-secondary" />
+                <span>Strategy Backtester</span>
+              </CardTitle>
+              <span className="text-[11px] font-mono text-trade-up">ACTIVE</span>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-xs text-ink-secondary leading-relaxed font-sans">
+                Test dual-SMA crossover rules across NSE equity regimes with risk metrics and equity curves.
+              </p>
+              <Link to="/backtest" className="block">
+                <Button size="sm" variant="secondary" className="w-full">
+                  Launch Backtesting Engine
+                </Button>
+              </Link>
+            </CardContent>
           </Card>
 
-          {/* Education Curriculum Card */}
-          <Card className="p-4 space-y-3">
-            <div className="flex items-center justify-between text-xs font-mono">
-              <span className="font-bold text-(--color-text-primary) flex items-center gap-1.5">
-                <BookOpen className="w-3.5 h-3.5 text-(--color-brand)" />
-                <span>Trading Curriculum</span>
-              </span>
-              <span className="text-[10px] text-(--color-text-muted)">2 / 5</span>
-            </div>
-            <p className="text-xs text-(--color-text-muted) leading-relaxed">
-              Order mechanics, candlestick interpretation, and portfolio risk management modules.
-            </p>
-            <div className="w-full h-1.5 rounded-full bg-(--color-bg-raised) overflow-hidden">
-              <div className="h-full bg-(--color-brand) rounded-full w-[40%]" />
-            </div>
-            <Link to="/learn" className="block pt-1">
-              <Button variant="outline" size="sm" className="w-full justify-between" rightIcon={<ArrowRight className="w-3.5 h-3.5" />}>
-                <span>Resume Lesson 3</span>
-              </Button>
-            </Link>
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-[13px] font-medium text-ink-primary font-sans flex items-center gap-1.5">
+                <RotateCcw className="w-3.5 h-3.5 text-ink-secondary" />
+                <span>Candle Replay</span>
+              </CardTitle>
+              <span className="text-[11px] font-mono text-trade-up">ACTIVE</span>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-xs text-ink-secondary leading-relaxed font-sans">
+                Step forward candle-by-candle through historical market regimes with zero future bias to validate your trading rules.
+              </p>
+              <Link to="/replay" className="block">
+                <Button size="sm" variant="secondary" className="w-full">
+                  Launch Replay Engine
+                </Button>
+              </Link>
+            </CardContent>
+          </Card>
+
+          
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between pb-2">
+              <CardTitle className="text-[13px] font-medium text-ink-primary font-sans flex items-center gap-1.5">
+                <BookOpen className="w-3.5 h-3.5 text-ink-secondary" />
+                <span>Curriculum</span>
+              </CardTitle>
+              <Link to="/learn" className="text-xs text-ink-secondary hover:text-ink-primary inline-flex items-center gap-1">
+                <span>View all</span>
+                <ArrowUpRight className="w-3 h-3" />
+              </Link>
+            </CardHeader>
+            <CardContent className="space-y-3">
+              <p className="text-xs text-ink-secondary leading-relaxed font-sans">
+                Review core mechanics of bid-ask spread liquidity, order book dynamics, and disciplined risk-to-reward position sizing.
+              </p>
+              <Link to="/learn" className="block">
+                <Button size="sm" variant="secondary" className="w-full">
+                  Open Curriculum
+                </Button>
+              </Link>
+            </CardContent>
           </Card>
         </div>
       </div>
